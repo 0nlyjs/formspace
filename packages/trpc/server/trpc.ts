@@ -11,3 +11,21 @@ export const tRPCContext = initTRPC
 export const router = tRPCContext.router;
 
 export const publicProcedure = tRPCContext.procedure;
+
+// Middleware to enforce authentication
+const isAuthenticated = tRPCContext.middleware(({ ctx, next }) => {
+  if (!ctx.user) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "You must be logged in to access this resource",
+    });
+  }
+  return next({
+    ctx: {
+      ...ctx,
+      user: ctx.user, // Coerce user type as non-nullable in protected context
+    },
+  });
+});
+
+export const protectedProcedure = tRPCContext.procedure.use(isAuthenticated);
