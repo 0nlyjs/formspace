@@ -2,15 +2,22 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { trpc } from "~/trpc/client";
 import { ThreeBackground } from "~/components/ThreeBackground";
-import { Sparkles, Terminal, Flame, ArrowRight, CheckCircle2, Play } from "lucide-react";
+import { Sparkles, Terminal, Flame, ArrowRight, Play } from "lucide-react";
 
 export default function Home() {
   const [selectedTheme, setSelectedTheme] = useState<"anime" | "tech" | "retro">("anime");
 
+  // Query session to conditionally toggle header action
+  const { data: me } = trpc.auth.me.useQuery(undefined, {
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+
   return (
     <main className="relative min-h-screen text-white overflow-x-hidden bg-zinc-950 font-sans flex flex-col">
-      {/* 3D Dynamic Background */}
+      {/* 3D Background */}
       <ThreeBackground theme={selectedTheme} />
 
       {/* Header / Navbar */}
@@ -25,18 +32,21 @@ export default function Home() {
         </Link>
 
         <div className="flex items-center gap-4">
-          <Link
-            href="/login"
-            className="text-sm font-semibold hover:text-purple-400 transition-colors px-4 py-2"
-          >
-            Sign In
-          </Link>
-          <Link
-            href="/signup"
-            className="text-sm font-semibold bg-white text-zinc-950 hover:bg-zinc-200 transition-all rounded-xl px-5 py-2.5 shadow-md shadow-white/5"
-          >
-            Launch Builder
-          </Link>
+          {me ? (
+            <Link
+              href="/dashboard"
+              className="text-sm font-semibold bg-white text-zinc-950 hover:bg-zinc-200 transition-all rounded-xl px-5 py-2.5 shadow-md shadow-white/5"
+            >
+              Get Started
+            </Link>
+          ) : (
+            <Link
+              href="/login"
+              className="text-sm font-semibold bg-white text-zinc-950 hover:bg-zinc-200 transition-all rounded-xl px-5 py-2.5 shadow-md shadow-white/5"
+            >
+              Get Started
+            </Link>
+          )}
         </div>
       </header>
 
@@ -65,10 +75,10 @@ export default function Home() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mt-4">
             <Link
-              href="/signup"
+              href={me ? "/dashboard" : "/signup"}
               className="flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-90 font-bold px-8 py-4 rounded-2xl shadow-lg shadow-purple-500/25 transition-all text-white"
             >
-              Get Started (Demo Account)
+              {me ? "Get Started" : "Get Started (Demo Account)"}
               <ArrowRight className="w-5 h-5" />
             </Link>
             

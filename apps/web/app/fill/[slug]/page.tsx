@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import { trpc } from "~/trpc/client";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
@@ -93,12 +94,12 @@ export default function FormFillingPage() {
               {formError?.message || "This form is unavailable or has been archived."}
             </p>
           </div>
-          <a
+          <Link
             href="/"
-            className="w-full bg-white text-zinc-950 font-bold py-2.5 rounded-xl text-xs hover:bg-zinc-200 transition-colors"
+            className="w-full bg-white text-zinc-950 font-bold py-2.5 rounded-xl text-xs hover:bg-zinc-200 transition-colors inline-block"
           >
             Return Home
-          </a>
+          </Link>
         </div>
       </div>
     );

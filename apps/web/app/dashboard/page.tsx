@@ -13,17 +13,13 @@ import {
   BarChart2,
   LogOut,
   User,
-  Settings,
   Code,
-  Globe,
-  Lock,
   List,
   Sparkles,
   Terminal,
   Flame,
   Loader2,
   ExternalLink,
-  ChevronRight,
   TrendingUp,
   Copy,
 } from "lucide-react";
@@ -71,6 +67,13 @@ export default function DashboardPage() {
   const { data: apiKeys, refetch: refetchKeys } = trpc.apiKey.list.useQuery(undefined, {
     enabled: !!user && activeTab === "dev",
   });
+
+  // Redirect to login if not authenticated
+  React.useEffect(() => {
+    if (!userLoading && !user) {
+      router.replace("/login");
+    }
+  }, [user, userLoading, router]);
 
   // Mutations
   const createFormMutation = trpc.form.create.useMutation({
@@ -146,19 +149,10 @@ export default function DashboardPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-white p-6">
-        <div className="bg-zinc-900 border border-white/10 p-8 rounded-3xl text-center max-w-sm flex flex-col gap-5 items-center">
-          <Lock className="w-12 h-12 text-red-400" />
-          <div>
-            <h2 className="text-xl font-bold">Access Denied</h2>
-            <p className="text-sm text-zinc-400 mt-1">Please sign in to view the dashboard.</p>
-          </div>
-          <Link
-            href="/login"
-            className="w-full bg-white text-zinc-950 font-bold py-3 rounded-2xl hover:bg-zinc-200 transition-colors"
-          >
-            Go to Login
-          </Link>
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-white">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+          <p className="text-sm text-zinc-400">Redirecting to login...</p>
         </div>
       </div>
     );
@@ -199,12 +193,12 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-zinc-950 text-white font-sans flex flex-col">
       {/* Navbar */}
       <header className="border-b border-white/5 bg-zinc-900/60 backdrop-blur-md px-6 md:px-12 py-4 flex justify-between items-center z-20">
-        <Link href="/" className="flex items-center gap-2">
+        <div className="flex items-center gap-2 select-none">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-500 to-pink-500 flex items-center justify-center">
             <span className="font-extrabold text-xs text-black">FS</span>
           </div>
           <span className="font-black text-lg text-white">formspace.</span>
-        </Link>
+        </div>
 
         <div className="flex items-center gap-6">
           {/* User profile identifier */}
@@ -663,7 +657,7 @@ export default function DashboardPage() {
                   {generatedKey && (
                     <div className="bg-emerald-950/20 border border-emerald-500/20 p-4 rounded-xl flex flex-col gap-2">
                       <p className="text-[10px] text-emerald-400 font-extrabold uppercase tracking-widest">
-                        Key Generated (Copy now, it won't show again!)
+                        Key Generated (Copy now, it will not show again!)
                       </p>
                       <div className="flex items-center gap-2 bg-zinc-950 border border-white/5 p-2.5 rounded-lg text-xs font-mono select-all">
                         {generatedKey}

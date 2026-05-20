@@ -6,21 +6,46 @@ import { useRouter } from "next/navigation";
 import { trpc } from "~/trpc/client";
 import { ThreeBackground } from "~/components/ThreeBackground";
 import { toast } from "sonner";
-import { Lock, Mail, User, ArrowRight, Loader2 } from "lucide-react";
+import { Lock, Mail, User, ArrowRight, Loader2, Eye, EyeOff } from "lucide-react";
 
 export default function SignupPage() {
   const router = useRouter();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Auto-redirect to dashboard if already authenticated
+  const { data: me, isLoading: meLoading } = trpc.auth.me.useQuery(undefined, {
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+
+  React.useEffect(() => {
+    if (me) {
+      router.replace("/dashboard");
+    }
+  }, [me, router]);
+
+  // While verifying, show a high-fidelity loading gate to skip the form flash
+  if (meLoading || me) {
+    return (
+      <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center text-white relative">
+        <ThreeBackground theme="anime" />
+        <div className="bg-zinc-900/60 backdrop-blur-xl border border-white/10 p-8 rounded-3xl text-center max-w-sm flex flex-col gap-3 items-center z-10 shadow-2xl">
+          <Loader2 className="w-8 h-8 animate-spin text-pink-500 mb-2" />
+          <h3 className="font-extrabold text-sm text-white">Accessing Secure Space...</h3>
+          <p className="text-xs text-zinc-400">Verifying session keys and authentication cookies.</p>
+        </div>
+      </div>
+    );
+  }
 
   const signupMutation = trpc.auth.signup.useMutation({
     onSuccess: (user) => {
       toast.success(`Welcome to Formspace, ${user.fullName}!`);
-      router.push("/dashboard");
-      setTimeout(() => {
-        window.location.href = "/dashboard";
-      }, 500);
+      // Force hard-reload immediately to set cookies/state and overwrite the history stack entry cleanly
+      window.location.replace("/dashboard");
     },
     onError: (err) => {
       toast.error(err.message || "Failed to sign up. Please try again.");
@@ -97,13 +122,20 @@ export default function SignupPage() {
             <div className="relative">
               <Lock className="absolute left-4 top-3.5 w-5 h-5 text-zinc-500" />
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Min. 6 characters"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-zinc-950/80 border border-white/10 rounded-2xl py-3 pl-12 pr-4 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-pink-500 transition-colors"
+                className="w-full bg-zinc-950/80 border border-white/10 rounded-2xl py-3 pl-12 pr-12 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-pink-500 transition-colors"
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-3.5 text-zinc-500 hover:text-white transition-colors cursor-pointer"
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
             </div>
           </div>
 

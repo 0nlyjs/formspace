@@ -20,8 +20,6 @@ import {
   Settings2,
   HelpCircle,
   PlusCircle,
-  Settings,
-  X,
   Type,
   AlignLeft,
   Mail,
@@ -88,7 +86,7 @@ export default function FormBuilderPage() {
   const updateFormMutation = trpc.form.update.useMutation({
     onSuccess: () => {
       toast.success("Form changes saved successfully!");
-      router.refresh();
+      router.push("/dashboard");
     },
     onError: (err) => {
       toast.error(err.message || "Failed to save form changes.");

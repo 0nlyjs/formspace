@@ -21,12 +21,12 @@ async function main() {
   await db.delete(usersTable);
 
   console.log("Seeding admin demo account...");
-  const hashedPassword = await bcrypt.hash("password123", 10);
+  const hashedPassword = await bcrypt.hash("mist@2434", 10);
   const [admin] = await db
     .insert(usersTable)
     .values({
       fullName: "Formspace Judge",
-      email: "demo@formspace.com",
+      email: "test@mistjs.com",
       passwordHash: hashedPassword,
       emailVerified: true,
     })
@@ -35,7 +35,7 @@ async function main() {
   if (!admin) {
     throw new Error("Failed to create admin user");
   }
-  console.log(`Seeded User: ${admin.email} (Password: password123)`);
+  console.log(`Seeded User: ${admin.email} (Password: mist@2434)`);
 
   // ==========================================
   // FORM 1: Anime & Manga Explorer (Theme: anime, Visibility: public)
