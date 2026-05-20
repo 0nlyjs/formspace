@@ -1,135 +1,88 @@
-# Turborepo starter
+# Formspace
 
-This Turborepo starter is maintained by the Turborepo core team.
+Formspace is a high-fidelity, production-style form builder SaaS. It allows creators to build dynamic, themed forms with complex validation rules and provides respondents with an immersive, 3D-enhanced experience.
 
-## Using this example
+## ✨ Key Features
 
-Run the following command:
+- **Dynamic Form Builder**: Create forms with various field types including Short/Long Text, Email, Number, Single/Multi-select, Checkbox, Rating, and Date.
+- **Advanced Validation**: Powered by Zod for type-safe, robust schema validation for both form structure and respondent answers.
+- **Themed Experiences**: Immersive 3D backgrounds with interactive themes such as Anime, Cyberpunk (Tech), and Retro.
+- **Visibility Modes**:
+  - **Public**: Forms are searchable and listed in the global explore gallery.
+  - **Unlisted**: Forms are accessible only via a direct, unique link.
+- **Real-time Analytics**: Comprehensive dashboard to track submission counts, field-specific breakdowns (charts), and submission timelines.
+- **Automated Email Flows**: Automated notifications for creators upon new submissions and confirmation receipts for respondents.
+- **API-First Design**: Fully documented API using Scalar for easy integration.
+- **Security & Controls**: Password-protected forms, configurable response limits, and expiration dates.
 
-```sh
-npx create-turbo@latest
-```
+## 🛠️ Tech Stack
 
-## What's inside?
+- **Monorepo Management**: [Turborepo](https://turbo.build/)
+- **Frontend**: [Next.js](https://nextjs.org/), [Tailwind CSS](https://tailwindcss.com/), [Three.js](https://threejs.org/), [Radix UI](https://www.radix-ui.com/)
+- **Backend & API**: [tRPC](https://trpc.io/), [Express](https://expressjs.com/)
+- **Database & ORM**: [PostgreSQL](https://www.postgresql.org/), [Drizzle ORM](https://orm.drizzle.team/)
+- **Validation**: [Zod](https://zod.dev/)
+- **API Documentation**: [Scalar](https://scalar.com/)
 
-This Turborepo includes the following packages/apps:
+## 🚀 Getting Started
 
-### Apps and Packages
+### Prerequisites
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- Node.js (v18+)
+- [pnpm](https://pnpm.io/)
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+### Installation
 
-### Utilities
+1. **Clone the repository**
 
-This Turborepo has some additional tools already setup for you:
+   ```bash
+   git clone https://github.com/0nlyjs/formspace.git
+   cd formspace
+   ```
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+2. **Install dependencies**
 
-### Build
+   ```bash
+   pnpm install
+   ```
 
-To build all apps and packages, run the following command:
+3. **Environment Setup**
+   Create a `.env` file in the root directory. You will need to provide credentials for your PostgreSQL database and SMTP server.
 
-```
-cd my-turborepo
+   Example variables:
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
+   ```env
+   DATABASE_URL=postgresql://user:password@localhost:5432/formspace
+   SMTP_HOST=your_smtp_host
+   SMTP_PORT=587
+   SMTP_USER=your_smtp_user
+   SMTP_PASS=your_smtp_password
+   SMTP_FROM="Formspace <noreply@formspace.dev>"
+   BASE_URL=http://localhost:3001
+   NEXT_PUBLIC_APP_URL=http://localhost:3000
+   ```
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
+4. **Database Initialization**
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+   ```bash
+   pnpm db:generate
+   pnpm db:migrate
+   pnpm db:seed
+   ```
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+5. **Run Development Mode**
+   ```bash
+   pnpm dev
+   ```
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+## 🔑 Demo Credentials
 
-### Develop
+Use these credentials to explore the creator dashboard and management features:
 
-To develop all apps and packages, run the following command:
+- **Email**: `test@mistjs.com`
+- **Password**: `mist@2434`
 
-```
-cd my-turborepo
+## 📖 API Documentation
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+The API is fully documented using Scalar. When running the API locally, you can access the documentation at:
+`http://localhost:3001/docs`
