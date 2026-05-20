@@ -24,6 +24,8 @@ export const formsTable = pgTable("forms", {
   password: text("password"),
   expiresAt: timestamp("expires_at"),
   responseLimit: integer("response_limit"),
+  emailNotifications: boolean("email_notifications").default(true).notNull(),
+  emailConfirmations: boolean("email_confirmations").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
 });

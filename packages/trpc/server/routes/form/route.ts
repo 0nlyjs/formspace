@@ -154,6 +154,8 @@ export const formRouter = router({
         password: z.string().nullable(),
         expiresAt: z.date().nullable(),
         responseLimit: z.number().nullable(),
+        emailNotifications: z.boolean(),
+        emailConfirmations: z.boolean(),
         fields: z.array(
           z.object({
             id: z.string(),
@@ -210,6 +212,8 @@ export const formRouter = router({
         password: z.string().optional().nullable(),
         expiresAt: z.date().optional().nullable(),
         responseLimit: z.number().optional().nullable(),
+        emailNotifications: z.boolean().optional(),
+        emailConfirmations: z.boolean().optional(),
         fields: z.array(FieldInputSchema),
       })
     )
@@ -257,6 +261,8 @@ export const formRouter = router({
           password: input.password || null,
           expiresAt: input.expiresAt || null,
           responseLimit: input.responseLimit || null,
+          emailNotifications: input.emailNotifications ?? true,
+          emailConfirmations: input.emailConfirmations ?? true,
         })
         .where(eq(formsTable.id, input.formId));
 

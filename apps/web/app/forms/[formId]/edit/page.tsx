@@ -67,6 +67,8 @@ export default function FormBuilderPage() {
   const [enablePassword, setEnablePassword] = useState(false);
   const [responseLimit, setResponseLimit] = useState<number | "">("");
   const [expiresAt, setExpiresAt] = useState<string>("");
+  const [emailNotifications, setEmailNotifications] = useState(true);
+  const [emailConfirmations, setEmailConfirmations] = useState(true);
 
   // Local Questions List State
   const [fields, setFields] = useState<FieldState[]>([]);
@@ -110,6 +112,8 @@ export default function FormBuilderPage() {
         setEnablePassword(false);
       }
       setResponseLimit(formData.responseLimit || "");
+      setEmailNotifications(formData.emailNotifications ?? true);
+      setEmailConfirmations(formData.emailConfirmations ?? true);
       
       if (formData.expiresAt) {
         const dateObj = new Date(formData.expiresAt);
@@ -306,6 +310,8 @@ export default function FormBuilderPage() {
       password: enablePassword && password ? password : null,
       expiresAt: expiresAt ? new Date(expiresAt) : null,
       responseLimit: responseLimit ? Number(responseLimit) : null,
+      emailNotifications,
+      emailConfirmations,
       fields: fields.map((f) => ({
         id: f.id,
         type: f.type,
@@ -629,6 +635,40 @@ export default function FormBuilderPage() {
                   onChange={(e) => setExpiresAt(e.target.value)}
                   className="bg-zinc-950 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-purple-500 transition-colors text-zinc-300"
                 />
+              </div>
+
+              {/* Email Settings */}
+              <div className="flex flex-col gap-2.5 pt-2.5 border-t border-white/5">
+                <h4 className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <Mail className="w-3.5 h-3.5 text-purple-400" />
+                  Email Dispatch Flow
+                </h4>
+
+                <div className="flex items-center justify-between bg-zinc-950/50 border border-white/5 rounded-xl p-2.5">
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-[11px] font-semibold text-zinc-200">Notify Creator</span>
+                    <span className="text-[9px] text-zinc-500 leading-tight">Email me on new submissions</span>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={emailNotifications}
+                    onChange={(e) => setEmailNotifications(e.target.checked)}
+                    className="w-3.5 h-3.5 accent-purple-500 rounded cursor-pointer"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between bg-zinc-950/50 border border-white/5 rounded-xl p-2.5">
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-[11px] font-semibold text-zinc-200">Respondent Receipt</span>
+                    <span className="text-[9px] text-zinc-500 leading-tight">Send confirmation to respondents</span>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={emailConfirmations}
+                    onChange={(e) => setEmailConfirmations(e.target.checked)}
+                    className="w-3.5 h-3.5 accent-indigo-500 rounded cursor-pointer"
+                  />
+                </div>
               </div>
             </div>
           </div>

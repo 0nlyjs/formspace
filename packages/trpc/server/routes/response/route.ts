@@ -2,8 +2,9 @@ import { z } from "../../schema";
 import { protectedProcedure, publicProcedure, router } from "../../trpc";
 import { generatePath } from "../../utils/path-generator";
 import { db, eq, and, sql, desc } from "@repo/database";
-import { formsTable, fieldsTable, responsesTable } from "@repo/database/schema";
+import { formsTable, fieldsTable, responsesTable, usersTable } from "@repo/database/schema";
 import { TRPCError } from "@trpc/server";
+import { emailService } from "../../services";
 
 const TAGS = ["Responses"];
 const getPath = generatePath("/responses");
@@ -145,6 +146,51 @@ export const responseRouter = router({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to submit response",
         });
+      }
+
+      // 4. Send Email Notifications/Confirmations in background
+      try {
+        const [creator] = await db
+          .select({ email: usersTable.email })
+          .from(usersTable)
+          .where(eq(usersTable.id, form.userId))
+          .limit(1);
+
+        if (creator) {
+          const emailAnswers = fields.map((f) => ({
+            label: f.label,
+            type: f.type,
+            value: validatedAnswers[f.id] !== undefined ? validatedAnswers[f.id] : "-",
+          }));
+
+          const emailField = fields.find((f) => f.type === "email");
+          const respondentEmail = emailField ? validatedAnswers[emailField.id] : null;
+
+          // Asynchronous non-blocking dispatch
+          (async () => {
+            try {
+              if (form.emailNotifications && creator.email) {
+                await emailService.sendCreatorNotification(
+                  creator.email,
+                  form.title,
+                  emailAnswers,
+                  response.id
+                );
+              }
+              if (form.emailConfirmations && respondentEmail && typeof respondentEmail === "string") {
+                await emailService.sendRespondentConfirmation(
+                  respondentEmail,
+                  form.title,
+                  emailAnswers
+                );
+              }
+            } catch (backgroundError) {
+              console.error("Error in background email sending process:", backgroundError);
+            }
+          })();
+        }
+      } catch (emailQueryError) {
+        console.error("Failed to initiate email sending:", emailQueryError);
       }
 
       return {
