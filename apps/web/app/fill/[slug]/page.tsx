@@ -272,7 +272,11 @@ export default function FormFillingPage() {
   };
 
   // Completion calculation
-  const progressPercent = fields.length > 0 ? Math.round(((currentIndex) / fields.length) * 100) : 0;
+  const progressPercent = isSubmitted
+    ? 100
+    : fields.length > 0
+    ? Math.round((currentIndex / fields.length) * 100)
+    : 0;
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white flex flex-col font-sans relative overflow-hidden">

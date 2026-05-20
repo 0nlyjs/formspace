@@ -25,6 +25,7 @@ import {
   ExternalLink,
   ChevronRight,
   TrendingUp,
+  Copy,
 } from "lucide-react";
 import {
   AreaChart,
@@ -371,6 +372,18 @@ export default function DashboardPage() {
                                 <Eye className="w-3.5 h-3.5" />
                               </Link>
                             )}
+
+                            <button
+                              onClick={() => {
+                                const url = `${window.location.origin}/fill/${form.slug}`;
+                                navigator.clipboard.writeText(url);
+                                toast.success("Form link copied to clipboard!");
+                              }}
+                              className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-zinc-300 transition-colors cursor-pointer"
+                              title="Copy form link"
+                            >
+                              <Copy className="w-3.5 h-3.5" />
+                            </button>
 
                             <button
                               onClick={() => {
