@@ -12,6 +12,11 @@ import { env } from "./env";
 
 export const app = express();
 
+app.use((req, res, next) => {
+  console.log(`[Express API] ${req.method} ${req.url}`);
+  next();
+});
+
 const openApiDocument = generateOpenApiDocument(serverRouter, {
   title: "Formspace OpenAPI Docs",
   description: "Production-style Form Builder SaaS APIs with 3D templates support",

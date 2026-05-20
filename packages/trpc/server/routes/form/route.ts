@@ -100,7 +100,7 @@ export const formRouter = router({
 
   list: protectedProcedure
     .meta({ openapi: { method: "GET", path: getPath("/list"), tags: TAGS } })
-    .input(z.any().optional())
+    .input(z.object({}).optional().default({}))
     .output(
       z.array(
         z.object({
