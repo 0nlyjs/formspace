@@ -155,7 +155,7 @@ async function main() {
   }
 
   // ==========================================
-  // FORM 2: Cyberpunk OS Survey (Theme: tech, Visibility: unlisted)
+  // FORM 2: Cyberpunk OS Survey (Theme: tech, Visibility: public)
   // ==========================================
   console.log("Seeding Cyberpunk OS Survey form...");
   const [techForm] = await db
@@ -163,10 +163,10 @@ async function main() {
     .values({
       userId: admin.id,
       title: "Cyberpunk Developer OS Survey",
-      description: "Unlisted diagnostic of host terminals and preferred runtime compilers.",
+      description: "Explore the ultimate neon grids, host terminal preferences, and modern package compilers.",
       slug: "tech-os-survey",
       theme: "tech",
-      visibility: "unlisted",
+      visibility: "public",
       status: "published",
     })
     .returning();

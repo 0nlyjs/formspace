@@ -41,10 +41,29 @@ export default function DashboardPage() {
   
   // Create form state
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [closingModal, setClosingModal] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newDesc, setNewDesc] = useState("");
   const [newTheme, setNewTheme] = useState<"anime" | "tech" | "retro">("anime");
   const [newVisibility, setNewVisibility] = useState<"public" | "unlisted">("public");
+
+  // Smooth close: trigger exit animation, then unmount
+  const closeModal = React.useCallback(() => {
+    setClosingModal(true);
+    setTimeout(() => {
+      setShowCreateModal(false);
+      setClosingModal(false);
+      setIsRedirecting(false);
+    }, 220); // matches exit animation duration
+  }, []);
+
+  // Reset redirection state when modal closes
+  React.useEffect(() => {
+    if (!showCreateModal) {
+      setIsRedirecting(false);
+    }
+  }, [showCreateModal]);
 
   // Selected form for analytics
   const [selectedAnalyticsFormId, setSelectedAnalyticsFormId] = useState<string>("");
@@ -79,7 +98,7 @@ export default function DashboardPage() {
   const createFormMutation = trpc.form.create.useMutation({
     onSuccess: (form) => {
       toast.success("Form created successfully!");
-      setShowCreateModal(false);
+      setIsRedirecting(true);
       setNewTitle("");
       setNewDesc("");
       refetchForms();
@@ -277,7 +296,7 @@ export default function DashboardPage() {
                   <p className="text-sm text-zinc-400 mt-0.5">Create, edit, and publish dynamic schemas.</p>
                 </div>
                 <button
-                  onClick={() => setShowCreateModal(true)}
+                  onClick={() => { setClosingModal(false); setShowCreateModal(true); }}
                   className="bg-white text-zinc-950 hover:bg-zinc-200 font-bold px-4 py-2.5 rounded-xl text-sm flex items-center gap-1.5 transition-all shadow-md shadow-white/5 cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
@@ -301,7 +320,7 @@ export default function DashboardPage() {
                     </p>
                   </div>
                   <button
-                    onClick={() => setShowCreateModal(true)}
+                    onClick={() => { setClosingModal(false); setShowCreateModal(true); }}
                     className="bg-white text-zinc-950 px-4 py-2 rounded-xl text-xs font-bold hover:bg-zinc-200 transition-colors cursor-pointer"
                   >
                     Get Started
@@ -360,10 +379,12 @@ export default function DashboardPage() {
                               <Link
                                 href={`/fill/${form.slug}`}
                                 target="_blank"
-                                className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-zinc-300 transition-colors"
-                                title="Open filling page"
+                                className="group/btn relative w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-zinc-300 transition-colors"
                               >
                                 <Eye className="w-3.5 h-3.5" />
+                                <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-zinc-950 text-[9px] font-bold text-white border border-white/10 rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-100 whitespace-nowrap shadow-xl z-20">
+                                  Open Form
+                                </span>
                               </Link>
                             )}
 
@@ -373,10 +394,12 @@ export default function DashboardPage() {
                                 navigator.clipboard.writeText(url);
                                 toast.success("Form link copied to clipboard!");
                               }}
-                              className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-zinc-300 transition-colors cursor-pointer"
-                              title="Copy form link"
+                              className="group/btn relative w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-zinc-300 transition-colors cursor-pointer"
                             >
                               <Copy className="w-3.5 h-3.5" />
+                              <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-zinc-950 text-[9px] font-bold text-white border border-white/10 rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-100 whitespace-nowrap shadow-xl z-20">
+                                Copy Link
+                              </span>
                             </button>
 
                             <button
@@ -384,18 +407,22 @@ export default function DashboardPage() {
                                 setSelectedAnalyticsFormId(form.id);
                                 setActiveTab("analytics");
                               }}
-                              className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-zinc-300 transition-colors cursor-pointer"
-                              title="View Analytics"
+                              className="group/btn relative w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-zinc-300 transition-colors cursor-pointer"
                             >
                               <BarChart2 className="w-3.5 h-3.5" />
+                              <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-zinc-950 text-[9px] font-bold text-white border border-white/10 rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-100 whitespace-nowrap shadow-xl z-20">
+                                View Analytics
+                              </span>
                             </button>
 
                             <Link
                               href={`/forms/${form.id}/edit`}
-                              className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-zinc-300 transition-colors"
-                              title="Edit fields"
+                              className="group/btn relative w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-zinc-300 transition-colors"
                             >
                               <Edit className="w-3.5 h-3.5" />
+                              <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-zinc-950 text-[9px] font-bold text-white border border-white/10 rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-100 whitespace-nowrap shadow-xl z-20">
+                                Edit Fields
+                              </span>
                             </Link>
 
                             <button
@@ -404,10 +431,12 @@ export default function DashboardPage() {
                                   deleteFormMutation.mutate({ formId: form.id });
                                 }
                               }}
-                              className="w-8 h-8 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 flex items-center justify-center text-red-400 transition-colors cursor-pointer"
-                              title="Delete form"
+                              className="group/btn relative w-8 h-8 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 flex items-center justify-center text-red-400 transition-colors cursor-pointer"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
+                              <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-zinc-950 text-[9px] font-bold text-white border border-white/10 rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-100 whitespace-nowrap shadow-xl z-20">
+                                Delete Form
+                              </span>
                             </button>
                           </div>
                         </div>
@@ -704,133 +733,159 @@ export default function DashboardPage() {
               </div>
             </div>
           )}
+
         </main>
       </div>
 
       {/* CREATE FORM DIALOG / WIZARD MODAL */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="bg-zinc-900 border border-white/10 rounded-3xl p-8 max-w-lg w-full flex flex-col gap-6 animate-zoomIn relative">
-            <div>
-              <h2 className="text-xl font-bold">Create a New Form</h2>
-              <p className="text-xs text-zinc-400 mt-1">Specify basic settings and pick a visual template style.</p>
-            </div>
-
-            <form onSubmit={handleCreateFormSubmit} className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Form Title</label>
-                <input
-                  type="text"
-                  placeholder="e.g. User Feedback Survey"
-                  value={newTitle}
-                  onChange={(e) => setNewTitle(e.target.value)}
-                  className="bg-zinc-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500 transition-colors"
-                  required
-                />
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Description (Optional)</label>
-                <textarea
-                  placeholder="Summarize the intent of this form..."
-                  value={newDesc}
-                  onChange={(e) => setNewDesc(e.target.value)}
-                  className="bg-zinc-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500 transition-colors h-20"
-                />
-              </div>
-
-              {/* Theme Template Selection */}
-              <div className="flex flex-col gap-2">
-                <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Choose Theme Template</label>
-                
-                <div className="grid grid-cols-3 gap-2.5">
-                  {/* Anime */}
-                  <button
-                    type="button"
-                    onClick={() => setNewTheme("anime")}
-                    className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-center transition-all cursor-pointer ${
-                      newTheme === "anime"
-                        ? "bg-pink-500/10 border-pink-500/40 text-pink-400"
-                        : "bg-zinc-950 border-white/5 text-zinc-400 hover:border-white/10"
-                    }`}
-                  >
-                    <Flame className="w-5 h-5" />
-                    <span className="text-[10px] font-bold">Anime</span>
-                  </button>
-
-                  {/* Tech */}
-                  <button
-                    type="button"
-                    onClick={() => setNewTheme("tech")}
-                    className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-center transition-all cursor-pointer ${
-                      newTheme === "tech"
-                        ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-400"
-                        : "bg-zinc-950 border-white/5 text-zinc-400 hover:border-white/10"
-                    }`}
-                  >
-                    <Terminal className="w-5 h-5" />
-                    <span className="text-[10px] font-bold">Cyberpunk</span>
-                  </button>
-
-                  {/* Retro */}
-                  <button
-                    type="button"
-                    onClick={() => setNewTheme("retro")}
-                    className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-center transition-all cursor-pointer ${
-                      newTheme === "retro"
-                        ? "bg-amber-500/10 border-amber-500/40 text-amber-400"
-                        : "bg-zinc-950 border-white/5 text-zinc-400 hover:border-white/10"
-                    }`}
-                  >
-                    <Sparkles className="w-5 h-5" />
-                    <span className="text-[10px] font-bold">Retro</span>
-                  </button>
+        <div
+          className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${closingModal ? 'modal-backdrop-exit' : 'modal-backdrop-enter'}`}
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(6px)' }}
+          onClick={(e) => { if (e.target === e.currentTarget && !isRedirecting) closeModal(); }}
+        >
+          <div className={`bg-zinc-900 border border-white/10 rounded-3xl p-8 max-w-lg w-full flex flex-col gap-6 relative ${closingModal ? 'modal-panel-exit' : 'modal-panel-enter'}`}>
+            {isRedirecting ? (
+              <div className="flex flex-col items-center justify-center py-12 gap-5 text-center content-fade-in">
+                <div className="relative w-16 h-16 flex items-center justify-center">
+                  <div className="absolute inset-0 rounded-full bg-purple-500/20 animate-ping" />
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-white shadow-lg shadow-purple-500/25">
+                    <Loader2 className="w-6 h-6 animate-spin" />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-xl font-black bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent animate-pulse">
+                    Assembling Workspace...
+                  </h3>
+                  <p className="text-xs text-zinc-400 max-w-xs leading-relaxed font-medium">
+                    Initializing your 3D canvas, configuring fields, and loading Sakura stardust particle fields. Please wait!
+                  </p>
                 </div>
               </div>
-
-              {/* Visibility selection */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Visibility Mode</label>
-                <div className="flex gap-4 bg-zinc-950 border border-white/10 p-1 rounded-xl">
-                  <button
-                    type="button"
-                    onClick={() => setNewVisibility("public")}
-                    className={`flex-grow font-bold py-2 rounded-lg text-xs cursor-pointer ${
-                      newVisibility === "public" ? "bg-white text-zinc-950" : "text-zinc-400 hover:text-white"
-                    }`}
-                  >
-                    Public (Shown in explore)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setNewVisibility("unlisted")}
-                    className={`flex-grow font-bold py-2 rounded-lg text-xs cursor-pointer ${
-                      newVisibility === "unlisted" ? "bg-white text-zinc-950" : "text-zinc-400 hover:text-white"
-                    }`}
-                  >
-                    Unlisted (Link only)
-                  </button>
+            ) : (
+              <div className="content-fade-in">
+                <div>
+                  <h2 className="text-xl font-bold">Create a New Form</h2>
+                  <p className="text-xs text-zinc-400 mt-1">Specify basic settings and pick a visual template style.</p>
                 </div>
-              </div>
 
-              <div className="flex gap-3 mt-4">
-                <button
-                  type="button"
-                  onClick={() => setShowCreateModal(false)}
-                  className="flex-1 border border-white/10 hover:bg-white/5 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={createFormMutation.isPending}
-                  className="flex-1 bg-white hover:bg-zinc-200 text-zinc-950 py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-white/5"
-                >
-                  {createFormMutation.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
-                  Confirm
-                </button>
+                <form onSubmit={handleCreateFormSubmit} className="flex flex-col gap-4 mt-6">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Form Title</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. User Feedback Survey"
+                      value={newTitle}
+                      onChange={(e) => setNewTitle(e.target.value)}
+                      className="bg-zinc-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500 transition-all duration-200"
+                      required
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Description (Optional)</label>
+                    <textarea
+                      placeholder="Summarize the intent of this form..."
+                      value={newDesc}
+                      onChange={(e) => setNewDesc(e.target.value)}
+                      className="bg-zinc-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500 transition-all duration-200 h-20"
+                    />
+                  </div>
+
+                  {/* Theme Template Selection */}
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Choose Theme Template</label>
+                    
+                    <div className="grid grid-cols-3 gap-2.5">
+                      {/* Anime */}
+                      <button
+                        type="button"
+                        onClick={() => setNewTheme("anime")}
+                        className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-center transition-all duration-200 cursor-pointer ${
+                          newTheme === "anime"
+                            ? "bg-pink-500/10 border-pink-500/40 text-pink-400 scale-[1.03]"
+                            : "bg-zinc-950 border-white/5 text-zinc-400 hover:border-white/10 hover:scale-[1.02]"
+                        }`}
+                      >
+                        <Flame className="w-5 h-5" />
+                        <span className="text-[10px] font-bold">Anime</span>
+                      </button>
+
+                      {/* Tech */}
+                      <button
+                        type="button"
+                        onClick={() => setNewTheme("tech")}
+                        className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-center transition-all duration-200 cursor-pointer ${
+                          newTheme === "tech"
+                            ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-400 scale-[1.03]"
+                            : "bg-zinc-950 border-white/5 text-zinc-400 hover:border-white/10 hover:scale-[1.02]"
+                        }`}
+                      >
+                        <Terminal className="w-5 h-5" />
+                        <span className="text-[10px] font-bold">Cyberpunk</span>
+                      </button>
+
+                      {/* Retro */}
+                      <button
+                        type="button"
+                        onClick={() => setNewTheme("retro")}
+                        className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-center transition-all duration-200 cursor-pointer ${
+                          newTheme === "retro"
+                            ? "bg-amber-500/10 border-amber-500/40 text-amber-400 scale-[1.03]"
+                            : "bg-zinc-950 border-white/5 text-zinc-400 hover:border-white/10 hover:scale-[1.02]"
+                        }`}
+                      >
+                        <Sparkles className="w-5 h-5" />
+                        <span className="text-[10px] font-bold">Retro</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Visibility selection */}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Visibility Mode</label>
+                    <div className="flex gap-4 bg-zinc-950 border border-white/10 p-1 rounded-xl">
+                      <button
+                        type="button"
+                        onClick={() => setNewVisibility("public")}
+                        className={`flex-grow font-bold py-2 rounded-lg text-xs cursor-pointer transition-all duration-200 ${
+                          newVisibility === "public" ? "bg-white text-zinc-950 shadow-sm" : "text-zinc-400 hover:text-white"
+                        }`}
+                      >
+                        Public (Shown in explore)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setNewVisibility("unlisted")}
+                        className={`flex-grow font-bold py-2 rounded-lg text-xs cursor-pointer transition-all duration-200 ${
+                          newVisibility === "unlisted" ? "bg-white text-zinc-950 shadow-sm" : "text-zinc-400 hover:text-white"
+                        }`}
+                      >
+                        Unlisted (Link only)
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 mt-4">
+                    <button
+                      type="button"
+                      onClick={() => closeModal()}
+                      className="flex-1 border border-white/10 hover:bg-white/5 py-3 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={createFormMutation.isPending}
+                      className="flex-1 bg-white hover:bg-zinc-200 text-zinc-950 py-3 rounded-xl text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-white/5 disabled:opacity-60"
+                    >
+                      {createFormMutation.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
+                      Confirm
+                    </button>
+                  </div>
+                </form>
               </div>
-            </form>
+            )}
           </div>
         </div>
       )}

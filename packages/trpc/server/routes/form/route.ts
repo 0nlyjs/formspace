@@ -1,8 +1,8 @@
 import { z } from "../../schema";
 import { protectedProcedure, publicProcedure, router } from "../../trpc";
 import { generatePath } from "../../utils/path-generator";
-import { db, eq, and, sql, asc } from "@repo/database";
-import { formsTable, fieldsTable, responsesTable } from "@repo/database/schema";
+import { db, eq, and, sql, asc, desc } from "@repo/database";
+import { formsTable, fieldsTable, responsesTable, usersTable } from "@repo/database/schema";
 import { TRPCError } from "@trpc/server";
 
 const TAGS = ["Forms"];
@@ -336,6 +336,45 @@ export const formRouter = router({
       }
 
       return { success: true };
+    }),
+
+  listPublic: publicProcedure
+    .meta({ openapi: { method: "GET", path: getPath("/explore"), tags: TAGS } })
+    .input(z.object({}).optional().default({}))
+    .output(
+      z.array(
+        z.object({
+          id: z.string(),
+          title: z.string(),
+          description: z.string().nullable(),
+          slug: z.string(),
+          theme: z.string(),
+          createdAt: z.date().nullable(),
+          creatorName: z.string(),
+        })
+      )
+    )
+    .query(async () => {
+      const publicForms = await db
+        .select({
+          id: formsTable.id,
+          title: formsTable.title,
+          description: formsTable.description,
+          slug: formsTable.slug,
+          theme: formsTable.theme,
+          createdAt: formsTable.createdAt,
+          creatorName: usersTable.fullName,
+        })
+        .from(formsTable)
+        .innerJoin(usersTable, eq(formsTable.userId, usersTable.id))
+        .where(
+          and(
+            eq(formsTable.visibility, "public"),
+            eq(formsTable.status, "published")
+          )
+        )
+        .orderBy(desc(formsTable.createdAt));
+      return publicForms;
     }),
 
   getPublicBySlug: publicProcedure

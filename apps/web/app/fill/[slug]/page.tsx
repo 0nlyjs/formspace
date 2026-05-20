@@ -35,6 +35,18 @@ export default function FormFillingPage() {
   const [isTyping, setIsTyping] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  // Synchronous answer ref to prevent state-batching race conditions
+  const answersRef = useRef<Record<string, any>>({});
+  // Auto advance timer handle ref
+  const autoAdvanceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const clearAutoAdvance = () => {
+    if (autoAdvanceTimeoutRef.current) {
+      clearTimeout(autoAdvanceTimeoutRef.current);
+      autoAdvanceTimeoutRef.current = null;
+    }
+  };
+
   // Focus ref for auto-focusing inputs on slide change
   const inputRef = useRef<any>(null);
 
@@ -205,23 +217,36 @@ export default function FormFillingPage() {
   // ----------------------------------------------------
   const handleAnswerChange = (val: any) => {
     if (!activeField) return;
-    setAnswers({
-      ...answers,
+    const updatedAnswers = {
+      ...answersRef.current,
       [activeField.id]: val,
-    });
+    };
+    answersRef.current = updatedAnswers;
+    setAnswers(updatedAnswers);
   };
 
   const validateCurrentStep = (): boolean => {
     if (!activeField) return true;
-    const value = answers[activeField.id];
+    const value = answersRef.current[activeField.id];
 
     // Check required constraint
-    if (activeField.required && (value === undefined || value === null || value === "")) {
-      toast.warning(`Please complete this required question before moving forward.`);
-      return false;
+    if (activeField.required) {
+      if (activeField.type === "checkbox" && value !== "Yes") {
+        toast.warning(`Please accept the required statement before moving forward.`);
+        return false;
+      }
+      if (
+        value === undefined ||
+        value === null ||
+        value === "" ||
+        (Array.isArray(value) && value.length === 0)
+      ) {
+        toast.warning(`Please complete this required question before moving forward.`);
+        return false;
+      }
     }
 
-    if (value !== undefined && value !== null && value !== "") {
+    if (value !== undefined && value !== null && value !== "" && !(Array.isArray(value) && value.length === 0)) {
       // Validate email format
       if (activeField.type === "email") {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -242,6 +267,7 @@ export default function FormFillingPage() {
   };
 
   const handleNext = () => {
+    clearAutoAdvance();
     if (!validateCurrentStep()) return;
     setIsTyping(false);
 
@@ -251,12 +277,13 @@ export default function FormFillingPage() {
       // Trigger submission!
       submitMutation.mutate({
         formId: form.id,
-        answers,
+        answers: answersRef.current,
       });
     }
   };
 
   const handlePrev = () => {
+    clearAutoAdvance();
     setIsTyping(false);
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
@@ -289,7 +316,7 @@ export default function FormFillingPage() {
       <div className="flex-grow flex flex-col lg:flex-row z-10">
         
         {/* LEFT PANEL: 2D Step Questionnaire */}
-        <div className="w-full lg:w-[60%] flex flex-col justify-between p-6 md:p-16 lg:p-24 bg-zinc-950/85 backdrop-blur-md border-r border-white/5 h-full min-h-screen">
+        <div className="w-full lg:w-[60%] flex flex-col justify-between p-6 md:p-16 lg:p-24 bg-zinc-950/85 backdrop-blur-md border-r border-white/5 h-screen overflow-y-auto">
           
           {/* Header */}
           <div className="flex justify-between items-center mb-10">
@@ -409,16 +436,9 @@ export default function FormFillingPage() {
                             type="button"
                             onClick={() => {
                               handleAnswerChange(opt);
-                              // Auto advance single selects after a minor lag for satisfaction
-                              setTimeout(() => {
-                                if (currentIndex < fields.length - 1) {
-                                  setCurrentIndex(currentIndex + 1);
-                                } else {
-                                  submitMutation.mutate({
-                                    formId: form.id,
-                                    answers: { ...answers, [activeField.id]: opt },
-                                  });
-                                }
+                              clearAutoAdvance();
+                              autoAdvanceTimeoutRef.current = setTimeout(() => {
+                                handleNext();
                               }, 350);
                             }}
                             className={`w-full p-4 rounded-2xl border text-left font-bold text-sm transition-all flex justify-between items-center cursor-pointer ${
@@ -517,16 +537,9 @@ export default function FormFillingPage() {
                             type="button"
                             onClick={() => {
                               handleAnswerChange(starVal);
-                              // Auto advance rating selection
-                              setTimeout(() => {
-                                if (currentIndex < fields.length - 1) {
-                                  setCurrentIndex(currentIndex + 1);
-                                } else {
-                                  submitMutation.mutate({
-                                    formId: form.id,
-                                    answers: { ...answers, [activeField.id]: starVal },
-                                  });
-                                }
+                              clearAutoAdvance();
+                              autoAdvanceTimeoutRef.current = setTimeout(() => {
+                                handleNext();
                               }, 350);
                             }}
                             className="p-1 hover:scale-110 active:scale-95 transition-transform cursor-pointer"
@@ -558,13 +571,13 @@ export default function FormFillingPage() {
                 </div>
 
                 {/* Footer Controls */}
-                <div className="flex justify-between items-center mt-6 pt-4 border-t border-white/5 gap-4">
+                <div className="flex justify-between items-center mt-6 pt-4 border-t border-white/5 gap-4 relative z-20">
                   {/* Previous button */}
                   <button
                     type="button"
                     onClick={handlePrev}
                     disabled={currentIndex === 0}
-                    className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-white disabled:opacity-30 disabled:hover:text-zinc-400 cursor-pointer"
+                    className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-white disabled:opacity-30 disabled:hover:text-zinc-400 cursor-pointer relative z-30"
                   >
                     <ArrowLeft className="w-4 h-4" />
                     Back
@@ -575,7 +588,7 @@ export default function FormFillingPage() {
                     type="button"
                     onClick={handleNext}
                     disabled={submitMutation.isPending}
-                    className={`px-6 py-3 font-extrabold rounded-2xl text-xs flex items-center gap-1.5 cursor-pointer shadow-md transition-all active:scale-[0.98] ${style.buttonColor}`}
+                    className={`px-6 py-3 font-extrabold rounded-2xl text-xs flex items-center gap-1.5 cursor-pointer shadow-md transition-all active:scale-[0.98] ${style.buttonColor} relative z-30`}
                   >
                     {submitMutation.isPending ? (
                       <>
@@ -615,6 +628,7 @@ export default function FormFillingPage() {
                 
                 <button
                   onClick={() => {
+                    answersRef.current = {};
                     setAnswers({});
                     setCurrentIndex(0);
                     setIsSubmitted(false);
@@ -628,7 +642,7 @@ export default function FormFillingPage() {
           </AnimatePresence>
 
           {/* Stepper Progress indicators */}
-          <div className="mt-10 flex flex-col gap-2 max-w-xl mx-auto w-full">
+          <div className="mt-10 flex flex-col gap-2 max-w-xl mx-auto w-full pointer-events-none">
             <div className="flex justify-between items-center text-[10px] text-zinc-500 font-bold">
               <span>PROGRESS</span>
               <span>{progressPercent}% COMPLETE</span>

@@ -74,14 +74,27 @@ export const responseRouter = router({
         const value = input.answers[field.id];
 
         // Check required fields
-        if (field.required && (value === undefined || value === null || value === "")) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: `Question "${field.label}" is required`,
-          });
+        if (field.required) {
+          if (field.type === "checkbox" && value !== "Yes") {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: `You must check the required box for "${field.label}"`,
+            });
+          }
+          if (
+            value === undefined ||
+            value === null ||
+            value === "" ||
+            (Array.isArray(value) && value.length === 0)
+          ) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: `Question "${field.label}" is required`,
+            });
+          }
         }
 
-        if (value !== undefined && value !== null && value !== "") {
+        if (value !== undefined && value !== null && value !== "" && !(Array.isArray(value) && value.length === 0)) {
           // Perform basic format validations
           if (field.type === "email" && typeof value === "string") {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

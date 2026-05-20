@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { trpc } from "~/trpc/client";
 import { ThreeBackground } from "~/components/ThreeBackground";
-import { Sparkles, Terminal, Flame, ArrowRight, Play } from "lucide-react";
+import { Sparkles, Terminal, Flame, ArrowRight, Play, User, ExternalLink, Copy, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 export default function Home() {
   const [selectedTheme, setSelectedTheme] = useState<"anime" | "tech" | "retro">("anime");
@@ -12,6 +13,11 @@ export default function Home() {
   // Query session to conditionally toggle header action
   const { data: me } = trpc.auth.me.useQuery(undefined, {
     retry: false,
+    refetchOnWindowFocus: false,
+  });
+
+  // Query public explore forms
+  const { data: publicForms, isLoading: publicFormsLoading } = trpc.form.listPublic.useQuery(undefined, {
     refetchOnWindowFocus: false,
   });
 
@@ -160,6 +166,103 @@ export default function Home() {
             </button>
           </div>
         </div>
+      </section>
+
+      {/* PUBLIC EXPLORE & TEMPLATE GALLERY */}
+      <section className="relative px-6 py-16 md:py-24 md:px-12 max-w-7xl mx-auto w-full z-10 border-t border-white/5 flex flex-col gap-10">
+        <div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 w-max text-xs font-semibold text-purple-300 mb-4 animate-pulse">
+            <Sparkles className="w-3.5 h-3.5 text-purple-400" />
+            Featured Galleries & Templates
+          </div>
+          <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight">
+            Explore public forms.
+          </h2>
+          <p className="text-sm md:text-base text-zinc-400 mt-2 max-w-2xl font-medium">
+            Test high-fidelity interactive forms built by the Formspace community. Tap into beautiful animations and live reactions.
+          </p>
+        </div>
+
+        {publicFormsLoading ? (
+          <div className="py-12 flex justify-center">
+            <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
+          </div>
+        ) : !publicForms || publicForms.length === 0 ? (
+          <div className="border border-white/5 bg-zinc-900/10 p-12 rounded-3xl text-center flex flex-col items-center gap-4">
+            <p className="text-sm text-zinc-500">No public forms found in the explore registry yet.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {publicForms.map((form) => (
+              <div
+                key={form.id}
+                className="group/explore bg-zinc-900/30 border border-white/5 hover:border-purple-500/30 hover:bg-zinc-900/50 p-6 rounded-2xl flex flex-col justify-between gap-5 transition-all duration-300 relative overflow-hidden"
+              >
+                {/* Glowing highlight on hover */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/0 via-pink-500/0 to-purple-500/5 opacity-0 group-hover/explore:opacity-100 transition-opacity duration-300" />
+
+                <div className="flex flex-col gap-3 relative z-10">
+                  <div className="flex justify-between items-start gap-2">
+                    {/* Theme badge */}
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider ${
+                      form.theme === "anime"
+                        ? "bg-pink-500/10 text-pink-400 border border-pink-500/20"
+                        : form.theme === "tech"
+                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                        : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                    }`}>
+                      {form.theme === "anime" ? "🌸 Anime" : form.theme === "tech" ? "🌐 Cyberpunk" : "👾 Retro"}
+                    </span>
+
+                    <span className="text-[10px] font-semibold text-zinc-500">
+                      {form.createdAt ? new Date(form.createdAt).toLocaleDateString() : ""}
+                    </span>
+                  </div>
+
+                  <div>
+                    <h4 className="font-extrabold text-lg text-zinc-100 group-hover/explore:text-white transition-colors line-clamp-1">{form.title}</h4>
+                    <p className="text-xs text-zinc-400 line-clamp-2 mt-1 min-h-[2rem] leading-relaxed">
+                      {form.description || "No description provided."}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-3.5 relative z-10 border-t border-white/5 pt-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-medium text-zinc-400 flex items-center gap-1.5">
+                      <User className="w-3.5 h-3.5 text-zinc-500" />
+                      By <span className="font-bold text-zinc-300">{form.creatorName}</span>
+                    </span>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <a
+                      href={`/fill/${form.slug}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex-grow bg-white text-zinc-950 hover:bg-zinc-200 py-3 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-white/5"
+                    >
+                      Open Form
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+
+                    <button
+                      onClick={() => {
+                        const url = `${window.location.origin}/fill/${form.slug}`;
+                        navigator.clipboard.writeText(url);
+                        toast.success("Public link copied to clipboard!");
+                      }}
+                      className="px-3.5 py-3 bg-white/5 hover:bg-white/10 border border-white/15 rounded-xl text-xs font-bold transition-all flex items-center justify-center text-zinc-300 hover:text-white cursor-pointer"
+                      title="Copy Public Link"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Footer */}
