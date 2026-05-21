@@ -25,6 +25,17 @@ export default function LoginPage() {
     }
   }, [me, router]);
 
+  const loginMutation = trpc.auth.login.useMutation({
+    onSuccess: (user) => {
+      toast.success(`Welcome back, ${user.fullName}!`);
+      // Force hard-reload immediately to set cookies/state and overwrite the history stack entry cleanly
+      window.location.replace("/dashboard");
+    },
+    onError: (err) => {
+      toast.error(err.message || "Failed to log in. Please check your credentials.");
+    },
+  });
+
   // While verifying, show a high-fidelity loading gate to skip the form flash
   if (meLoading || me) {
     return (
@@ -40,17 +51,6 @@ export default function LoginPage() {
       </div>
     );
   }
-
-  const loginMutation = trpc.auth.login.useMutation({
-    onSuccess: (user) => {
-      toast.success(`Welcome back, ${user.fullName}!`);
-      // Force hard-reload immediately to set cookies/state and overwrite the history stack entry cleanly
-      window.location.replace("/dashboard");
-    },
-    onError: (err) => {
-      toast.error(err.message || "Failed to log in. Please check your credentials.");
-    },
-  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

@@ -27,6 +27,17 @@ export default function SignupPage() {
     }
   }, [me, router]);
 
+  const signupMutation = trpc.auth.signup.useMutation({
+    onSuccess: (user) => {
+      toast.success(`Welcome to Formspace, ${user.fullName}!`);
+      // Force hard-reload immediately to set cookies/state and overwrite the history stack entry cleanly
+      window.location.replace("/dashboard");
+    },
+    onError: (err) => {
+      toast.error(err.message || "Failed to sign up. Please try again.");
+    },
+  });
+
   // While verifying, show a high-fidelity loading gate to skip the form flash
   if (meLoading || me) {
     return (
@@ -42,17 +53,6 @@ export default function SignupPage() {
       </div>
     );
   }
-
-  const signupMutation = trpc.auth.signup.useMutation({
-    onSuccess: (user) => {
-      toast.success(`Welcome to Formspace, ${user.fullName}!`);
-      // Force hard-reload immediately to set cookies/state and overwrite the history stack entry cleanly
-      window.location.replace("/dashboard");
-    },
-    onError: (err) => {
-      toast.error(err.message || "Failed to sign up. Please try again.");
-    },
-  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
