@@ -28,8 +28,9 @@ export default function SignupPage() {
   }, [me, router]);
 
   const signupMutation = trpc.auth.signup.useMutation({
-    onSuccess: (user) => {
-      toast.success(`Welcome to Formspace, ${user.fullName}!`);
+    onSuccess: (res) => {
+      localStorage.setItem("token", res.token);
+      toast.success(`Welcome to Formspace, ${res.fullName}!`);
       // Force hard-reload immediately to set cookies/state and overwrite the history stack entry cleanly
       window.location.replace("/dashboard");
     },

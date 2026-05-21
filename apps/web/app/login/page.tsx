@@ -26,8 +26,9 @@ export default function LoginPage() {
   }, [me, router]);
 
   const loginMutation = trpc.auth.login.useMutation({
-    onSuccess: (user) => {
-      toast.success(`Welcome back, ${user.fullName}!`);
+    onSuccess: (res) => {
+      localStorage.setItem("token", res.token);
+      toast.success(`Welcome back, ${res.fullName}!`);
       // Force hard-reload immediately to set cookies/state and overwrite the history stack entry cleanly
       window.location.replace("/dashboard");
     },

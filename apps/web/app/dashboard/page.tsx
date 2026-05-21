@@ -125,6 +125,7 @@ export default function DashboardPage() {
 
   const logoutMutation = trpc.auth.logout.useMutation({
     onSuccess: () => {
+      localStorage.removeItem("token");
       toast.success("Signed out successfully.");
       router.push("/");
       setTimeout(() => {

@@ -22,6 +22,7 @@ export const authRouter = router({
         fullName: z.string(),
         email: z.string(),
         profileImageUrl: z.string().nullable().optional(),
+        token: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -41,7 +42,7 @@ export const authRouter = router({
         });
       }
 
-      return user;
+      return { ...user, token };
     }),
 
   login: publicProcedure
@@ -58,6 +59,7 @@ export const authRouter = router({
         fullName: z.string(),
         email: z.string(),
         profileImageUrl: z.string().nullable().optional(),
+        token: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -77,7 +79,7 @@ export const authRouter = router({
         });
       }
 
-      return user;
+      return { ...user, token };
     }),
 
   logout: publicProcedure

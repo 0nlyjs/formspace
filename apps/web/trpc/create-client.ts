@@ -38,8 +38,16 @@ export const createTRPCHttpBatchClientClient = (opts?: CreateTRPCHttpBatchClient
   return c({
     url: finalUrl,
     fetch(url, options) {
+      let token = "";
+      if (typeof window !== "undefined") {
+        token = localStorage.getItem("token") || "";
+      }
       return fetch(url, {
         ...options,
+        headers: {
+          ...options?.headers,
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         credentials: "include",
       });
     },
