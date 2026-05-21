@@ -8,8 +8,7 @@ export default defineConfig({
   bundle: true,
   outDir: "./dist",
   clean: true,
-  format: ["esm"], // output ESM so ESM-only packages like @scalar work
-  outExtension: () => ({ js: ".mjs" }),
+  format: ["cjs"], // back to CJS
   env: { IS_SERVER_BUILD: "true" },
   loader: { ".json": "copy" },
   minify: true,
