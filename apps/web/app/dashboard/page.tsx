@@ -38,6 +38,11 @@ import {
 export default function DashboardPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<"forms" | "analytics" | "dev">("forms");
+  const [mounted, setMounted] = useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
   
   // Create form state
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -89,10 +94,11 @@ export default function DashboardPage() {
 
   // Redirect to login if not authenticated
   React.useEffect(() => {
+    if (!mounted) return;
     if (!userLoading && !user) {
       router.replace("/login");
     }
-  }, [user, userLoading, router]);
+  }, [user, userLoading, router, mounted]);
 
   // Mutations
   const createFormMutation = trpc.form.create.useMutation({

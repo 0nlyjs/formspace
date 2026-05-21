@@ -57,6 +57,8 @@ app.use(
   cors({
     origin: true,
     credentials: true, // Allow cookie session transmission
+    allowedHeaders: ["Authorization", "Content-Type", "Cookie"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   })
 );
 
