@@ -30,10 +30,12 @@ export const authRouter = router({
       // Generate and set session token in HTTP-only cookie
       const token = userService.generateToken(user.id);
       if (ctx.res) {
+        const isProd = !!(process.env.NODE_ENV === "production" || 
+                       (ctx.req && ctx.req.headers.origin && !ctx.req.headers.origin.includes("localhost")));
         ctx.res.cookie("token", token, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "lax",
+          secure: isProd,
+          sameSite: isProd ? "none" : "lax",
           path: "/",
           maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
@@ -64,10 +66,12 @@ export const authRouter = router({
       // Generate and set session token in HTTP-only cookie
       const token = userService.generateToken(user.id);
       if (ctx.res) {
+        const isProd = !!(process.env.NODE_ENV === "production" || 
+                       (ctx.req && ctx.req.headers.origin && !ctx.req.headers.origin.includes("localhost")));
         ctx.res.cookie("token", token, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "lax",
+          secure: isProd,
+          sameSite: isProd ? "none" : "lax",
           path: "/",
           maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
@@ -82,10 +86,12 @@ export const authRouter = router({
     .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx }) => {
       if (ctx.res) {
+        const isProd = !!(process.env.NODE_ENV === "production" || 
+                       (ctx.req && ctx.req.headers.origin && !ctx.req.headers.origin.includes("localhost")));
         ctx.res.clearCookie("token", {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "lax",
+          secure: isProd,
+          sameSite: isProd ? "none" : "lax",
           path: "/",
         });
       }
