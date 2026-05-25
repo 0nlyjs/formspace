@@ -52,7 +52,7 @@ const StaticBackground = () => (
     
     {/* Luminous Top-Left Brand Blue Orb - boosted intensity */}
     <div 
-      className="absolute -top-[15%] -left-[10%] w-[55vw] h-[55vw] rounded-full opacity-[1]"
+      className="absolute -top-[15%] -left-[10%] w-[55vw] h-[55vw] rounded-full opacity-[1] animate-orb-1"
       style={{
         background: 'radial-gradient(circle, rgba(82, 163, 221, 0.45) 0%, rgba(82, 163, 221, 0.12) 45%, rgba(5, 5, 5, 0) 75%)',
         filter: 'blur(60px)',
@@ -61,7 +61,7 @@ const StaticBackground = () => (
 
     {/* Luminous Bottom-Right Brand Orange Orb (Static & anti-aliased CSS gradient glow - 10% smaller) */}
     <div 
-      className="absolute -bottom-[15%] -right-[10%] w-[55vw] h-[55vw] rounded-full opacity-[0.7]"
+      className="absolute -bottom-[15%] -right-[10%] w-[55vw] h-[55vw] rounded-full opacity-[0.7] animate-orb-2"
       style={{
         background: 'radial-gradient(circle, rgba(228, 121, 57, 0.07) 0%, rgba(5, 5, 5, 0) 75%)',
       }}

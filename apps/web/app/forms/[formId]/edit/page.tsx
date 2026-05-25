@@ -51,6 +51,39 @@ interface FieldState {
   order: number;
 }
 
+const StaticBackground = () => (
+  <div className="absolute inset-0 w-full h-full bg-[#050505] z-0 pointer-events-none select-none overflow-hidden">
+    {/* Subtle Cyberpunk/Tech Grid Overlay */}
+    <div 
+      className="absolute inset-0 opacity-[0.35]"
+      style={{
+        backgroundImage: `
+          linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px)
+        `,
+        backgroundSize: '48px 48px',
+      }}
+    />
+    
+    {/* Luminous Top-Left Brand Blue Orb - boosted intensity & animated */}
+    <div 
+      className="absolute -top-[15%] -left-[10%] w-[55vw] h-[55vw] rounded-full opacity-[1] animate-orb-1"
+      style={{
+        background: 'radial-gradient(circle, rgba(82, 163, 221, 0.45) 0%, rgba(82, 163, 221, 0.12) 45%, rgba(5, 5, 5, 0) 75%)',
+        filter: 'blur(60px)',
+      }}
+    />
+
+    {/* Luminous Bottom-Right Brand Orange Orb - animated */}
+    <div 
+      className="absolute -bottom-[15%] -right-[10%] w-[55vw] h-[55vw] rounded-full opacity-[0.7] animate-orb-2"
+      style={{
+        background: 'radial-gradient(circle, rgba(228, 121, 57, 0.07) 0%, rgba(5, 5, 5, 0) 75%)',
+      }}
+    />
+  </div>
+);
+
 export default function FormBuilderPage() {
   const router = useRouter();
   const params = useParams();
@@ -147,10 +180,14 @@ export default function FormBuilderPage() {
 
   if (formLoading) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-white">
-        <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
-          <p className="text-sm text-zinc-400">Loading form builder canvas...</p>
+      <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center text-[#e5e2e1] relative font-sans">
+        <StaticBackground />
+        <div className="glass-level-1 bg-[#0a0a0a]/50 rounded-2xl p-8 text-center max-w-sm flex flex-col gap-3 items-center z-10 shadow-2xl">
+          <Loader2 className="w-8 h-8 animate-spin text-[#52a3dd] mb-2" />
+          <h3 className="font-bold text-sm text-[#e5e2e1] tracking-wide">Loading builder space...</h3>
+          <p className="text-xs text-[#bfc7d1] leading-relaxed">
+            Retrieving dynamic schema blueprints and loading 3D assets.
+          </p>
         </div>
       </div>
     );
@@ -158,18 +195,20 @@ export default function FormBuilderPage() {
 
   if (loadError || !formData) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-white p-6">
-        <div className="bg-zinc-900 border border-white/10 p-8 rounded-3xl text-center max-w-md flex flex-col gap-4 items-center">
-          <Lock className="w-12 h-12 text-red-400" />
+      <div className="min-h-screen bg-[#050505] flex items-center justify-center text-[#e5e2e1] relative font-sans p-6">
+        <StaticBackground />
+        <div className="glass-level-1 bg-[#0a0a0a]/50 p-8 rounded-2xl text-center max-w-md flex flex-col gap-4 items-center z-10 shadow-2xl">
+          <Lock className="w-12 h-12 text-[#E47939]" />
           <div>
-            <h2 className="text-xl font-bold">Error Loading Form</h2>
-            <p className="text-sm text-zinc-400 mt-1">
+            <h2 className="text-xl font-bold text-white">Error Loading Form</h2>
+            <p className="text-sm text-[#bfc7d1] mt-1">
               {loadError?.message || "This form might not exist or you do not have administrative permissions."}
             </p>
           </div>
           <Link
             href="/dashboard"
-            className="w-full bg-white text-zinc-950 font-bold py-3 rounded-2xl hover:bg-zinc-200 transition-colors"
+            className="w-full text-center text-white font-bold py-3 rounded-xl transition-all cursor-pointer shadow-md"
+            style={{ background: 'linear-gradient(90deg, #52A3DD 0%, #E47939 100%)' }}
           >
             Back to Dashboard
           </Link>
@@ -354,26 +393,34 @@ export default function FormBuilderPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white flex flex-col font-sans">
+    <div className="min-h-screen bg-[#050505] text-[#e5e2e1] flex flex-col font-sans relative overflow-hidden select-none">
+      <StaticBackground />
       {/* Top Header / Action Bar */}
-      <header className="border-b border-white/5 bg-zinc-900/60 backdrop-blur-md px-6 py-4 flex flex-wrap justify-between items-center z-20 gap-4">
+      <header className="border-b border-white/5 bg-[#050505]/40 backdrop-blur-md px-6 py-4 flex flex-wrap justify-between items-center z-20 gap-4 relative">
         <div className="flex items-center gap-3">
           <Link
             href="/dashboard"
-            className="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-zinc-300 transition-colors"
+            className="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-zinc-300 transition-all duration-200"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
-          <div>
+          <img 
+            id="app-logo"
+            alt="FormSpace Logo" 
+            className="h-7 object-contain w-auto select-none mr-1.5" 
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIN8_hMTBYEGrpk3uRvOfz07E8YNUiGE687uhRHfb1clW0yc8X6UDsun8-_OG6Dlx6QnaLaltNfBAqCsAy1i1bW_45Npo79qXLRzOMICMhscWGiyqAQyqPKVIxlQgjpt5Xe9iD5GQoQYzk3PP3VtwvbJQ7EYNTrYYxpHaC4RIk9M6dUIDW3qZ8VNf5uhSzI2aMiFE3XrnYmjlNgTj3lPGYH_0lP8uT0CwAz5nWqZbfVqbN2YP6uwyLCshPyrGGTFuppmqo_L3XBvM7"
+            referrerPolicy="no-referrer"
+          />
+          <div className="border-l border-white/10 pl-3">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+              <span className="text-[10px] font-bold text-[#52a3dd] uppercase tracking-widest">
                 Form Builder Space
               </span>
               <span
                 className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-full ${
                   status === "published"
                     ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/25"
-                    : "bg-zinc-800 text-zinc-400 border border-white/5"
+                    : "bg-white/5 text-zinc-400 border border-white/5"
                 }`}
               >
                 {status}
@@ -401,7 +448,8 @@ export default function FormBuilderPage() {
           <button
             onClick={handleSave}
             disabled={updateFormMutation.isPending}
-            className="px-4 py-2.5 bg-gradient-to-r from-indigo-500 to-pink-500 hover:opacity-90 active:scale-[0.98] font-bold rounded-xl text-xs text-black flex items-center gap-1.5 transition-all cursor-pointer shadow-md shadow-indigo-500/10"
+            className="px-4 py-2.5 hover:opacity-90 active:scale-[0.98] font-bold rounded-xl text-xs text-white flex items-center gap-1.5 transition-all cursor-pointer shadow-md shadow-[0_0_20px_rgba(82,163,221,0.25)] hover:shadow-[0_0_30px_rgba(228,121,57,0.35)]"
+            style={{ background: 'linear-gradient(90deg, #52A3DD 0%, #E47939 100%)' }}
           >
             {updateFormMutation.isPending ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -417,12 +465,17 @@ export default function FormBuilderPage() {
       <div className="flex-grow flex flex-col lg:flex-row overflow-hidden h-[calc(100vh-73px)]">
         
         {/* LEFT COLUMN: Cyberpunk Form Settings Control panel */}
-        <aside className="w-full lg:w-[360px] border-b lg:border-b-0 lg:border-r border-white/5 bg-zinc-900/20 p-6 overflow-y-auto shrink-0 flex flex-col gap-6 scrollbar-thin">
-          <div className="flex items-center gap-2 border-b border-white/5 pb-3">
-            <Settings2 className="w-4 h-4 text-purple-400" />
-            <h2 className="text-xs font-black uppercase tracking-widest text-zinc-400">
-              Form Configuration
-            </h2>
+        <aside className="w-full lg:w-[360px] border-b lg:border-b-0 lg:border-r border-white/5 bg-[#08090b] p-6 overflow-y-auto shrink-0 flex flex-col gap-6 scrollbar-thin relative z-10">
+          <div className="flex items-center gap-3 border-b border-white/5 pb-4">
+            <img 
+              src="https://api.dicebear.com/7.x/avataaars/svg?seed=Shepard" 
+              className="w-10 h-10 rounded-full bg-[#13151a] border border-white/10 p-0.5 select-none" 
+              alt="Avatar" 
+            />
+            <div>
+              <p className="text-xs font-bold text-white leading-tight">Commander Shepard</p>
+              <p className="text-[9px] text-[#52a3dd] mt-0.5 leading-none font-semibold uppercase tracking-wider">Form Architect</p>
+            </div>
           </div>
 
           <div className="flex flex-col gap-4">
@@ -436,7 +489,7 @@ export default function FormBuilderPage() {
                 placeholder="Enter form title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="bg-zinc-950 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-purple-500 transition-colors"
+                className="bg-[#050505]/50 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#52a3dd] focus:ring-1 focus:ring-[#52a3dd]/50 transition-all outline-none text-[#e5e2e1]"
                 required
               />
             </div>
@@ -450,7 +503,7 @@ export default function FormBuilderPage() {
                 placeholder="Enter form description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="bg-zinc-950 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-purple-500 transition-colors h-14"
+                className="bg-[#050505]/50 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#52a3dd] focus:ring-1 focus:ring-[#52a3dd]/50 transition-all outline-none text-[#e5e2e1] h-14"
               />
             </div>
 
@@ -459,7 +512,7 @@ export default function FormBuilderPage() {
               <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
                 Unique Slug URL
               </label>
-              <div className="flex bg-zinc-950 border border-white/10 rounded-xl items-center overflow-hidden focus-within:border-purple-500 transition-all">
+              <div className="flex bg-[#050505]/50 border border-white/10 rounded-xl items-center overflow-hidden focus-within:border-[#52a3dd] focus-within:ring-1 focus-within:ring-[#52a3dd]/50 transition-all">
                 <span className="text-[10px] text-zinc-500 bg-zinc-900/50 border-r border-white/5 px-2.5 py-2 font-mono">
                   /fill/
                 </span>
@@ -468,7 +521,7 @@ export default function FormBuilderPage() {
                   placeholder="custom-slug"
                   value={slug}
                   onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-_]+/g, "-"))}
-                  className="bg-transparent border-none px-3 py-2 text-xs focus:outline-none w-full font-mono text-indigo-300"
+                  className="bg-transparent border-none px-3 py-2 text-xs focus:outline-none w-full font-mono text-[#52a3dd]"
                   required
                 />
               </div>
@@ -479,7 +532,7 @@ export default function FormBuilderPage() {
               <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
                 Visual Template Theme
               </label>
-              <div className="grid grid-cols-3 gap-2 bg-zinc-950 border border-white/10 p-1 rounded-xl">
+              <div className="grid grid-cols-3 gap-2 bg-[#050505]/50 border border-white/10 p-1 rounded-xl">
                 <button
                   type="button"
                   onClick={() => setTheme("anime")}
@@ -526,12 +579,12 @@ export default function FormBuilderPage() {
               <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
                 Visibility Mode
               </label>
-              <div className="flex bg-zinc-950 border border-white/10 p-1 rounded-xl">
+              <div className="flex bg-[#050505]/50 border border-white/10 p-1 rounded-xl">
                 <button
                   type="button"
                   onClick={() => setVisibility("public")}
                   className={`flex-grow font-bold py-1.5 rounded-lg text-[10px] cursor-pointer transition-all ${
-                    visibility === "public" ? "bg-white text-zinc-950" : "text-zinc-400 hover:text-white"
+                    visibility === "public" ? "bg-[#52a3dd] text-black" : "text-zinc-400 hover:text-white"
                   }`}
                 >
                   Public
@@ -540,7 +593,7 @@ export default function FormBuilderPage() {
                   type="button"
                   onClick={() => setVisibility("unlisted")}
                   className={`flex-grow font-bold py-1.5 rounded-lg text-[10px] cursor-pointer transition-all ${
-                    visibility === "unlisted" ? "bg-white text-zinc-950" : "text-zinc-400 hover:text-white"
+                    visibility === "unlisted" ? "bg-[#52a3dd] text-black" : "text-zinc-400 hover:text-white"
                   }`}
                 >
                   Unlisted
@@ -582,7 +635,7 @@ export default function FormBuilderPage() {
               </h3>
 
               {/* Password Protection */}
-              <div className="flex flex-col gap-2 bg-zinc-950/40 border border-white/5 p-3 rounded-xl">
+              <div className="flex flex-col gap-2 bg-[#050505]/40 border border-white/5 p-3 rounded-xl">
                 <div className="flex items-center justify-between">
                   <label className="text-[10px] font-bold text-zinc-300">
                     Require Password
@@ -591,7 +644,7 @@ export default function FormBuilderPage() {
                     type="checkbox"
                     checked={enablePassword}
                     onChange={(e) => setEnablePassword(e.target.checked)}
-                    className="w-3.5 h-3.5 accent-indigo-500 rounded cursor-pointer"
+                    className="w-3.5 h-3.5 accent-[#52a3dd] rounded cursor-pointer"
                   />
                 </div>
 
@@ -601,7 +654,7 @@ export default function FormBuilderPage() {
                     placeholder="Enter submission password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="bg-zinc-950 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-purple-500 transition-colors w-full mt-1.5 font-mono text-zinc-300"
+                    className="bg-[#050505]/50 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-[#52a3dd] focus:ring-1 focus:ring-[#52a3dd]/50 transition-all outline-none w-full mt-1.5 font-mono text-zinc-300"
                     required
                   />
                 )}
@@ -620,7 +673,7 @@ export default function FormBuilderPage() {
                   placeholder="e.g. 100"
                   value={responseLimit}
                   onChange={(e) => setResponseLimit(e.target.value === "" ? "" : Number(e.target.value))}
-                  className="bg-zinc-950 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-purple-500 transition-colors"
+                  className="bg-[#050505]/50 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#52a3dd] focus:ring-1 focus:ring-[#52a3dd]/50 transition-all outline-none text-[#e5e2e1]"
                 />
               </div>
 
@@ -633,18 +686,18 @@ export default function FormBuilderPage() {
                   type="datetime-local"
                   value={expiresAt}
                   onChange={(e) => setExpiresAt(e.target.value)}
-                  className="bg-zinc-950 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-purple-500 transition-colors text-zinc-300"
+                  className="bg-[#050505]/50 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#52a3dd] focus:ring-1 focus:ring-[#52a3dd]/50 transition-all outline-none text-[#e5e2e1]"
                 />
               </div>
 
               {/* Email Settings */}
               <div className="flex flex-col gap-2.5 pt-2.5 border-t border-white/5">
-                <h4 className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <Mail className="w-3.5 h-3.5 text-purple-400" />
+                <h4 className="text-[10px] font-bold text-[#bfc7d1] uppercase tracking-wider flex items-center gap-1.5">
+                  <Mail className="w-3.5 h-3.5 text-[#52a3dd]" />
                   Email Dispatch Flow
                 </h4>
 
-                <div className="flex items-center justify-between bg-zinc-950/50 border border-white/5 rounded-xl p-2.5">
+                <div className="flex items-center justify-between bg-[#050505]/50 border border-white/5 rounded-xl p-2.5">
                   <div className="flex flex-col gap-0.5">
                     <span className="text-[11px] font-semibold text-zinc-200">Notify Creator</span>
                     <span className="text-[9px] text-zinc-500 leading-tight">Email me on new submissions</span>
@@ -653,11 +706,11 @@ export default function FormBuilderPage() {
                     type="checkbox"
                     checked={emailNotifications}
                     onChange={(e) => setEmailNotifications(e.target.checked)}
-                    className="w-3.5 h-3.5 accent-purple-500 rounded cursor-pointer"
+                    className="w-3.5 h-3.5 accent-[#52a3dd] rounded cursor-pointer"
                   />
                 </div>
 
-                <div className="flex items-center justify-between bg-zinc-950/50 border border-white/5 rounded-xl p-2.5">
+                <div className="flex items-center justify-between bg-[#050505]/50 border border-white/5 rounded-xl p-2.5">
                   <div className="flex flex-col gap-0.5">
                     <span className="text-[11px] font-semibold text-zinc-200">Respondent Receipt</span>
                     <span className="text-[9px] text-zinc-500 leading-tight">Send confirmation to respondents</span>
@@ -666,7 +719,7 @@ export default function FormBuilderPage() {
                     type="checkbox"
                     checked={emailConfirmations}
                     onChange={(e) => setEmailConfirmations(e.target.checked)}
-                    className="w-3.5 h-3.5 accent-indigo-500 rounded cursor-pointer"
+                    className="w-3.5 h-3.5 accent-[#52a3dd] rounded cursor-pointer"
                   />
                 </div>
               </div>
@@ -675,18 +728,18 @@ export default function FormBuilderPage() {
         </aside>
 
         {/* MIDDLE COLUMN: Form Canvas & Questions Layout */}
-        <main className="flex-grow p-6 overflow-y-auto h-full scrollbar-thin">
+        <main className="flex-grow p-6 overflow-y-auto h-full scrollbar-thin relative z-10">
           <div className="max-w-xl mx-auto flex flex-col gap-6 pb-20">
-            <div>
-              <h2 className="text-xl font-bold">Question Blueprint</h2>
-              <p className="text-xs text-zinc-400 mt-0.5">
-                Design the sequential fields. Respondents will complete these one by one.
+            <div className="pb-6 border-b border-white/5 mb-2">
+              <h1 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">Question Blueprint</h1>
+              <p className="text-sm text-neutral-400 mt-1.5 leading-relaxed">
+                Design sequential interactive fields. Respondents will complete these one by one.
               </p>
             </div>
 
             {/* List of current questions */}
             {fields.length === 0 ? (
-              <div className="border border-dashed border-white/10 rounded-2xl p-12 text-center flex flex-col items-center gap-3">
+              <div className="glass-level-1 bg-[#0a0a0a]/30 border border-white/5 rounded-2xl p-12 text-center flex flex-col items-center gap-3">
                 <HelpCircle className="w-10 h-10 text-zinc-600" />
                 <div>
                   <h4 className="font-bold text-sm">Your Form is Empty</h4>
@@ -703,23 +756,23 @@ export default function FormBuilderPage() {
                     <div
                       key={idx}
                       onClick={() => setSelectedFieldIdx(idx)}
-                      className={`border rounded-2xl p-5 flex flex-col gap-3 transition-all relative group cursor-pointer ${
+                      className={`rounded-2xl p-5 flex flex-col gap-3 transition-all relative group cursor-pointer ${
                         isSelected
-                          ? "bg-zinc-900 border-purple-500/50 shadow-lg shadow-purple-500/5"
-                          : "bg-zinc-900/30 border-white/5 hover:border-white/15"
+                          ? "glass-level-1 bg-[#0c0c0c]/80 border-[#52a3dd]/40 shadow-[0_0_25px_rgba(82,163,221,0.1)]"
+                          : "glass-level-1 bg-[#050505]/40 opacity-75 hover:opacity-100 border border-white/5"
                       }`}
                     >
                       {/* Left color bar based on selection */}
                       {isSelected && (
-                        <div className="absolute top-0 bottom-0 left-0 w-1 bg-gradient-to-b from-indigo-500 to-pink-500 rounded-l-2xl" />
+                        <div className="absolute top-0 bottom-0 left-0 w-1 bg-gradient-to-b from-[#52a3dd] to-[#E47939] rounded-l-2xl" />
                       )}
 
                       <div className="flex justify-between items-start gap-4">
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-mono text-zinc-500 font-bold bg-zinc-950 border border-white/5 w-6 h-6 rounded-lg flex items-center justify-center">
+                          <span className="text-xs font-mono text-[#52a3dd] font-bold bg-[#050505]/50 border border-white/5 w-6 h-6 rounded-lg flex items-center justify-center">
                             {idx + 1}
                           </span>
-                          <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 border rounded-md flex items-center gap-1.5 bg-zinc-950/80 border-white/10 text-zinc-400">
+                          <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 border rounded-md flex items-center gap-1.5 bg-[#050505]/80 border-white/10 text-[#bfc7d1]">
                             {getFieldIcon(field.type)}
                             {field.type.replace("_", " ")}
                           </span>
@@ -776,7 +829,7 @@ export default function FormBuilderPage() {
                               type="text"
                               value={field.label}
                               onChange={(e) => updateQuestionField(idx, "label", e.target.value)}
-                              className="bg-zinc-950 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-purple-500 w-full"
+                              className="bg-[#050505]/50 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#52a3dd] focus:ring-1 focus:ring-[#52a3dd]/50 transition-all outline-none w-full text-white"
                               placeholder="e.g. What is your full name?"
                             />
                           </div>
@@ -789,7 +842,7 @@ export default function FormBuilderPage() {
                               type="text"
                               value={field.description || ""}
                               onChange={(e) => updateQuestionField(idx, "description", e.target.value)}
-                              className="bg-zinc-950 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-purple-500 w-full"
+                              className="bg-[#050505]/50 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#52a3dd] focus:ring-1 focus:ring-[#52a3dd]/50 transition-all outline-none w-full text-white"
                               placeholder="e.g. Please enter first and last name"
                             />
                           </div>
@@ -803,7 +856,7 @@ export default function FormBuilderPage() {
                                 type="text"
                                 value={field.placeholder || ""}
                                 onChange={(e) => updateQuestionField(idx, "placeholder", e.target.value)}
-                                className="bg-zinc-950 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-purple-500 w-full"
+                                className="bg-[#050505]/50 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#52a3dd] focus:ring-1 focus:ring-[#52a3dd]/50 transition-all outline-none w-full text-white"
                                 placeholder="e.g. John Doe"
                               />
                             </div>
@@ -811,7 +864,7 @@ export default function FormBuilderPage() {
 
                           {/* Options editor for choice based questions */}
                           {(field.type === "single_select" || field.type === "multi_select") && (
-                            <div className="flex flex-col gap-2 bg-zinc-950 p-4 rounded-xl border border-white/5">
+                            <div className="flex flex-col gap-2 bg-[#050505]/50 p-4 rounded-xl border border-white/5">
                               <label className="text-[9px] font-bold text-zinc-400 uppercase tracking-wider">
                                 Configure Choices Options
                               </label>
@@ -823,14 +876,14 @@ export default function FormBuilderPage() {
                                       type="text"
                                       value={opt}
                                       onChange={(e) => updateOptionInQuestion(idx, optIdx, e.target.value)}
-                                      className="bg-zinc-900 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-purple-500 w-full"
+                                      className="bg-[#050505]/50 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-[#52a3dd] focus:ring-1 focus:ring-[#52a3dd]/50 transition-all outline-none w-full text-white"
                                       placeholder={`Option ${optIdx + 1}`}
                                     />
                                     <button
                                       type="button"
                                       onClick={() => removeOptionFromQuestion(idx, optIdx)}
                                       disabled={field.options!.length <= 1}
-                                      className="p-1.5 bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg disabled:opacity-30"
+                                      className="p-1.5 bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg disabled:opacity-30 cursor-pointer"
                                     >
                                       <Trash2 className="w-3.5 h-3.5" />
                                     </button>
@@ -841,7 +894,7 @@ export default function FormBuilderPage() {
                               <button
                                 type="button"
                                 onClick={() => addOptionToQuestion(idx)}
-                                className="text-[10px] font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1 mt-1 text-left w-max cursor-pointer"
+                                className="text-[10px] font-bold text-[#52a3dd] hover:text-[#90cdff] flex items-center gap-1 mt-1 text-left w-max cursor-pointer transition-colors duration-200"
                               >
                                 <Plus className="w-3 h-3" />
                                 Add option Choice
@@ -850,7 +903,7 @@ export default function FormBuilderPage() {
                           )}
 
                           {/* Toggle constraints */}
-                          <div className="flex justify-between items-center bg-zinc-950/60 p-3 rounded-xl">
+                          <div className="flex justify-between items-center bg-[#050505]/60 p-3 rounded-xl border border-white/5">
                             <span className="text-[10px] font-bold text-zinc-400">
                               Respondent Answer Required
                             </span>
@@ -858,7 +911,7 @@ export default function FormBuilderPage() {
                               type="checkbox"
                               checked={field.required}
                               onChange={(e) => updateQuestionField(idx, "required", e.target.checked)}
-                              className="w-4 h-4 accent-indigo-500 rounded cursor-pointer"
+                              className="w-4 h-4 accent-[#52a3dd] rounded cursor-pointer"
                             />
                           </div>
                         </div>
@@ -866,10 +919,10 @@ export default function FormBuilderPage() {
                         <div className="mt-1">
                           <h4 className="font-bold text-sm text-zinc-100 line-clamp-1">{field.label}</h4>
                           {field.description && (
-                            <p className="text-xs text-zinc-500 line-clamp-1 mt-0.5">{field.description}</p>
+                            <p className="text-xs text-[#bfc7d1] line-clamp-1 mt-0.5">{field.description}</p>
                           )}
                           {field.placeholder && (
-                            <div className="bg-zinc-950 border border-white/5 rounded-lg px-2.5 py-1.5 text-[10px] text-zinc-600 font-mono mt-2 w-max">
+                            <div className="bg-[#050505]/50 border border-white/5 rounded-lg px-2.5 py-1.5 text-[10px] text-zinc-500 font-mono mt-2 w-max">
                               Placeholder: {field.placeholder}
                             </div>
                           )}
@@ -878,7 +931,7 @@ export default function FormBuilderPage() {
                               {field.options?.map((opt, oIdx) => (
                                 <span
                                   key={oIdx}
-                                  className="text-[9px] font-semibold bg-zinc-950 border border-white/10 rounded-full px-2 py-0.5 text-zinc-400"
+                                  className="text-[9px] font-semibold bg-[#050505]/50 border border-white/10 rounded-full px-2 py-0.5 text-zinc-400"
                                 >
                                   {opt}
                                 </span>
@@ -895,15 +948,15 @@ export default function FormBuilderPage() {
 
             {/* Toolbox Section */}
             <div className="border-t border-white/5 pt-6 flex flex-col gap-3">
-              <h3 className="text-xs font-black uppercase tracking-widest text-zinc-400 flex items-center gap-1.5">
-                <PlusCircle className="w-4 h-4 text-pink-400" />
+              <h3 className="text-xs font-black uppercase tracking-widest text-[#bfc7d1] flex items-center gap-1.5">
+                <PlusCircle className="w-4 h-4 text-[#52a3dd]" />
                 Question Field Toolbox
               </h3>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 <button
                   onClick={() => addQuestion("short_text")}
-                  className="flex items-center gap-2 p-3 bg-zinc-900/50 border border-white/5 hover:border-indigo-500/30 rounded-xl transition-all hover:bg-zinc-900 text-left text-xs font-bold cursor-pointer"
+                  className="flex items-center gap-2 p-3 bg-[#0c0c0c]/40 border border-white/5 hover:border-[#52a3dd]/40 hover:bg-[#0c0c0c]/80 rounded-xl transition-all text-left text-xs font-bold cursor-pointer text-[#e5e2e1]"
                 >
                   <Type className="w-4 h-4 text-sky-400 shrink-0" />
                   Short Text
@@ -911,7 +964,7 @@ export default function FormBuilderPage() {
 
                 <button
                   onClick={() => addQuestion("long_text")}
-                  className="flex items-center gap-2 p-3 bg-zinc-900/50 border border-white/5 hover:border-indigo-500/30 rounded-xl transition-all hover:bg-zinc-900 text-left text-xs font-bold cursor-pointer"
+                  className="flex items-center gap-2 p-3 bg-[#0c0c0c]/40 border border-white/5 hover:border-[#52a3dd]/40 hover:bg-[#0c0c0c]/80 rounded-xl transition-all text-left text-xs font-bold cursor-pointer text-[#e5e2e1]"
                 >
                   <AlignLeft className="w-4 h-4 text-purple-400 shrink-0" />
                   Essay/Long Text
@@ -919,7 +972,7 @@ export default function FormBuilderPage() {
 
                 <button
                   onClick={() => addQuestion("email")}
-                  className="flex items-center gap-2 p-3 bg-zinc-900/50 border border-white/5 hover:border-indigo-500/30 rounded-xl transition-all hover:bg-zinc-900 text-left text-xs font-bold cursor-pointer"
+                  className="flex items-center gap-2 p-3 bg-[#0c0c0c]/40 border border-white/5 hover:border-[#52a3dd]/40 hover:bg-[#0c0c0c]/80 rounded-xl transition-all text-left text-xs font-bold cursor-pointer text-[#e5e2e1]"
                 >
                   <Mail className="w-4 h-4 text-pink-400 shrink-0" />
                   Email Field
@@ -927,7 +980,7 @@ export default function FormBuilderPage() {
 
                 <button
                   onClick={() => addQuestion("number")}
-                  className="flex items-center gap-2 p-3 bg-zinc-900/50 border border-white/5 hover:border-indigo-500/30 rounded-xl transition-all hover:bg-zinc-900 text-left text-xs font-bold cursor-pointer"
+                  className="flex items-center gap-2 p-3 bg-[#0c0c0c]/40 border border-white/5 hover:border-[#52a3dd]/40 hover:bg-[#0c0c0c]/80 rounded-xl transition-all text-left text-xs font-bold cursor-pointer text-[#e5e2e1]"
                 >
                   <Binary className="w-4 h-4 text-emerald-400 shrink-0" />
                   Number Field
@@ -935,7 +988,7 @@ export default function FormBuilderPage() {
 
                 <button
                   onClick={() => addQuestion("single_select")}
-                  className="flex items-center gap-2 p-3 bg-zinc-900/50 border border-white/5 hover:border-indigo-500/30 rounded-xl transition-all hover:bg-zinc-900 text-left text-xs font-bold cursor-pointer"
+                  className="flex items-center gap-2 p-3 bg-[#0c0c0c]/40 border border-white/5 hover:border-[#52a3dd]/40 hover:bg-[#0c0c0c]/80 rounded-xl transition-all text-left text-xs font-bold cursor-pointer text-[#e5e2e1]"
                 >
                   <CheckSquare className="w-4 h-4 text-amber-400 shrink-0" />
                   Single Choice
@@ -943,7 +996,7 @@ export default function FormBuilderPage() {
 
                 <button
                   onClick={() => addQuestion("multi_select")}
-                  className="flex items-center gap-2 p-3 bg-zinc-900/50 border border-white/5 hover:border-indigo-500/30 rounded-xl transition-all hover:bg-zinc-900 text-left text-xs font-bold cursor-pointer"
+                  className="flex items-center gap-2 p-3 bg-[#0c0c0c]/40 border border-white/5 hover:border-[#52a3dd]/40 hover:bg-[#0c0c0c]/80 rounded-xl transition-all text-left text-xs font-bold cursor-pointer text-[#e5e2e1]"
                 >
                   <ListPlus className="w-4 h-4 text-indigo-400 shrink-0" />
                   Multi Choice
@@ -951,7 +1004,7 @@ export default function FormBuilderPage() {
 
                 <button
                   onClick={() => addQuestion("checkbox")}
-                  className="flex items-center gap-2 p-3 bg-zinc-900/50 border border-white/5 hover:border-indigo-500/30 rounded-xl transition-all hover:bg-zinc-900 text-left text-xs font-bold cursor-pointer"
+                  className="flex items-center gap-2 p-3 bg-[#0c0c0c]/40 border border-white/5 hover:border-[#52a3dd]/40 hover:bg-[#0c0c0c]/80 rounded-xl transition-all text-left text-xs font-bold cursor-pointer text-[#e5e2e1]"
                 >
                   <CheckSquare className="w-4 h-4 text-rose-400 shrink-0" />
                   Yes/No Checkbox
@@ -959,7 +1012,7 @@ export default function FormBuilderPage() {
 
                 <button
                   onClick={() => addQuestion("rating")}
-                  className="flex items-center gap-2 p-3 bg-zinc-900/50 border border-white/5 hover:border-indigo-500/30 rounded-xl transition-all hover:bg-zinc-900 text-left text-xs font-bold cursor-pointer"
+                  className="flex items-center gap-2 p-3 bg-[#0c0c0c]/40 border border-white/5 hover:border-[#52a3dd]/40 hover:bg-[#0c0c0c]/80 rounded-xl transition-all text-left text-xs font-bold cursor-pointer text-[#e5e2e1]"
                 >
                   <Star className="w-4 h-4 text-yellow-400 shrink-0" />
                   Star Rating (1-5)
@@ -967,7 +1020,7 @@ export default function FormBuilderPage() {
 
                 <button
                   onClick={() => addQuestion("date")}
-                  className="flex items-center gap-2 p-3 bg-zinc-900/50 border border-white/5 hover:border-indigo-500/30 rounded-xl transition-all hover:bg-zinc-900 text-left text-xs font-bold cursor-pointer"
+                  className="flex items-center gap-2 p-3 bg-[#0c0c0c]/40 border border-white/5 hover:border-[#52a3dd]/40 hover:bg-[#0c0c0c]/80 rounded-xl transition-all text-left text-xs font-bold cursor-pointer text-[#e5e2e1]"
                 >
                   <Calendar className="w-4 h-4 text-teal-400 shrink-0" />
                   Date Selector

@@ -60,7 +60,7 @@ export default function LoginPage() {
       <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center text-[#e5e2e1] relative font-sans">
         <InteractiveBackground />
         <div className="ambient-glow" />
-        <div className="glass-level-1 rounded-2xl p-8 text-center max-w-sm flex flex-col gap-3 items-center z-10 shadow-2xl">
+        <div className="glass-level-1 bg-[#0a0a0a]/50 rounded-2xl p-8 text-center max-w-sm flex flex-col gap-3 items-center z-10 shadow-2xl">
           <Loader2 className="w-8 h-8 animate-spin text-[#52a3dd] mb-2" />
           <h3 className="font-bold text-sm text-[#e5e2e1] tracking-wide">Accessing Secure Space...</h3>
           <p className="text-xs text-[#bfc7d1] leading-relaxed">
@@ -79,7 +79,7 @@ export default function LoginPage() {
       <div className="ambient-glow" />
 
       <div className="w-full max-w-[480px] px-4 relative z-10 py-10 flex flex-col justify-center min-h-screen">
-        <div className="glass-level-1 rounded-2xl p-8 flex flex-col gap-8 shadow-2xl relative my-auto">
+        <div className="glass-level-1 bg-[#0a0a0a]/50 rounded-2xl p-8 flex flex-col gap-8 shadow-2xl relative my-auto">
           
           {/* Header / Logo */}
           <div className="flex flex-col items-center gap-4 text-center">
