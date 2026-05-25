@@ -94,3 +94,32 @@
   z-index: -10;
   pointer-events: none;
 }
+
+@keyframes float-orb-1 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -40px) scale(1.05);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.95);
+  }
+}
+
+@keyframes float-orb-2 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  50% {
+    transform: translate(-40px, 30px) scale(1.08);
+  }
+}
+
+.animate-orb-1 {
+  animation: float-orb-1 25s infinite ease-in-out;
+}
+
+.animate-orb-2 {
+  animation: float-orb-2 30s infinite ease-in-out;
+}

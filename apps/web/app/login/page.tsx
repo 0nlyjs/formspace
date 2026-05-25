@@ -75,7 +75,6 @@ export default function LoginPage() {
     <main className="relative min-h-screen flex items-center justify-center bg-[#050505] font-sans p-6 overflow-hidden select-none">
       {/* 3D Interactive Points Background */}
       <InteractiveBackground />
-      
       {/* Pulsing Ambient Orb Glow */}
       <div className="ambient-glow" />
 

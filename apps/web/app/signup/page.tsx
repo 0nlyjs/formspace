@@ -61,7 +61,7 @@ export default function SignupPage() {
         <div className="glass-level-1 rounded-2xl p-8 text-center max-w-sm flex flex-col gap-3 items-center z-10 shadow-2xl">
           <Loader2 className="w-8 h-8 animate-spin text-[#52a3dd] mb-2" />
           <h3 className="font-bold text-sm text-[#e5e2e1] tracking-wide">Accessing Secure Space...</h3>
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <p className="text-xs text-[#bfc7d1] leading-relaxed">
             Verifying session keys and authenticating credentials.
           </p>
         </div>
@@ -73,7 +73,6 @@ export default function SignupPage() {
     <main className="relative min-h-screen flex items-center justify-center bg-[#050505] font-sans p-6 overflow-hidden select-none">
       {/* 3D Interactive Points Background */}
       <InteractiveBackground />
-      
       {/* Pulsing Ambient Orb Glow */}
       <div className="ambient-glow" />
 

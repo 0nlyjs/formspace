@@ -22,6 +22,7 @@ import {
   ExternalLink,
   TrendingUp,
   Copy,
+  Gamepad2,
 } from "lucide-react";
 import {
   AreaChart,
@@ -34,6 +35,39 @@ import {
   Bar,
   Cell,
 } from "recharts";
+
+const StaticBackground = () => (
+  <div className="absolute inset-0 w-full h-full bg-[#050505] z-0 pointer-events-none select-none overflow-hidden">
+    {/* Subtle Cyberpunk/Tech Grid Overlay */}
+    <div 
+      className="absolute inset-0 opacity-[0.35]"
+      style={{
+        backgroundImage: `
+          linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px)
+        `,
+        backgroundSize: '48px 48px',
+      }}
+    />
+    
+    {/* Luminous Top-Left Brand Blue Orb - boosted intensity */}
+    <div 
+      className="absolute -top-[15%] -left-[10%] w-[55vw] h-[55vw] rounded-full opacity-[1]"
+      style={{
+        background: 'radial-gradient(circle, rgba(82, 163, 221, 0.45) 0%, rgba(82, 163, 221, 0.12) 45%, rgba(5, 5, 5, 0) 75%)',
+        filter: 'blur(60px)',
+      }}
+    />
+
+    {/* Luminous Bottom-Right Brand Orange Orb (Static & anti-aliased CSS gradient glow - 10% smaller) */}
+    <div 
+      className="absolute -bottom-[15%] -right-[10%] w-[55vw] h-[55vw] rounded-full opacity-[0.7]"
+      style={{
+        background: 'radial-gradient(circle, rgba(228, 121, 57, 0.07) 0%, rgba(5, 5, 5, 0) 75%)',
+      }}
+    />
+  </div>
+);
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -164,10 +198,14 @@ export default function DashboardPage() {
 
   if (userLoading) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-white">
-        <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
-          <p className="text-sm text-zinc-400">Loading creator dashboard...</p>
+      <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center text-[#e5e2e1] relative font-sans">
+        <StaticBackground />
+        <div className="glass-level-1 rounded-2xl p-8 text-center max-w-sm flex flex-col gap-3 items-center z-10 shadow-2xl">
+          <Loader2 className="w-8 h-8 animate-spin text-[#52a3dd] mb-2" />
+          <h3 className="font-bold text-sm text-[#e5e2e1] tracking-wide">Accessing Secure Space...</h3>
+          <p className="text-xs text-[#bfc7d1] leading-relaxed">
+            Verifying session keys and loading creator dashboard.
+          </p>
         </div>
       </div>
     );
@@ -175,10 +213,14 @@ export default function DashboardPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-white">
-        <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
-          <p className="text-sm text-zinc-400">Redirecting to login...</p>
+      <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center text-[#e5e2e1] relative font-sans">
+        <StaticBackground />
+        <div className="glass-level-1 rounded-2xl p-8 text-center max-w-sm flex flex-col gap-3 items-center z-10 shadow-2xl">
+          <Loader2 className="w-8 h-8 animate-spin text-[#52a3dd] mb-2" />
+          <h3 className="font-bold text-sm text-[#e5e2e1] tracking-wide">Redirecting...</h3>
+          <p className="text-xs text-[#bfc7d1] leading-relaxed">
+            Unauthorized session. Returning to safe harbor.
+          </p>
         </div>
       </div>
     );
@@ -207,191 +249,227 @@ export default function DashboardPage() {
   const getThemeDetails = (themeName: string) => {
     switch (themeName) {
       case "tech":
-        return { label: "Cyberpunk Tech", icon: <Terminal className="w-4 h-4 text-emerald-400" />, color: "border-emerald-500/20 bg-emerald-500/5 text-emerald-400" };
+        return {
+          label: "Cyberpunk Tech",
+          icon: <Terminal className="w-4.5 h-4.5" />,
+          iconBg: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20",
+          badgeBg: "border-emerald-500/20 bg-emerald-500/5 text-emerald-400"
+        };
       case "retro":
-        return { label: "Classic Retro", icon: <Sparkles className="w-4 h-4 text-amber-400" />, color: "border-amber-500/20 bg-amber-500/5 text-amber-400" };
+        return {
+          label: "Classic Retro",
+          icon: <Gamepad2 className="w-4.5 h-4.5" />,
+          iconBg: "bg-[#e47939]/10 text-[#e47939] border border-[#e47939]/20",
+          badgeBg: "border-[#e47939]/20 bg-[#e47939]/5 text-[#e47939]"
+        };
       default:
-        return { label: "Anime & Manga", icon: <Flame className="w-4 h-4 text-pink-400" />, color: "border-pink-500/20 bg-pink-500/5 text-pink-400" };
+        return {
+          label: "Anime & Manga",
+          icon: <Flame className="w-4.5 h-4.5" />,
+          iconBg: "bg-[#52a3dd]/10 text-[#52a3dd] border border-[#52a3dd]/20",
+          badgeBg: "border-[#52a3dd]/20 bg-[#52a3dd]/5 text-[#52a3dd]"
+        };
     }
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white font-sans flex flex-col">
-      {/* Navbar */}
-      <header className="border-b border-white/5 bg-zinc-900/60 backdrop-blur-md px-6 md:px-12 py-4 flex justify-between items-center z-20">
-        <div className="flex items-center gap-2 select-none">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-500 to-pink-500 flex items-center justify-center">
-            <span className="font-extrabold text-xs text-black">FS</span>
-          </div>
-          <span className="font-black text-lg text-white">formspace.</span>
+    <div className="flex h-screen bg-[#050505] text-[#e5e2e1] font-sans relative overflow-hidden select-none">
+      
+      {/* LEFT SIDEBAR - Spans full height of the viewport fixed to the left */}
+      <aside className="w-64 border-r border-white/5 bg-[#08090b] flex flex-col justify-between p-6 shrink-0 h-screen fixed left-0 top-0 bottom-0 z-20">
+        
+        {/* Top Branding Section */}
+        <div className="flex flex-col gap-6">
+          <Link href="/" className="px-1 select-none block mb-2">
+            <img 
+              id="app-logo"
+              alt="FormSpace Logo" 
+              className="h-10 object-contain w-auto select-none" 
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIN8_hMTBYEGrpk3uRvOfz07E8YNUiGE687uhRHfb1clW0yc8X6UDsun8-_OG6Dlx6QnaLaltNfBAqCsAy1i1bW_45Npo79qXLRzOMICMhscWGiyqAQyqPKVIxlQgjpt5Xe9iD5GQoQYzk3PP3VtwvbJQ7EYNTrYYxpHaC4RIk9M6dUIDW3qZ8VNf5uhSzI2aMiFE3XrnYmjlNgTj3lPGYH_0lP8uT0CwAz5nWqZbfVqbN2YP6uwyLCshPyrGGTFuppmqo_L3XBvM7"
+              referrerPolicy="no-referrer"
+            />
+          </Link>
+
+          {/* Navigation links inside the sidebar */}
+          <nav className="flex flex-col gap-1">
+            <button
+              onClick={() => setActiveTab("forms")}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-l-xl text-sm font-bold transition-all text-left cursor-pointer border-y border-l border-r-0 relative ${
+                activeTab === "forms" 
+                  ? "bg-[#52a3dd]/8 text-[#52a3dd] border-[#52a3dd]/15" 
+                  : "text-[#bfc7d1]/70 border-transparent hover:bg-white/5 hover:text-white"
+              }`}
+            >
+              <List className="w-4 h-4" />
+              My Forms
+              {activeTab === "forms" && <div className="absolute right-0 top-0 bottom-0 w-[3px] bg-[#52a3dd]" />}
+            </button>
+
+            <button
+              onClick={() => {
+                setActiveTab("analytics");
+                // Pick first form if available and none picked yet
+                if (!selectedAnalyticsFormId && forms && forms.length > 0 && forms[0]) {
+                  setSelectedAnalyticsFormId(forms[0].id);
+                }
+              }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-l-xl text-sm font-bold transition-all text-left cursor-pointer border-y border-l border-r-0 relative ${
+                activeTab === "analytics" 
+                  ? "bg-[#52a3dd]/8 text-[#52a3dd] border-[#52a3dd]/15" 
+                  : "text-[#bfc7d1]/70 border-transparent hover:bg-white/5 hover:text-white"
+              }`}
+            >
+              <BarChart2 className="w-4 h-4" />
+              Analytics
+              {activeTab === "analytics" && <div className="absolute right-0 top-0 bottom-0 w-[3px] bg-[#52a3dd]" />}
+            </button>
+
+            <button
+              onClick={() => setActiveTab("dev")}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-l-xl text-sm font-bold transition-all text-left cursor-pointer border-y border-l border-r-0 relative ${
+                activeTab === "dev" 
+                  ? "bg-[#52a3dd]/8 text-[#52a3dd] border-[#52a3dd]/15" 
+                  : "text-[#bfc7d1]/70 border-transparent hover:bg-white/5 hover:text-white"
+              }`}
+            >
+              <Code className="w-4 h-4" />
+              Developer API
+              {activeTab === "dev" && <div className="absolute right-0 top-0 bottom-0 w-[3px] bg-[#52a3dd]" />}
+            </button>
+          </nav>
         </div>
 
-        <div className="flex items-center gap-6">
-          {/* User profile identifier */}
-          <div className="hidden sm:flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center">
-              <User className="w-4 h-4 text-zinc-400" />
-            </div>
-            <div>
-              <p className="text-xs font-bold text-white leading-tight">{user.fullName}</p>
-              <p className="text-[10px] text-zinc-500 leading-tight">{user.email}</p>
+        {/* Sidebar Footer with Avatar details and Logout option */}
+        <div className="flex flex-col gap-1 pt-6 border-t border-white/5">
+          
+          {/* Dynamic Profile Metadata card (Commander Shepard themed seed avatar) */}
+          <div className="flex items-center gap-3 mb-4 px-1 select-none">
+            <img 
+              src="https://api.dicebear.com/7.x/avataaars/svg?seed=Shepard" 
+              className="w-10 h-10 rounded-full bg-[#13151a] border border-white/10 p-0.5 select-none" 
+              alt="Avatar" 
+            />
+            <div className="overflow-hidden">
+              <p className="text-xs font-bold text-white leading-tight truncate">{user.fullName}</p>
+              <p className="text-[9px] text-neutral-400 mt-0.5 leading-none">Creator Panel</p>
             </div>
           </div>
 
+          {/* Simple Clean Logout button */}
           <button
             onClick={() => logoutMutation.mutate()}
-            className="flex items-center gap-1.5 text-xs font-bold bg-white/5 border border-white/15 hover:bg-white/10 px-4 py-2 rounded-xl transition-all cursor-pointer"
+            className="w-full flex items-center gap-2 px-1 py-2 text-xs font-bold text-neutral-400 hover:text-white transition-all cursor-pointer"
           >
-            <LogOut className="w-3.5 h-3.5" />
+            <LogOut className="w-4 h-4 text-neutral-500" />
             Logout
           </button>
         </div>
-      </header>
+      </aside>
 
-      <div className="flex-grow flex flex-col md:flex-row">
-        {/* Sidebar Nav */}
-        <aside className="w-full md:w-64 border-b md:border-b-0 md:border-r border-white/5 bg-zinc-900/20 p-6 flex flex-col gap-1.5 shrink-0">
-          <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest px-3 mb-2">
-            Creator Panel
-          </h3>
+      {/* RIGHT CONTENT AREA - Scrolls independently with visually stunning backgrounds */}
+      <div className="flex-grow h-screen relative flex flex-col overflow-y-auto pl-64">
+        
+        {/* Animated Static Black Backdrop with Brand radial glows & grid outline */}
+        <StaticBackground />
+
+        {/* Inner core margin container matching large layout viewports */}
+        <main className="relative z-10 flex-grow p-8 md:p-12 max-w-6xl w-full mx-auto flex flex-col gap-8">
           
-          <button
-            onClick={() => setActiveTab("forms")}
-            className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-bold transition-all text-left cursor-pointer ${
-              activeTab === "forms" ? "bg-white/10 text-white" : "text-zinc-400 hover:bg-white/5"
-            }`}
-          >
-            <List className="w-4 h-4" />
-            My Forms
-          </button>
-
-          <button
-            onClick={() => {
-              setActiveTab("analytics");
-              // Pick first form if available and none picked yet
-              if (!selectedAnalyticsFormId && forms && forms.length > 0 && forms[0]) {
-                setSelectedAnalyticsFormId(forms[0].id);
-              }
-            }}
-            className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-bold transition-all text-left cursor-pointer ${
-              activeTab === "analytics" ? "bg-white/10 text-white" : "text-zinc-400 hover:bg-white/5"
-            }`}
-          >
-            <BarChart2 className="w-4 h-4" />
-            Analytics Charts
-          </button>
-
-          <button
-            onClick={() => setActiveTab("dev")}
-            className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-bold transition-all text-left cursor-pointer ${
-              activeTab === "dev" ? "bg-white/10 text-white" : "text-zinc-400 hover:bg-white/5"
-            }`}
-          >
-            <Code className="w-4 h-4" />
-            Developer / Scalar API
-          </button>
-        </aside>
-
-        {/* Main Content Area */}
-        <main className="flex-grow p-6 md:p-10 max-w-6xl mx-auto w-full">
-          {/* TAB 1: MY FORMS */}
+          {/* TAB 1: MY FORMS VIEW */}
           {activeTab === "forms" && (
-            <div className="flex flex-col gap-6">
-              <div className="flex justify-between items-center">
+            <div className="flex flex-col gap-8">
+              
+              {/* Header section matching exact layout header */}
+              <div className="flex justify-between items-end pb-6 border-b border-white/5">
                 <div>
-                  <h1 className="text-2xl font-extrabold">My Forms</h1>
-                  <p className="text-sm text-zinc-400 mt-0.5">Create, edit, and publish dynamic schemas.</p>
+                  <h1 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">My Forms</h1>
+                  <p className="text-sm text-neutral-400 mt-1.5 leading-relaxed">Create, edit, and publish dynamic schemas.</p>
                 </div>
                 <button
                   onClick={() => { setClosingModal(false); setShowCreateModal(true); }}
-                  className="bg-white text-zinc-950 hover:bg-zinc-200 font-bold px-4 py-2.5 rounded-xl text-sm flex items-center gap-1.5 transition-all shadow-md shadow-white/5 cursor-pointer"
+                  className="font-bold px-5 py-2.5 rounded-lg text-sm flex items-center gap-1.5 transition-all shadow-[0_0_20px_rgba(82,163,221,0.25)] hover:shadow-[0_0_30px_rgba(228,121,57,0.35)] hover:opacity-90 cursor-pointer text-white"
+                  style={{ background: 'linear-gradient(90deg, #52A3DD 0%, #E47939 100%)' }}
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-4 h-4 text-white" />
                   Create Form
                 </button>
               </div>
 
               {formsLoading ? (
                 <div className="py-20 flex justify-center">
-                  <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
+                  <Loader2 className="w-6 h-6 animate-spin text-[#52a3dd]" />
                 </div>
               ) : !forms || forms.length === 0 ? (
-                <div className="border border-white/5 bg-zinc-900/10 p-12 rounded-3xl text-center flex flex-col items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-zinc-900 flex items-center justify-center border border-white/10">
-                    <List className="w-5 h-5 text-zinc-400" />
+                <div className="glass-level-1 p-12 rounded-2xl text-center flex flex-col items-center gap-4 shadow-xl">
+                  <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10">
+                    <List className="w-5 h-5 text-neutral-400" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-base">No forms created yet</h3>
-                    <p className="text-xs text-zinc-500 mt-1 max-w-xs mx-auto">
+                    <h3 className="font-bold text-base text-white">No forms created yet</h3>
+                    <p className="text-xs text-[#bfc7d1] mt-1 max-w-xs mx-auto leading-relaxed">
                       Build your first Typeform-style question schema with immersive 3D template support!
                     </p>
                   </div>
                   <button
                     onClick={() => { setClosingModal(false); setShowCreateModal(true); }}
-                    className="bg-white text-zinc-950 px-4 py-2 rounded-xl text-xs font-bold hover:bg-zinc-200 transition-colors cursor-pointer"
+                    className="bg-white text-[#050505] px-5 py-2.5 rounded-xl text-xs font-bold hover:bg-neutral-200 transition-colors cursor-pointer"
                   >
                     Get Started
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {forms.map((form) => {
                     const theme = getThemeDetails(form.theme);
                     return (
                       <div
                         key={form.id}
-                        className="bg-zinc-900/40 border border-white/10 rounded-2xl p-6 flex flex-col justify-between gap-5 relative overflow-hidden group hover:border-white/20 hover:bg-zinc-900/60 transition-all duration-300"
+                        className="glass-level-1 rounded-2xl p-6 flex flex-col justify-between gap-6 relative border border-white/5 hover:border-[#52a3dd]/30 transition-all duration-300 shadow-xl group"
                       >
-                        <div className="flex flex-col gap-2">
-                          {/* Badges */}
-                          <div className="flex flex-wrap gap-2 items-center">
-                            <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 border rounded-full flex items-center gap-1 shrink-0 ${theme.color}`}>
+                        <div className="flex flex-col gap-4 relative z-10">
+                          {/* Top row elements: icon box on left, theme label badge on right */}
+                          <div className="flex justify-between items-center">
+                            <div className={`p-2.5 rounded-xl ${theme.iconBg} flex items-center justify-center`}>
                               {theme.icon}
+                            </div>
+                            <span className={`text-[9px] font-extrabold uppercase px-2.5 py-1 tracking-wider border rounded-full select-none leading-none ${theme.badgeBg}`}>
                               {theme.label}
-                            </span>
-                            
-                            <span className={`text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full ${
-                              form.visibility === "public"
-                                ? "bg-sky-500/10 text-sky-400 border border-sky-500/20"
-                                : "bg-purple-500/10 text-purple-400 border border-purple-500/20"
-                            }`}>
-                              {form.visibility}
-                            </span>
-
-                            <span className={`text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full ${
-                              form.status === "published"
-                                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                                : "bg-zinc-800 text-zinc-400 border border-white/5"
-                            }`}>
-                              {form.status}
                             </span>
                           </div>
 
-                          <h3 className="text-lg font-bold text-white group-hover:text-purple-400 transition-colors mt-2">
-                            {form.title}
-                          </h3>
-                          <p className="text-xs text-zinc-400 line-clamp-2">
-                            {form.description || "No description provided."}
-                          </p>
+                          {/* Middle row elements: card title and visibility status labels */}
+                          <div className="flex flex-col gap-2 mt-2">
+                            <h3 className="text-base font-bold text-white group-hover:text-[#52a3dd] transition-colors leading-tight line-clamp-2 min-h-[2.5rem]">
+                              {form.title}
+                            </h3>
+                            
+                            <div className="flex gap-2 items-center mt-1">
+                              <span className="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded bg-[#0e0e0e]/50 border border-white/5 text-neutral-400 select-none">
+                                {form.visibility}
+                              </span>
+                              <span className="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded bg-[#0e0e0e]/50 border border-white/5 text-neutral-400 select-none">
+                                {form.status}
+                              </span>
+                            </div>
+                          </div>
                         </div>
 
-                        <div className="flex justify-between items-center border-t border-white/5 pt-4">
-                          <span className="text-xs font-semibold text-zinc-500">
-                            Responses:{" "}
-                            <span className="text-white font-bold">{form.responseCount}</span>
+                        {/* Footer row elements: dynamic responses on left, clean copy actions on right hover */}
+                        <div className="flex justify-between items-center border-t border-white/5 pt-4 relative z-10">
+                          <span className="text-xs font-semibold text-neutral-400 flex items-center gap-1.5 select-none">
+                            <User className="w-4 h-4 text-neutral-500" />
+                            {form.responseCount} Responses
                           </span>
 
-                          <div className="flex gap-2">
+                          {/* Hover-reveal action indicators to guarantee visually stunning identical matching */}
+                          <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             {form.status === "published" && (
                               <Link
                                 href={`/fill/${form.slug}`}
                                 target="_blank"
-                                className="group/btn relative w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-zinc-300 transition-colors"
+                                className="group/btn w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-neutral-300 hover:text-white transition-colors"
                               >
                                 <Eye className="w-3.5 h-3.5" />
-                                <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-zinc-950 text-[9px] font-bold text-white border border-white/10 rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-100 whitespace-nowrap shadow-xl z-20">
-                                  Open Form
-                                </span>
                               </Link>
                             )}
 
@@ -401,49 +479,27 @@ export default function DashboardPage() {
                                 navigator.clipboard.writeText(url);
                                 toast.success("Form link copied to clipboard!");
                               }}
-                              className="group/btn relative w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-zinc-300 transition-colors cursor-pointer"
+                              className="group/btn w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-neutral-300 hover:text-white transition-colors cursor-pointer"
                             >
                               <Copy className="w-3.5 h-3.5" />
-                              <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-zinc-950 text-[9px] font-bold text-white border border-white/10 rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-100 whitespace-nowrap shadow-xl z-20">
-                                Copy Link
-                              </span>
-                            </button>
-
-                            <button
-                              onClick={() => {
-                                setSelectedAnalyticsFormId(form.id);
-                                setActiveTab("analytics");
-                              }}
-                              className="group/btn relative w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-zinc-300 transition-colors cursor-pointer"
-                            >
-                              <BarChart2 className="w-3.5 h-3.5" />
-                              <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-zinc-950 text-[9px] font-bold text-white border border-white/10 rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-100 whitespace-nowrap shadow-xl z-20">
-                                View Analytics
-                              </span>
                             </button>
 
                             <Link
                               href={`/forms/${form.id}/edit`}
-                              className="group/btn relative w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-zinc-300 transition-colors"
+                              className="group/btn w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-neutral-300 hover:text-white transition-colors"
                             >
                               <Edit className="w-3.5 h-3.5" />
-                              <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-zinc-950 text-[9px] font-bold text-white border border-white/10 rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-100 whitespace-nowrap shadow-xl z-20">
-                                Edit Fields
-                              </span>
                             </Link>
 
                             <button
                               onClick={() => {
-                                if (confirm("Are you sure you want to delete this form and all its responses?")) {
+                                if (confirm("Are you sure you want to delete this form?")) {
                                   deleteFormMutation.mutate({ formId: form.id });
                                 }
                               }}
-                              className="group/btn relative w-8 h-8 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 flex items-center justify-center text-red-400 transition-colors cursor-pointer"
+                              className="group/btn w-7 h-7 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 flex items-center justify-center text-red-400 transition-colors cursor-pointer"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
-                              <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-zinc-950 text-[9px] font-bold text-white border border-white/10 rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-100 whitespace-nowrap shadow-xl z-20">
-                                Delete Form
-                              </span>
                             </button>
                           </div>
                         </div>
@@ -455,25 +511,25 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* TAB 2: ANALYTICS */}
+          {/* TAB 2: ANALYTICS VIEW */}
           {activeTab === "analytics" && (
-            <div className="flex flex-col gap-6">
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            <div className="flex flex-col gap-6 font-sans">
+              <div className="glass-level-1 p-6 rounded-2xl flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 shadow-xl">
                 <div>
-                  <h1 className="text-2xl font-extrabold">Analytics Dashboard</h1>
-                  <p className="text-sm text-zinc-400 mt-0.5">Visualize user submissions and ratings.</p>
+                  <h1 className="text-2xl font-black text-white tracking-tight">Analytics Dashboard</h1>
+                  <p className="text-sm text-[#bfc7d1] mt-0.5">Visualize user submissions and ratings.</p>
                 </div>
 
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Select Form:</span>
+                <div className="flex items-center gap-3 shrink-0">
+                  <span className="text-xs text-neutral-400 font-bold uppercase tracking-wider">Select Form:</span>
                   <select
                     value={selectedAnalyticsFormId}
                     onChange={(e) => setSelectedAnalyticsFormId(e.target.value)}
-                    className="bg-zinc-900 border border-white/15 px-3 py-2 rounded-xl text-sm text-white focus:outline-none focus:border-purple-500 transition-colors min-w-[200px]"
+                    className="bg-[#0e0e0e]/60 border border-white/10 px-4 py-2.5 rounded-xl text-sm text-white focus:outline-none focus:border-[#52a3dd] transition-all min-w-[220px]"
                   >
-                    <option value="" disabled>-- Pick a Form --</option>
+                    <option value="" disabled className="bg-neutral-900">-- Pick a Form --</option>
                     {forms?.map((f) => (
-                      <option key={f.id} value={f.id}>
+                      <option key={f.id} value={f.id} className="bg-neutral-900 text-white">
                         {f.title}
                       </option>
                     ))}
@@ -482,44 +538,44 @@ export default function DashboardPage() {
               </div>
 
               {!selectedAnalyticsFormId ? (
-                <div className="py-20 text-center text-zinc-500">
+                <div className="glass-level-1 py-20 text-center text-neutral-400 rounded-2xl shadow-xl">
                   <p className="text-sm">Please select a form from the dropdown to load analytics.</p>
                 </div>
               ) : analyticsLoading ? (
                 <div className="py-20 flex justify-center">
-                  <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
+                  <Loader2 className="w-6 h-6 animate-spin text-[#52a3dd]" />
                 </div>
               ) : !analytics ? (
-                <div className="py-20 text-center text-red-400">
+                <div className="glass-level-1 py-20 text-center text-red-400 rounded-2xl shadow-xl">
                   <p className="text-sm">Failed to load analytics details.</p>
                 </div>
               ) : (
                 <div className="flex flex-col gap-6">
                   {/* Summary row */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="bg-zinc-900/60 border border-white/5 p-6 rounded-2xl">
-                      <p className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Total Submissions</p>
+                    <div className="glass-level-1 p-6 rounded-2xl shadow-lg">
+                      <p className="text-xs text-neutral-400 font-bold uppercase tracking-wider">Total Submissions</p>
                       <h2 className="text-3xl font-black mt-2 text-white">{analytics.totalSubmissions}</h2>
                     </div>
 
-                    <div className="bg-zinc-900/60 border border-white/5 p-6 rounded-2xl">
-                      <p className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Completion Rate</p>
-                      <h2 className="text-3xl font-black mt-2 text-indigo-400">
+                    <div className="glass-level-1 p-6 rounded-2xl shadow-lg">
+                      <p className="text-xs text-neutral-400 font-bold uppercase tracking-wider">Completion Rate</p>
+                      <h2 className="text-3xl font-black mt-2 text-[#52a3dd]">
                         {analytics.totalSubmissions > 0 ? "100.0%" : "0.0%"}
                       </h2>
                     </div>
 
-                    <div className="bg-zinc-900/60 border border-white/5 p-6 rounded-2xl">
-                      <p className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Active Status</p>
+                    <div className="glass-level-1 p-6 rounded-2xl shadow-lg">
+                      <p className="text-xs text-neutral-400 font-bold uppercase tracking-wider">Active Status</p>
                       <h2 className="text-3xl font-black mt-2 text-emerald-400">Accepting</h2>
                     </div>
                   </div>
 
                   {/* Submission Trend Timeline */}
-                  <div className="bg-zinc-900/40 border border-white/10 rounded-2xl p-6">
+                  <div className="glass-level-1 rounded-2xl p-6 shadow-xl">
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-bold text-base flex items-center gap-1.5">
-                        <TrendingUp className="w-4 h-4 text-purple-400" />
+                      <h3 className="font-bold text-base flex items-center gap-1.5 text-white">
+                        <TrendingUp className="w-4 h-4 text-[#52a3dd]" />
                         Submission Timelines (Last 7 Days)
                       </h3>
                     </div>
@@ -529,14 +585,14 @@ export default function DashboardPage() {
                         <AreaChart data={analytics.timeline}>
                           <defs>
                             <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.4}/>
-                              <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                              <stop offset="5%" stopColor="#52a3dd" stopOpacity={0.4}/>
+                              <stop offset="95%" stopColor="#52a3dd" stopOpacity={0}/>
                             </linearGradient>
                           </defs>
-                          <XAxis dataKey="date" stroke="#71717a" fontSize={11} tickLine={false} />
-                          <YAxis stroke="#71717a" fontSize={11} tickLine={false} allowDecimals={false} />
-                          <Tooltip contentStyle={{ backgroundColor: "#18181b", borderColor: "#27272a", color: "#fff" }} />
-                          <Area type="monotone" dataKey="count" stroke="#8b5cf6" strokeWidth={2} fillOpacity={1} fill="url(#colorCount)" />
+                          <XAxis dataKey="date" stroke="#8a929a" fontSize={11} tickLine={false} />
+                          <YAxis stroke="#8a929a" fontSize={11} tickLine={false} allowDecimals={false} />
+                          <Tooltip contentStyle={{ backgroundColor: "rgba(14, 14, 14, 0.85)", backdropFilter: "blur(16px)", borderColor: "rgba(255, 255, 255, 0.15)", borderRadius: "12px", color: "#fff" }} />
+                          <Area type="monotone" dataKey="count" stroke="#52a3dd" strokeWidth={2.5} fillOpacity={1} fill="url(#colorCount)" />
                         </AreaChart>
                       </ResponsiveContainer>
                     </div>
@@ -544,20 +600,20 @@ export default function DashboardPage() {
 
                   {/* Questions Summary */}
                   <div className="flex flex-col gap-4">
-                    <h3 className="font-bold text-base">Question Breakdown</h3>
+                    <h3 className="font-bold text-base text-white">Question Breakdown</h3>
                     
                     {analytics.fieldsSummary.map((field) => (
-                      <div key={field.fieldId} className="bg-zinc-900/60 border border-white/5 rounded-2xl p-6 flex flex-col gap-4">
+                      <div key={field.fieldId} className="glass-level-1 rounded-2xl p-6 flex flex-col gap-4 shadow-lg">
                         <div className="flex justify-between items-start">
                           <div>
-                            <h4 className="font-bold text-sm text-zinc-100">{field.label}</h4>
-                            <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mt-1 inline-block">
+                            <h4 className="font-bold text-sm text-white">{field.label}</h4>
+                            <span className="text-[10px] text-neutral-400 uppercase tracking-widest font-bold mt-1 inline-block">
                               Type: {field.type.replace("_", " ")}
                             </span>
                           </div>
                           
                           {field.type === "rating" && (
-                            <span className="text-xs bg-amber-500/10 border border-amber-500/20 text-amber-400 font-bold px-2.5 py-1 rounded-lg">
+                            <span className="text-xs bg-[#e47939]/10 border border-[#e47939]/20 text-[#e47939] font-bold px-2.5 py-1 rounded-lg">
                               Avg: {field.averageRating} ★
                             </span>
                           )}
@@ -573,13 +629,13 @@ export default function DashboardPage() {
                                 const pct = ((count / total) * 100).toFixed(0);
                                 return (
                                   <div key={choice} className="flex flex-col gap-1 text-xs">
-                                    <div className="flex justify-between text-zinc-400">
+                                    <div className="flex justify-between text-neutral-400">
                                       <span className="font-semibold text-white">{choice}</span>
                                       <span>{count} votes ({pct}%)</span>
                                     </div>
-                                    <div className="w-full bg-zinc-950 rounded-full h-2 overflow-hidden">
+                                    <div className="w-full bg-[#0e0e0e]/50 rounded-full h-2 overflow-hidden border border-white/5">
                                       <div
-                                        className="bg-indigo-500 h-full rounded-full"
+                                        className="bg-gradient-to-r from-[#52a3dd] to-[#90cdff] h-full rounded-full"
                                         style={{ width: `${pct}%` }}
                                       />
                                     </div>
@@ -592,12 +648,12 @@ export default function DashboardPage() {
                             <div className="h-40">
                               <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={Object.entries(field.choicesBreakdown).map(([c, count]) => ({ name: c, count }))}>
-                                  <XAxis dataKey="name" fontSize={9} stroke="#71717a" />
-                                  <YAxis fontSize={9} stroke="#71717a" allowDecimals={false} />
-                                  <Tooltip contentStyle={{ backgroundColor: "#18181b", borderColor: "#27272a" }} />
-                                  <Bar dataKey="count" fill="#6366f1" radius={[4, 4, 0, 0]}>
+                                  <XAxis dataKey="name" fontSize={9} stroke="#8a929a" />
+                                  <YAxis fontSize={9} stroke="#8a929a" allowDecimals={false} />
+                                  <Tooltip contentStyle={{ backgroundColor: "rgba(14, 14, 14, 0.85)", backdropFilter: "blur(16px)", borderColor: "rgba(255, 255, 255, 0.15)", borderRadius: "12px", color: "#fff" }} />
+                                  <Bar dataKey="count" fill="#52a3dd" radius={[4, 4, 0, 0]}>
                                     {Object.entries(field.choicesBreakdown).map((entry, index) => (
-                                      <Cell key={`cell-${index}`} fill={index % 2 === 0 ? "#6366f1" : "#ec4899"} />
+                                      <Cell key={`cell-${index}`} fill={index % 2 === 0 ? "#52a3dd" : "#e47939"} />
                                     ))}
                                   </Bar>
                                 </BarChart>
@@ -609,10 +665,10 @@ export default function DashboardPage() {
                         {/* If text input */}
                         {field.recentResponses && field.recentResponses.length > 0 && (
                           <div className="flex flex-col gap-2">
-                            <h5 className="text-xs font-bold uppercase tracking-wider text-zinc-500">Recent Responses</h5>
+                            <h5 className="text-xs font-bold uppercase tracking-wider text-neutral-400">Recent Responses</h5>
                             <div className="flex flex-col gap-1.5">
                               {field.recentResponses.map((textVal, idx) => (
-                                <div key={idx} className="bg-zinc-950 border border-white/5 rounded-xl p-3 text-xs text-zinc-300">
+                                <div key={idx} className="bg-[#0e0e0e]/40 border border-white/5 rounded-xl p-3 text-xs text-[#bfc7d1]">
                                   {textVal}
                                 </div>
                               ))}
@@ -622,7 +678,7 @@ export default function DashboardPage() {
 
                         {/* Empty responses state */}
                         {(!field.choicesBreakdown && !field.recentResponses && field.type !== "rating") && (
-                          <p className="text-xs text-zinc-500">No submission inputs recorded for this field.</p>
+                          <p className="text-xs text-neutral-500">No submission inputs recorded for this field.</p>
                         )}
                       </div>
                     ))}
@@ -632,22 +688,22 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* TAB 3: DEVELOPER & SCALAR API */}
+          {/* TAB 3: DEVELOPER & SCALAR API VIEW */}
           {activeTab === "dev" && (
             <div className="flex flex-col gap-6">
-              <div>
-                <h1 className="text-2xl font-extrabold">Developer Integration</h1>
-                <p className="text-sm text-zinc-400 mt-0.5">Use secure tokens to query responses via Scalar OpenAPI.</p>
+              <div className="glass-level-1 p-6 rounded-2xl shadow-xl flex flex-col gap-2">
+                <h1 className="text-2xl font-black text-white tracking-tight">Developer Integration</h1>
+                <p className="text-sm text-[#bfc7d1]">Use secure tokens to query responses via Scalar OpenAPI.</p>
               </div>
 
               {/* Scalar details card */}
-              <div className="bg-indigo-950/20 border border-indigo-500/20 p-6 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div className="glass-level-1 border-[#52a3dd]/30 p-6 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-xl">
                 <div>
-                  <h3 className="font-bold text-base text-indigo-400 flex items-center gap-1.5">
+                  <h3 className="font-bold text-base text-[#52a3dd] flex items-center gap-1.5">
                     <ExternalLink className="w-5 h-5" />
                     Interactive Scalar API Documentation
                   </h3>
-                  <p className="text-xs text-zinc-300 mt-1 max-w-xl">
+                  <p className="text-xs text-[#bfc7d1] mt-1 max-w-xl">
                     Every endpoint in our tRPC routing compiles to standard OpenAPI. Navigate to the documentation to try endpoints directly from your browser!
                   </p>
                 </div>
@@ -655,7 +711,7 @@ export default function DashboardPage() {
                   href="http://localhost:8000/docs"
                   target="_blank"
                   rel="noreferrer"
-                  className="bg-white text-zinc-950 px-4 py-2.5 rounded-xl text-xs font-black flex items-center gap-1.5 hover:bg-zinc-200 transition-all shrink-0 cursor-pointer shadow-md"
+                  className="bg-[#52a3dd] text-[#003755] hover:bg-[#90cdff] hover:text-[#001e30] px-5 py-2.5 rounded-xl text-xs font-black flex items-center gap-1.5 transition-all shrink-0 cursor-pointer shadow-[0_0_20px_rgba(82,163,221,0.15)]"
                 >
                   Open Scalar Docs
                   <ExternalLink className="w-3.5 h-3.5" />
@@ -664,26 +720,28 @@ export default function DashboardPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
                 {/* Generate API Key */}
-                <div className="bg-zinc-900/40 border border-white/10 rounded-2xl p-6 flex flex-col gap-4">
-                  <h3 className="font-bold text-base">Generate API Key</h3>
+                <div className="glass-level-1 rounded-2xl p-6 flex flex-col gap-4 shadow-lg">
+                  <h3 className="font-bold text-base text-white">Generate API Key</h3>
                   
                   <form onSubmit={handleGenerateKeySubmit} className="flex flex-col gap-4">
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Key Description</label>
-                      <input
-                        type="text"
-                        placeholder="e.g. My Website Integration"
-                        value={keyDescription}
-                        onChange={(e) => setKeyDescription(e.target.value)}
-                        className="bg-zinc-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500 transition-colors"
-                        required
-                      />
+                      <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider">Key Description</label>
+                      <div className="relative input-glow rounded-lg transition-all duration-300 bg-[rgba(255,255,255,0.02)] border border-white/5 focus-within:border-[#52a3dd]">
+                        <input
+                          type="text"
+                          placeholder="e.g. My Website Integration"
+                          value={keyDescription}
+                          onChange={(e) => setKeyDescription(e.target.value)}
+                          className="w-full bg-transparent border-none py-3 px-4 text-sm text-[#e5e2e1] focus:outline-none placeholder:text-neutral-600 rounded-lg outline-none"
+                          required
+                        />
+                      </div>
                     </div>
 
                     <button
                       type="submit"
                       disabled={generateKeyMutation.isPending}
-                      className="bg-white text-zinc-950 font-bold py-2.5 rounded-xl text-xs hover:bg-zinc-200 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                      className="bg-[#52a3dd] text-[#003755] hover:bg-[#90cdff] hover:text-[#001e30] font-bold py-3 rounded-xl text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-[0_0_15px_rgba(82,163,221,0.1)] hover:shadow-[0_0_20px_rgba(82,163,221,0.25)]"
                     >
                       {generateKeyMutation.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
                       Generate Key
@@ -695,7 +753,7 @@ export default function DashboardPage() {
                       <p className="text-[10px] text-emerald-400 font-extrabold uppercase tracking-widest">
                         Key Generated (Copy now, it will not show again!)
                       </p>
-                      <div className="flex items-center gap-2 bg-zinc-950 border border-white/5 p-2.5 rounded-lg text-xs font-mono select-all">
+                      <div className="flex items-center gap-2 bg-[#0e0e0e]/60 border border-white/5 p-2.5 rounded-lg text-xs font-mono select-all text-emerald-300">
                         {generatedKey}
                       </div>
                     </div>
@@ -703,21 +761,21 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Active keys list */}
-                <div className="bg-zinc-900/40 border border-white/10 rounded-2xl p-6 flex flex-col gap-4">
-                  <h3 className="font-bold text-base">Active API Keys</h3>
+                <div className="glass-level-1 rounded-2xl p-6 flex flex-col gap-4 shadow-lg">
+                  <h3 className="font-bold text-base text-white">Active API Keys</h3>
 
                   {!apiKeys || apiKeys.length === 0 ? (
-                    <p className="text-xs text-zinc-500 py-4">No active API keys found. Generate one to start query integrations.</p>
+                    <p className="text-xs text-neutral-500 py-4">No active API keys found. Generate one to start query integrations.</p>
                   ) : (
                     <div className="flex flex-col gap-2">
                       {apiKeys.map((key) => (
                         <div
                           key={key.id}
-                          className="bg-zinc-950 border border-white/5 rounded-xl p-3.5 flex justify-between items-center"
+                          className="bg-[#0e0e0e]/40 border border-white/5 rounded-xl p-3.5 flex justify-between items-center"
                         >
                           <div>
                             <p className="text-xs font-bold text-white">{key.description}</p>
-                            <p className="text-[9px] text-zinc-500 mt-1">
+                            <p className="text-[9px] text-[#bfc7d1] mt-1">
                               Created: {key.createdAt ? new Date(key.createdAt).toLocaleDateString() : ""}
                             </p>
                           </div>
@@ -740,7 +798,6 @@ export default function DashboardPage() {
               </div>
             </div>
           )}
-
         </main>
       </div>
 
@@ -748,23 +805,23 @@ export default function DashboardPage() {
       {showCreateModal && (
         <div
           className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${closingModal ? 'modal-backdrop-exit' : 'modal-backdrop-enter'}`}
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(6px)' }}
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.65)', backdropFilter: 'blur(12px)' }}
           onClick={(e) => { if (e.target === e.currentTarget && !isRedirecting) closeModal(); }}
         >
-          <div className={`bg-zinc-900 border border-white/10 rounded-3xl p-8 max-w-lg w-full flex flex-col gap-6 relative ${closingModal ? 'modal-panel-exit' : 'modal-panel-enter'}`}>
+          <div className={`glass-level-1 rounded-3xl p-8 max-w-lg w-full flex flex-col gap-6 relative shadow-2xl ${closingModal ? 'modal-panel-exit' : 'modal-panel-enter'}`}>
             {isRedirecting ? (
               <div className="flex flex-col items-center justify-center py-12 gap-5 text-center content-fade-in">
                 <div className="relative w-16 h-16 flex items-center justify-center">
-                  <div className="absolute inset-0 rounded-full bg-purple-500/20 animate-ping" />
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-white shadow-lg shadow-purple-500/25">
-                    <Loader2 className="w-6 h-6 animate-spin" />
+                  <div className="absolute inset-0 rounded-full bg-[#52a3dd]/20 animate-ping" />
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-[#52a3dd] to-[#e47939] flex items-center justify-center text-white shadow-lg shadow-[#52a3dd]/25">
+                    <Loader2 className="w-6 h-6 animate-spin text-white" />
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <h3 className="text-xl font-black bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent animate-pulse">
+                  <h3 className="text-xl font-black bg-gradient-to-r from-white via-neutral-200 to-neutral-400 bg-clip-text text-transparent animate-pulse">
                     Assembling Workspace...
                   </h3>
-                  <p className="text-xs text-zinc-400 max-w-xs leading-relaxed font-medium">
+                  <p className="text-xs text-[#bfc7d1] max-w-xs leading-relaxed font-medium">
                     Initializing your 3D canvas, configuring fields, and loading Sakura stardust particle fields. Please wait!
                   </p>
                 </div>
@@ -772,36 +829,40 @@ export default function DashboardPage() {
             ) : (
               <div className="content-fade-in">
                 <div>
-                  <h2 className="text-xl font-bold">Create a New Form</h2>
-                  <p className="text-xs text-zinc-400 mt-1">Specify basic settings and pick a visual template style.</p>
+                  <h2 className="text-xl font-bold text-white">Create a New Form</h2>
+                  <p className="text-xs text-[#bfc7d1] mt-1">Specify basic settings and pick a visual template style.</p>
                 </div>
 
                 <form onSubmit={handleCreateFormSubmit} className="flex flex-col gap-4 mt-6">
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Form Title</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. User Feedback Survey"
-                      value={newTitle}
-                      onChange={(e) => setNewTitle(e.target.value)}
-                      className="bg-zinc-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500 transition-all duration-200"
-                      required
-                    />
+                    <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider">Form Title</label>
+                    <div className="relative input-glow rounded-lg transition-all duration-300 bg-[rgba(255,255,255,0.02)] border border-white/5 focus-within:border-[#52a3dd]">
+                      <input
+                        type="text"
+                        placeholder="e.g. User Feedback Survey"
+                        value={newTitle}
+                        onChange={(e) => setNewTitle(e.target.value)}
+                        className="w-full bg-transparent border-none py-3 px-4 text-sm text-[#e5e2e1] focus:outline-none placeholder:text-neutral-600 rounded-lg outline-none"
+                        required
+                      />
+                    </div>
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Description (Optional)</label>
-                    <textarea
-                      placeholder="Summarize the intent of this form..."
-                      value={newDesc}
-                      onChange={(e) => setNewDesc(e.target.value)}
-                      className="bg-zinc-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500 transition-all duration-200 h-20"
-                    />
+                    <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider">Description (Optional)</label>
+                    <div className="relative input-glow rounded-lg transition-all duration-300 bg-[rgba(255,255,255,0.02)] border border-white/5 focus-within:border-[#52a3dd]">
+                      <textarea
+                        placeholder="Summarize the intent of this form..."
+                        value={newDesc}
+                        onChange={(e) => setNewDesc(e.target.value)}
+                        className="w-full bg-transparent border-none py-3 px-4 text-sm text-[#e5e2e1] focus:outline-none placeholder:text-neutral-600 rounded-lg outline-none h-20 resize-none"
+                      />
+                    </div>
                   </div>
 
                   {/* Theme Template Selection */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Choose Theme Template</label>
+                    <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider">Choose Theme Template</label>
                     
                     <div className="grid grid-cols-3 gap-2.5">
                       {/* Anime */}
@@ -810,8 +871,8 @@ export default function DashboardPage() {
                         onClick={() => setNewTheme("anime")}
                         className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-center transition-all duration-200 cursor-pointer ${
                           newTheme === "anime"
-                            ? "bg-pink-500/10 border-pink-500/40 text-pink-400 scale-[1.03]"
-                            : "bg-zinc-950 border-white/5 text-zinc-400 hover:border-white/10 hover:scale-[1.02]"
+                            ? "bg-[#52a3dd]/10 border-[#52a3dd]/40 text-[#52a3dd] scale-[1.03] shadow-[0_0_15px_rgba(82,163,221,0.1)]"
+                            : "bg-[#0e0e0e]/40 border-white/5 text-neutral-400 hover:border-white/10 hover:scale-[1.02]"
                         }`}
                       >
                         <Flame className="w-5 h-5" />
@@ -824,8 +885,8 @@ export default function DashboardPage() {
                         onClick={() => setNewTheme("tech")}
                         className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-center transition-all duration-200 cursor-pointer ${
                           newTheme === "tech"
-                            ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-400 scale-[1.03]"
-                            : "bg-zinc-950 border-white/5 text-zinc-400 hover:border-white/10 hover:scale-[1.02]"
+                            ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-400 scale-[1.03] shadow-[0_0_15px_rgba(16,185,129,0.1)]"
+                            : "bg-[#0e0e0e]/40 border-white/5 text-neutral-400 hover:border-white/10 hover:scale-[1.02]"
                         }`}
                       >
                         <Terminal className="w-5 h-5" />
@@ -838,11 +899,11 @@ export default function DashboardPage() {
                         onClick={() => setNewTheme("retro")}
                         className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-center transition-all duration-200 cursor-pointer ${
                           newTheme === "retro"
-                            ? "bg-amber-500/10 border-amber-500/40 text-amber-400 scale-[1.03]"
-                            : "bg-zinc-950 border-white/5 text-zinc-400 hover:border-white/10 hover:scale-[1.02]"
+                            ? "bg-[#e47939]/10 border-[#e47939]/40 text-[#e47939] scale-[1.03] shadow-[0_0_15px_rgba(228,121,57,0.1)]"
+                            : "bg-[#0e0e0e]/40 border-white/5 text-neutral-400 hover:border-white/10 hover:scale-[1.02]"
                         }`}
                       >
-                        <Sparkles className="w-5 h-5" />
+                        <Gamepad2 className="w-5 h-5" />
                         <span className="text-[10px] font-bold">Retro</span>
                       </button>
                     </div>
@@ -850,22 +911,22 @@ export default function DashboardPage() {
 
                   {/* Visibility selection */}
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Visibility Mode</label>
-                    <div className="flex gap-4 bg-zinc-950 border border-white/10 p-1 rounded-xl">
+                    <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider">Visibility Mode</label>
+                    <div className="flex gap-4 bg-[#0e0e0e]/60 border border-white/10 p-1 rounded-xl">
                       <button
                         type="button"
                         onClick={() => setNewVisibility("public")}
-                        className={`flex-grow font-bold py-2 rounded-lg text-xs cursor-pointer transition-all duration-200 ${
-                          newVisibility === "public" ? "bg-white text-zinc-950 shadow-sm" : "text-zinc-400 hover:text-white"
+                        className={`flex-grow font-bold py-2.5 rounded-lg text-xs cursor-pointer transition-all duration-200 ${
+                          newVisibility === "public" ? "bg-white text-zinc-950 shadow-sm font-extrabold" : "text-neutral-400 hover:text-white"
                         }`}
                       >
-                        Public (Shown in explore)
+                        Public (Explore page)
                       </button>
                       <button
                         type="button"
                         onClick={() => setNewVisibility("unlisted")}
-                        className={`flex-grow font-bold py-2 rounded-lg text-xs cursor-pointer transition-all duration-200 ${
-                          newVisibility === "unlisted" ? "bg-white text-zinc-950 shadow-sm" : "text-zinc-400 hover:text-white"
+                        className={`flex-grow font-bold py-2.5 rounded-lg text-xs cursor-pointer transition-all duration-200 ${
+                          newVisibility === "unlisted" ? "bg-white text-zinc-950 shadow-sm font-extrabold" : "text-neutral-400 hover:text-white"
                         }`}
                       >
                         Unlisted (Link only)
@@ -877,14 +938,14 @@ export default function DashboardPage() {
                     <button
                       type="button"
                       onClick={() => closeModal()}
-                      className="flex-1 border border-white/10 hover:bg-white/5 py-3 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer"
+                      className="flex-1 border border-white/10 hover:bg-white/5 py-3 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer text-neutral-300 hover:text-white"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
                       disabled={createFormMutation.isPending}
-                      className="flex-1 bg-white hover:bg-zinc-200 text-zinc-950 py-3 rounded-xl text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-white/5 disabled:opacity-60"
+                      className="flex-1 bg-[#52a3dd] hover:bg-[#90cdff] text-[#003755] hover:text-[#001e30] py-3 rounded-xl text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer shadow-[0_0_20px_rgba(82,163,221,0.15)] disabled:opacity-60"
                     >
                       {createFormMutation.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
                       Confirm
