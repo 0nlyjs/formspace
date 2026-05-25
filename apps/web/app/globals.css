@@ -123,3 +123,21 @@
 .animate-orb-2 {
   animation: float-orb-2 30s infinite ease-in-out;
 }
+
+/* Premium Non-Linear Moving Spatial Gradient */
+@keyframes spatial-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-spatial-gradient {
+  background-size: 200% 100%;
+  animation: spatial-gradient 5.5s ease-in-out infinite;
+}

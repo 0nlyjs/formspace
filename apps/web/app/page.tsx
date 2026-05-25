@@ -106,11 +106,24 @@ export default function Home() {
             {/* Big Premium Header (text-5xl/text-7xl to text-6xl/text-8xl) */}
             <h1 className="text-6xl md:text-8xl font-black tracking-tight leading-[1.05] text-white">
               Build the <br />
-              <span className="bg-gradient-to-r from-[#90cdff] via-[#52a3dd] to-sky-400 bg-clip-text text-transparent filter drop-shadow-[0_0_30px_rgba(144,205,255,0.25)]">
-                future
-              </span>{" "}
-              of{" "}
-              <span className="bg-gradient-to-r from-[#ffb690] via-[#e47939] to-orange-500 bg-clip-text text-transparent filter drop-shadow-[0_0_30px_rgba(255,182,144,0.25)]">
+              <span 
+                className="bg-clip-text text-transparent animate-spatial-gradient filter drop-shadow-[0_0_30px_rgba(144,205,255,0.15)] inline-block"
+                style={{
+                  backgroundImage: "linear-gradient(90deg, #52a3dd 0%, #e47939 33%, #52a3dd 66%, #e47939 100%)",
+                  backgroundSize: "200% 100%"
+                }}
+              >
+                future of
+              </span>
+              <br />
+              <span 
+                className="bg-clip-text text-transparent animate-spatial-gradient filter drop-shadow-[0_0_30px_rgba(144,205,255,0.15)] inline-block"
+                style={{
+                  backgroundImage: "linear-gradient(90deg, #52a3dd 0%, #e47939 33%, #52a3dd 66%, #e47939 100%)",
+                  backgroundSize: "200% 100%",
+                  animationDelay: "-2.75s"
+                }}
+              >
                 forms.
               </span>
             </h1>
@@ -173,10 +186,15 @@ export default function Home() {
             {/* Glowing Header (text-4xl/text-5xl to text-5xl/text-6xl) */}
             <h2 className="text-5xl md:text-6xl font-black text-white leading-tight">
               Give your questions a <br />
-              <span className="bg-gradient-to-r from-[#ffb690] to-[#e47939] bg-clip-text text-transparent filter drop-shadow-[0_0_20px_rgba(255,182,144,0.15)] font-black">
-                sense
-              </span>{" "}
-              of space.
+              <span 
+                className="bg-clip-text text-transparent animate-spatial-gradient filter drop-shadow-[0_0_25px_rgba(255,182,144,0.15)] inline-block"
+                style={{
+                  backgroundImage: "linear-gradient(90deg, #52a3dd 0%, #e47939 33%, #52a3dd 66%, #e47939 100%)",
+                  backgroundSize: "200% 100%"
+                }}
+              >
+                sense of space.
+              </span>
             </h2>
 
             {/* Paragraph Subtext (text-sm/text-base to text-base/text-lg) */}
