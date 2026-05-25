@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { trpc } from "~/trpc/client";
-import { ThreeBackground } from "~/components/ThreeBackground";
+import { InteractiveBackground } from "~/components/InteractiveBackground";
 import { toast } from "sonner";
 import { Lock, Mail, User, ArrowRight, Loader2, Eye, EyeOff } from "lucide-react";
 
@@ -31,29 +31,13 @@ export default function SignupPage() {
     onSuccess: (res) => {
       localStorage.setItem("token", res.token);
       toast.success(`Welcome to Formspace, ${res.fullName}!`);
-      // Force hard-reload immediately to set cookies/state and overwrite the history stack entry cleanly
+      // Force hard-reload immediately to set cookies/state and overwrite history cleanly
       window.location.replace("/dashboard");
     },
     onError: (err) => {
       toast.error(err.message || "Failed to sign up. Please try again.");
     },
   });
-
-  // While verifying, show a high-fidelity loading gate to skip the form flash
-  if (meLoading || me) {
-    return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-slate-50 relative">
-        <ThreeBackground theme="tech" />
-        <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-800 p-8 rounded-3xl text-center max-w-sm flex flex-col gap-3 items-center z-10 shadow-xl">
-          <Loader2 className="w-8 h-8 animate-spin text-blue-500 mb-2" />
-          <h3 className="font-extrabold text-sm text-slate-50">Accessing Secure Space...</h3>
-          <p className="text-xs text-slate-400">
-            Verifying session keys and authentication cookies.
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,114 +52,153 @@ export default function SignupPage() {
     signupMutation.mutate({ fullName, email, password });
   };
 
-  return (
-    <main className="relative min-h-screen flex items-center justify-center bg-slate-950 font-sans p-6 overflow-hidden">
-      {/* 3D background */}
-      <ThreeBackground theme="tech" />
-
-      <div className="absolute inset-0 bg-radial-gradient from-blue-900/20 via-transparent to-transparent pointer-events-none" />
-
-      <div className="relative w-full max-w-md bg-slate-900/80 backdrop-blur-xl border border-slate-800 p-8 rounded-3xl shadow-2xl shadow-blue-900/20 z-10 flex flex-col gap-6">
-        {/* Header */}
-        <div className="text-center flex flex-col gap-2">
-          <Link href="/" className="inline-flex justify-center items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center">
-              <span className="font-extrabold text-xs text-white">FS</span>
-            </div>
-            <span className="font-black text-lg text-slate-50">formspace.</span>
-          </Link>
-          <h2 className="text-2xl font-black text-slate-50">Get Started</h2>
-          <p className="text-sm text-slate-400">Create a creator account and start building</p>
+  // While verifying, show a high-fidelity loading gate to skip the form flash
+  if (meLoading || me) {
+    return (
+      <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center text-[#e5e2e1] relative font-sans">
+        <InteractiveBackground />
+        <div className="ambient-glow" />
+        <div className="glass-level-1 rounded-2xl p-8 text-center max-w-sm flex flex-col gap-3 items-center z-10 shadow-2xl">
+          <Loader2 className="w-8 h-8 animate-spin text-[#52a3dd] mb-2" />
+          <h3 className="font-bold text-sm text-[#e5e2e1] tracking-wide">Accessing Secure Space...</h3>
+          <p className="text-xs text-slate-400 leading-relaxed">
+            Verifying session keys and authenticating credentials.
+          </p>
         </div>
+      </div>
+    );
+  }
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
-              Full Name
-            </label>
-            <div className="relative">
-              <User className="absolute left-4 top-3.5 w-5 h-5 text-slate-500" />
-              <input
-                type="text"
-                placeholder="John Doe"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                className="w-full bg-slate-950/50 border border-slate-700 rounded-2xl py-3 pl-12 pr-4 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
-                required
-              />
-            </div>
+  return (
+    <main className="relative min-h-screen flex items-center justify-center bg-[#050505] font-sans p-6 overflow-hidden select-none">
+      {/* 3D Interactive Points Background */}
+      <InteractiveBackground />
+      
+      {/* Pulsing Ambient Orb Glow */}
+      <div className="ambient-glow" />
+
+      <div className="w-full max-w-[480px] px-4 relative z-10 py-10 flex flex-col justify-center min-h-screen">
+        <div className="glass-level-1 rounded-2xl p-8 flex flex-col gap-8 shadow-2xl relative my-auto">
+          
+          {/* Header / Logo */}
+          <div className="flex flex-col items-center gap-4 text-center">
+            <img 
+              id="app-logo"
+              alt="FormSpace Logo" 
+              className="h-12 object-contain w-auto mx-auto select-none" 
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIN8_hMTBYEGrpk3uRvOfz07E8YNUiGE687uhRHfb1clW0yc8X6UDsun8-_OG6Dlx6QnaLaltNfBAqCsAy1i1bW_45Npo79qXLRzOMICMhscWGiyqAQyqPKVIxlQgjpt5Xe9iD5GQoQYzk3PP3VtwvbJQ7EYNTrYYxpHaC4RIk9M6dUIDW3qZ8VNf5uhSzI2aMiFE3XrnYmjlNgTj3lPGYH_0lP8uT0CwAz5nWqZbfVqbN2YP6uwyLCshPyrGGTFuppmqo_L3XBvM7"
+              referrerPolicy="no-referrer"
+            />
+            <h1 className="text-2xl font-bold tracking-tight text-[#e5e2e1]">
+              Create an account
+            </h1>
+            <p className="text-sm text-[#bfc7d1]">
+              Get started to build interstellar forms.
+            </p>
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
-              Email Address
-            </label>
-            <div className="relative">
-              <Mail className="absolute left-4 top-3.5 w-5 h-5 text-slate-500" />
-              <input
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-slate-950/50 border border-slate-700 rounded-2xl py-3 pl-12 pr-4 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
-                required
-              />
+          {/* Form */}
+          <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+            {/* Full Name field */}
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-semibold tracking-wider uppercase text-neutral-300" htmlFor="name">
+                Full Name
+              </label>
+              <div className="relative input-glow rounded-lg transition-all duration-300 bg-[rgba(255,255,255,0.02)] border border-white/5 focus-within:border-[#52a3dd] focus-within:bg-[#0e0e0e]/50">
+                <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" />
+                <input 
+                  id="name"
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="Enter your name" 
+                  className="w-full bg-transparent border-none py-3 pl-10 pr-4 text-sm text-[#e5e2e1] focus:outline-none placeholder:text-neutral-600 rounded-lg outline-none"
+                  required
+                />
+              </div>
             </div>
-          </div>
 
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
-              Password
-            </label>
-            <div className="relative">
-              <Lock className="absolute left-4 top-3.5 w-5 h-5 text-slate-500" />
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Min. 6 characters"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-slate-950/50 border border-slate-700 rounded-2xl py-3 pl-12 pr-12 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-3.5 text-slate-500 hover:text-slate-300 transition-colors cursor-pointer"
+            {/* Email Input */}
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-semibold tracking-wider uppercase text-neutral-300" htmlFor="email">
+                Email
+              </label>
+              <div className="relative input-glow rounded-lg transition-all duration-300 bg-[rgba(255,255,255,0.02)] border border-white/5 focus-within:border-[#52a3dd] focus-within:bg-[#0e0e0e]/50">
+                <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" />
+                <input 
+                  id="email"
+                  type="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email" 
+                  className="w-full bg-transparent border-none py-3 pl-10 pr-4 text-sm text-[#e5e2e1] focus:outline-none placeholder:text-neutral-600 rounded-lg outline-none"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Password Input */}
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-semibold tracking-wider uppercase text-neutral-300" htmlFor="password">
+                Password
+              </label>
+              <div className="relative input-glow rounded-lg transition-all duration-300 bg-[rgba(255,255,255,0.02)] border border-white/5 focus-within:border-[#52a3dd] focus-within:bg-[#0e0e0e]/50">
+                <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" />
+                <input 
+                  id="password"
+                  type={showPassword ? 'text' : 'password'} 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password" 
+                  className="w-full bg-transparent border-none py-3 pl-10 pr-10 text-sm text-[#e5e2e1] focus:outline-none placeholder:text-neutral-600 rounded-lg outline-none"
+                  required
+                />
+                <button 
+                  id="visibility-icon"
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-white transition-colors"
+                >
+                  {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
+                </button>
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <button 
+              id="auth-submit-btn"
+              type="submit"
+              disabled={signupMutation.isPending}
+              className="w-full bg-[#52a3dd] text-[#003755] font-semibold text-sm py-3 rounded-lg hover:bg-[#90cdff] hover:text-[#001e30] transition-all duration-300 shadow-[0_0_20px_rgba(82,163,221,0.15)] hover:shadow-[0_0_25px_rgba(82,163,221,0.35)] flex items-center justify-center gap-2 mt-2 cursor-pointer"
+            >
+              {signupMutation.isPending ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin text-[#003755]" />
+                  Creating...
+                </>
+              ) : (
+                <>
+                  Create Account
+                  <ArrowRight size={16} />
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Footer Link */}
+          <div className="text-center pt-2">
+            <p className="text-sm text-[#bfc7d1]">
+              Already have an account?{" "}
+              <Link 
+                id="switch-auth-mode"
+                href="/login"
+                className="text-[#90cdff] hover:text-[#52a3dd] hover:underline transition-all font-medium cursor-pointer"
               >
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-              </button>
-            </div>
+                Sign In
+              </Link>
+            </p>
           </div>
 
-          <button
-            type="submit"
-            disabled={signupMutation.isPending}
-            className="w-full mt-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 active:scale-[0.98] transition-all py-3.5 rounded-2xl font-bold flex items-center justify-center gap-2 text-white shadow-md shadow-blue-600/20 cursor-pointer"
-          >
-            {signupMutation.isPending ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                Registering...
-              </>
-            ) : (
-              <>
-                Create Account
-                <ArrowRight className="w-5 h-5" />
-              </>
-            )}
-          </button>
-        </form>
-
-        {/* Switch to Login */}
-        <div className="text-center text-xs text-slate-500 border-t border-slate-800 pt-4">
-          Already have an account?{" "}
-          <Link
-            href="/login"
-            className="font-bold text-slate-200 hover:text-blue-400 transition-colors"
-          >
-            Sign In
-          </Link>
         </div>
       </div>
     </main>
