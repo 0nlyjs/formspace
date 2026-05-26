@@ -254,6 +254,51 @@ export default function Home() {
         </section>
       </div>
 
+      {/* Centered Gallery Callout Section (Section 3) */}
+      <section className="relative px-6 py-20 md:py-28 md:px-12 max-w-7xl mx-auto w-full z-10 border-t border-white/5 overflow-hidden">
+        <div className="relative z-10 flex flex-col items-center text-center max-w-3xl mx-auto gap-6 md:gap-8">
+          {/* Glassmorphic Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#52a3dd]/5 border border-[#52a3dd]/15 text-sm font-semibold text-[#90cdff] uppercase tracking-wider shadow-[0_0_15px_rgba(82,163,221,0.05)]">
+            <Sparkles className="w-3.5 h-3.5 text-[#90cdff]" />
+            Spatial Experience
+          </div>
+
+          {/* Headline */}
+          <h2 className="text-4xl md:text-6xl font-black tracking-tight text-white leading-tight">
+            Step into a new <br />
+            <span
+              className="bg-clip-text text-transparent animate-spatial-gradient filter drop-shadow-[0_0_20px_rgba(82,163,221,0.15)] inline-block"
+              style={{
+                backgroundImage:
+                  "linear-gradient(90deg, #52a3dd 0%, #e47939 33%, #52a3dd 66%, #e47939 100%)",
+                backgroundSize: "200% 100%",
+                animationDelay: "-1.5s",
+              }}
+            >
+              dimension of data.
+            </span>
+          </h2>
+
+          {/* Body Text */}
+          <p className="text-zinc-400 text-base md:text-lg leading-relaxed font-medium">
+            Harness the power of modern web rendering to captivate your audience. By blending
+            interactive 3D objects with your questions, you elevate your brand’s digital presence
+            and turn routine data collection into a premium, interactive journey.
+          </p>
+
+          {/* Button */}
+          <div className="mt-4">
+            <Link
+              href="/signup"
+              className="relative inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-sm font-bold uppercase tracking-wider text-black bg-gradient-to-r from-[#90cdff] to-[#ffb690] hover:from-[#52a3dd] hover:to-[#e47939] transition-all hover:scale-[1.02] shadow-[0_0_30px_rgba(82,163,221,0.25)] hover:shadow-[0_0_35px_rgba(228,121,57,0.3)] duration-300 hover:text-white"
+            >
+              Get Started
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* PUBLIC EXPLORE & TEMPLATE GALLERY */}
       <section
         id="public-forms"
