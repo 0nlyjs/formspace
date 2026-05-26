@@ -4,10 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { trpc } from "~/trpc/client";
 import { InteractiveBackground } from "~/components/InteractiveBackground";
-import { HeroTorusCanvas } from "~/components/HeroTorusCanvas";
-import { FeatureSphereCanvas } from "~/components/FeatureSphereCanvas";
 import { FloatingGlassCard } from "~/components/FloatingGlassCard";
-import { SpatialFeatureCanvas } from "~/components/SpatialFeatureCanvas";
 import { TechFloatingGlassCard } from "~/components/TechFloatingGlassCard";
 import {
   Sparkles,
@@ -21,7 +18,6 @@ import {
   Twitter,
   Github,
   Linkedin,
-  Lock,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -172,17 +168,12 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Right Column: Beautiful Holographic 3D Model */}
-          <div className="lg:col-span-6 flex justify-center items-center w-full">
-            <div className="relative w-full max-w-4xl aspect-square translate-y-[130px]">
-              <HeroTorusCanvas />
-              {/* Beautiful floating glass card positioned at the top Y-axis of the 3D model */}
-              <div
-                className="absolute top-[-15%] md:top-[-20%] left-1/2 -translate-x-1/2 w-[92%] sm:w-[85%] z-20 pointer-events-auto"
-                style={{ marginTop: "50px" }}
-              >
-                <FloatingGlassCard />
-              </div>
+          {/* Right Column: Floating Glassmorphism Card */}
+          <div className="lg:col-span-6 flex justify-center items-center w-full relative mt-12 lg:mt-0">
+            {/* Subtle premium background glow behind the glass card */}
+            <div className="absolute -inset-10 bg-radial from-[#52a3dd]/15 via-[#e47939]/5 to-transparent opacity-50 blur-3xl pointer-events-none" />
+            <div className="relative w-full max-w-xl z-20">
+              <FloatingGlassCard />
             </div>
           </div>
         </div>

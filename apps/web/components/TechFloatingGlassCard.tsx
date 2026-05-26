@@ -15,28 +15,102 @@ export const TechFloatingGlassCard: React.FC = () => {
 
   // DOM Ref to bypass React state for high-performance 120fps CSS 3D updates on the entire group
   const cardRef = useRef<HTMLDivElement>(null);
+  const glareRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleModelMove = (event: Event) => {
-      const customEvent = event as CustomEvent;
-      const { rotX, rotY, rotZ, bobY } = customEvent.detail;
+    const card = cardRef.current;
+    const glare = glareRef.current;
+    if (!card) return;
 
-      // Convert radians to degrees
-      const degX = (rotX * 180) / Math.PI;
-      const degY = (rotY * 180) / Math.PI;
-      const degZ = (rotZ * 180) / Math.PI;
+    // Window mouse coordinates for tilt
+    let isHovered = false;
 
-      // Vertical floating translations. Negate bobY to invert WebGL vs CSS Y-axis
-      const pxY = -bobY * 70;
+    // Spring physics variables for ultra-smooth transitions
+    let currentRotateX = 0;
+    let currentRotateY = 0;
+    let currentTranslateY = 0;
+    let currentScale = 1.0;
 
-      // Update the entire parent container group in perfect, lag-free 3D perspective lockstep
-      if (cardRef.current) {
-        cardRef.current.style.transform = `scale(0.75) rotateX(${degX * 1.25}deg) rotateY(${degY * 1.25}deg) rotateZ(${degZ * 1.25}deg) translateY(${pxY}px)`;
+    let targetRotateX = 0;
+    let targetRotateY = 0;
+    let targetTranslateY = 0;
+    let targetScale = 1.0;
+
+    // Glare position variables
+    let glareX = 0;
+    let glareY = 0;
+    let targetGlareX = 0;
+    let targetGlareY = 0;
+
+    const handleWindowMouseMove = (e: MouseEvent) => {
+      // 1. Calculate normalized coordinates (-1 to 1) for the whole window
+      const normX = (e.clientX / window.innerWidth) * 2 - 1;
+      const normY = (e.clientY / window.innerHeight) * 2 - 1;
+
+      // 2. Set target rotations (max 12 degrees tilt)
+      targetRotateX = -normY * 12;
+      targetRotateY = normX * 12;
+
+      // 3. Map to card local coordinates for glare reflection
+      const rect = card.getBoundingClientRect();
+      targetGlareX = e.clientX - rect.left;
+      targetGlareY = e.clientY - rect.top;
+    };
+
+    const handleMouseEnter = () => {
+      isHovered = true;
+      targetScale = 1.04; // scale up slightly more on hover for premium depth
+    };
+
+    const handleMouseLeave = () => {
+      isHovered = false;
+      targetScale = 1.0;
+    };
+
+    window.addEventListener("mousemove", handleWindowMouseMove);
+    card.addEventListener("mouseenter", handleMouseEnter);
+    card.addEventListener("mouseleave", handleMouseLeave);
+
+    let animationFrameId: number;
+    const startTime = Date.now();
+
+    const updatePhysics = () => {
+      animationFrameId = requestAnimationFrame(updatePhysics);
+
+      const elapsed = (Date.now() - startTime) / 1000;
+      
+      // Gentle floating bobbing loop (using sine wave)
+      // Amplitude: 12px, Period: ~4.5 seconds
+      // On hover, we can slightly dampen the bobbing amplitude for better usability of form elements
+      const bobAmplitude = isHovered ? 3 : 12;
+      const bobFreq = 1.4; // rads per sec
+      targetTranslateY = Math.sin(elapsed * bobFreq) * bobAmplitude;
+
+      // Spring physics interpolation (lerp with damping)
+      currentRotateX += (targetRotateX - currentRotateX) * 0.08;
+      currentRotateY += (targetRotateY - currentRotateY) * 0.08;
+      currentTranslateY += (targetTranslateY - currentTranslateY) * 0.08;
+      currentScale += (targetScale - currentScale) * 0.1;
+
+      // Apply gorgeous premium 3D transforms:
+      card.style.transform = `scale(${currentScale}) rotateX(${currentRotateX}deg) rotateY(${currentRotateY}deg) translateY(${currentTranslateY}px)`;
+
+      // Smoothly interpolate glare coordinates
+      if (glare) {
+        glareX += (targetGlareX - glareX) * 0.15;
+        glareY += (targetGlareY - glareY) * 0.15;
+        glare.style.background = `radial-gradient(circle 250px at ${glareX}px ${glareY}px, rgba(144, 205, 255, 0.22) 0%, transparent 80%)`;
       }
     };
 
-    window.addEventListener("3d-model-move", handleModelMove);
-    return () => window.removeEventListener("3d-model-move", handleModelMove);
+    updatePhysics();
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener("mousemove", handleWindowMouseMove);
+      card.removeEventListener("mouseenter", handleMouseEnter);
+      card.removeEventListener("mouseleave", handleMouseLeave);
+    };
   }, []);
 
   return (
@@ -46,7 +120,7 @@ export const TechFloatingGlassCard: React.FC = () => {
       style={{
         perspective: 1200,
         transformStyle: "preserve-3d",
-        transform: "scale(0.75) rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateY(0px)",
+        transform: "scale(1) rotateX(0deg) rotateY(0deg) translateY(0px)",
       }}
     >
       
@@ -76,6 +150,15 @@ export const TechFloatingGlassCard: React.FC = () => {
               "linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.15) 45%, rgba(255, 255, 255, 0.25) 50%, rgba(255, 255, 255, 0.15) 55%, transparent 65%)",
             backgroundSize: "200% 200%",
             animation: "navbar-bg-sweep 12s linear infinite",
+          }}
+        />
+
+        {/* Dynamic interactive cursor spotlight glare reflection */}
+        <div
+          ref={glareRef}
+          className="absolute inset-0 pointer-events-none z-15 mix-blend-screen opacity-100 transition-opacity duration-300"
+          style={{
+            background: "radial-gradient(circle 250px at 50% 50%, rgba(144, 205, 255, 0.22) 0%, transparent 80%)"
           }}
         />
 
