@@ -3,7 +3,7 @@
 import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 
-export const WavySphereCanvas: React.FC = () => {
+export const WavySphereCanvas: React.FC<{ shape?: "sphere" | "box" }> = ({ shape = "sphere" }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -85,18 +85,24 @@ export const WavySphereCanvas: React.FC = () => {
           vec3 finalColor = mix(color1, color2, mixFactor);
 
           // Brighten fragment output for glowing light wireframe look
-          gl_FragColor = vec4(finalColor, 0.65);
+          gl_FragColor = vec4(finalColor, 0.70);
         }
       `,
       wireframe: true,
       transparent: true,
-      blending: THREE.AdditiveBlending,
+      blending: THREE.NormalBlending,
       depthWrite: false,
     });
 
-    // 3. Create Wavy Wireframe Sphere
-    // Icosahedron with radius 3.0 (3% smaller than 3.1) and 5 detail subdivisions
-    const sphereGeometry = new THREE.IcosahedronGeometry(3.0, 5);
+    // 3. Create Wavy Wireframe Geometry
+    let sphereGeometry: THREE.BufferGeometry;
+    if (shape === "box") {
+      // Subdivision-rich 3D box/cube (square) sized to 3.3 (20% bigger than height 2.7) with equal divisions
+      sphereGeometry = new THREE.BoxGeometry(3.3, 3.3, 3.3, 14, 14, 14);
+    } else {
+      // Base 3D wireframe sphere
+      sphereGeometry = new THREE.IcosahedronGeometry(2.8, 5);
+    }
     const sphereMesh = new THREE.Mesh(sphereGeometry, shaderMaterial);
     scene.add(sphereMesh);
 

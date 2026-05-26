@@ -7,6 +7,7 @@ import { InteractiveBackground } from "~/components/InteractiveBackground";
 import { FloatingGlassCard } from "~/components/FloatingGlassCard";
 import { TechFloatingGlassCard } from "~/components/TechFloatingGlassCard";
 import { WavySphereCanvas } from "~/components/WavySphereCanvas";
+import { WavyClothCanvas } from "~/components/WavyClothCanvas";
 import {
   Sparkles,
   ArrowRight,
@@ -172,7 +173,10 @@ export default function Home() {
           {/* Right Column: Floating Glassmorphism Card & Wavy Sphere */}
           <div className="lg:col-span-6 flex justify-center items-center w-full relative mt-12 lg:mt-0 min-h-[550px] md:min-h-[650px] z-20">
             {/* 3D Wavy Sphere Canvas centered on the glass card with overflow-allowed sizing to prevent clipping */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160%] h-[160%] z-10 pointer-events-none flex items-center justify-center overflow-visible">
+            <div 
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160%] h-[160%] z-10 pointer-events-none flex items-center justify-center overflow-visible opacity-70"
+              style={{ opacity: 0.7 }}
+            >
               <WavySphereCanvas />
             </div>
             
@@ -184,63 +188,71 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Feature Section (Interactive coordinates sphere) */}
-      <section
-        id="features"
-        className="relative px-6 py-20 md:py-32 md:px-12 max-w-7xl mx-auto w-full z-10 border-t border-white/5"
-      >
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center w-full">
-          {/* Left Column: Beautiful Floating Tech Glassmorphism Card */}
-          <div className="lg:col-span-5 order-last lg:order-first flex justify-center items-center w-full">
-            <div className="relative w-full max-w-xl aspect-square flex items-center justify-center">
-              {/* Subtle internal glowing orb */}
-              <div className="absolute -inset-10 bg-radial from-[#52a3dd]/10 via-transparent to-transparent opacity-40 blur-3xl pointer-events-none" />
-              <TechFloatingGlassCard />
-            </div>
-          </div>
-
-          {/* Right Column: Heading, description and explore button */}
-          <div className="lg:col-span-7 flex flex-col gap-6 text-left">
-            {/* Orange secondary accent badge (text-xs to text-sm) */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#ffb690]/5 border border-[#ffb690]/15 w-max text-sm font-semibold text-[#ffb690]/95 tracking-wider uppercase">
-              Formspace Dimensions
-            </div>
-
-            {/* Glowing Header (text-4xl/text-5xl to text-5xl/text-6xl) */}
-            <h2 className="text-5xl md:text-6xl font-black text-white leading-tight">
-              Give your questions a <br />
-              <span
-                className="bg-clip-text text-transparent animate-spatial-gradient filter drop-shadow-[0_0_25px_rgba(255,182,144,0.15)] inline-block"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(90deg, #52a3dd 0%, #e47939 33%, #52a3dd 66%, #e47939 100%)",
-                  backgroundSize: "200% 100%",
-                }}
-              >
-                sense of space.
-              </span>
-            </h2>
-
-            {/* Paragraph Subtext (text-sm/text-base to text-base/text-lg) */}
-            <p className="text-zinc-400 text-base md:text-lg leading-relaxed max-w-xl font-medium">
-              Transform monotonous surveys into immersive spatial environments. Our engine
-              translates form logic into interactive 3D coordinates, giving every input field,
-              drop-down, and slide a literal dimension. Increase engagement up to 180% with layouts
-              designed for the spatial computing age.
-            </p>
-
-            {/* CTA Glass Button (text-xs to text-sm) */}
-            <div className="mt-2">
-              <Link
-                href="/fill/anime-survey"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold uppercase tracking-wider text-white border border-[#52a3dd]/40 hover:border-[#90cdff] hover:bg-[#52a3dd]/10 shadow-[0_0_15px_rgba(82,163,221,0.05)] hover:shadow-[0_0_20px_rgba(82,163,221,0.15)] transition-all duration-300"
-              >
-                Explore Templates
-              </Link>
-            </div>
-          </div>
+      {/* Feature Section (Interactive coordinates ribbon cloth) */}
+      <div className="w-full relative overflow-visible">
+        {/* Full-screen width 3D Wavy Cloth Canvas floating in the background spanning left to right (overflow-visible wrapper to prevent clipping) */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-screen h-full z-0 pointer-events-none overflow-hidden flex items-center justify-center">
+          <WavyClothCanvas />
         </div>
-      </section>
+
+        <section
+          id="features"
+          className="relative px-6 py-20 md:py-32 md:px-12 max-w-7xl mx-auto w-full z-10 border-t border-white/5"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center w-full relative z-20">
+            {/* Left Column: Beautiful Floating Tech Glassmorphism Card */}
+            <div className="lg:col-span-5 order-last lg:order-first flex justify-center items-center w-full relative z-20">
+              <div className="relative w-full max-w-xl aspect-square flex items-center justify-center">
+                {/* Beautiful floating tech glass card positioned in front (z-20) */}
+                <div className="relative w-full z-20">
+                  <TechFloatingGlassCard />
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Heading, description and explore button */}
+            <div className="lg:col-span-7 flex flex-col gap-6 text-left">
+              {/* Orange secondary accent badge (text-xs to text-sm) */}
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#ffb690]/5 border border-[#ffb690]/15 w-max text-sm font-semibold text-[#ffb690]/95 tracking-wider uppercase">
+                Formspace Dimensions
+              </div>
+
+              {/* Glowing Header (text-4xl/text-5xl to text-5xl/text-6xl) */}
+              <h2 className="text-5xl md:text-6xl font-black text-white leading-tight">
+                Give your questions a <br />
+                <span
+                  className="bg-clip-text text-transparent animate-spatial-gradient filter drop-shadow-[0_0_25px_rgba(255,182,144,0.15)] inline-block"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(90deg, #52a3dd 0%, #e47939 33%, #52a3dd 66%, #e47939 100%)",
+                    backgroundSize: "200% 100%",
+                  }}
+                >
+                  sense of space.
+                </span>
+              </h2>
+
+              {/* Paragraph Subtext (text-sm/text-base to text-base/text-lg) */}
+              <p className="text-zinc-400 text-base md:text-lg leading-relaxed max-w-xl font-medium">
+                Transform monotonous surveys into immersive spatial environments. Our engine
+                translates form logic into interactive 3D coordinates, giving every input field,
+                drop-down, and slide a literal dimension. Increase engagement up to 180% with layouts
+                designed for the spatial computing age.
+              </p>
+
+              {/* CTA Glass Button (text-xs to text-sm) */}
+              <div className="mt-2">
+                <Link
+                  href="/fill/anime-survey"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold uppercase tracking-wider text-white border border-[#52a3dd]/40 hover:border-[#90cdff] hover:bg-[#52a3dd]/10 shadow-[0_0_15px_rgba(82,163,221,0.05)] hover:shadow-[0_0_20px_rgba(82,163,221,0.15)] transition-all duration-300"
+                >
+                  Explore Templates
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
 
       {/* PUBLIC EXPLORE & TEMPLATE GALLERY */}
       <section
