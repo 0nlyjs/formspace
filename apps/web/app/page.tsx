@@ -7,6 +7,8 @@ import { InteractiveBackground } from "~/components/InteractiveBackground";
 import { HeroTorusCanvas } from "~/components/HeroTorusCanvas";
 import { FeatureSphereCanvas } from "~/components/FeatureSphereCanvas";
 import { FloatingGlassCard } from "~/components/FloatingGlassCard";
+import { SpatialFeatureCanvas } from "~/components/SpatialFeatureCanvas";
+import { TechFloatingGlassCard } from "~/components/TechFloatingGlassCard";
 import {
   Sparkles,
   ArrowRight,
@@ -192,12 +194,12 @@ export default function Home() {
         className="relative px-6 py-20 md:py-32 md:px-12 max-w-7xl mx-auto w-full z-10 border-t border-white/5"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center w-full">
-          {/* Left Column: Beautiful 3D Sphere Mesh inside Card */}
+          {/* Left Column: Beautiful Floating Tech Glassmorphism Card */}
           <div className="lg:col-span-5 order-last lg:order-first flex justify-center items-center w-full">
-            <div className="relative group w-full max-w-sm aspect-square rounded-[2rem] bg-[#0c0c0e]/80 border border-white/5 shadow-[0_30px_80px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.05)] overflow-hidden backdrop-blur-xl">
+            <div className="relative w-full max-w-xl aspect-square flex items-center justify-center">
               {/* Subtle internal glowing orb */}
-              <div className="absolute -inset-10 bg-radial from-[#e47939]/8 via-transparent to-transparent opacity-50 blur-3xl pointer-events-none" />
-              <FeatureSphereCanvas />
+              <div className="absolute -inset-10 bg-radial from-[#52a3dd]/10 via-transparent to-transparent opacity-40 blur-3xl pointer-events-none" />
+              <TechFloatingGlassCard />
             </div>
           </div>
 
