@@ -6,6 +6,7 @@ import { trpc } from "~/trpc/client";
 import { InteractiveBackground } from "~/components/InteractiveBackground";
 import { FloatingGlassCard } from "~/components/FloatingGlassCard";
 import { TechFloatingGlassCard } from "~/components/TechFloatingGlassCard";
+import { WavySphereCanvas } from "~/components/WavySphereCanvas";
 import {
   Sparkles,
   ArrowRight,
@@ -105,9 +106,9 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="relative flex-grow flex items-center px-6 py-16 md:py-28 md:px-12 max-w-7xl mx-auto w-full z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center w-full relative z-20">
           {/* Left Column: Heading & CTAs */}
-          <div className="lg:col-span-6 flex flex-col gap-6 text-left">
+          <div className="lg:col-span-6 flex flex-col gap-6 text-left relative z-20">
             {/* Holographic Badge (text-xs to text-sm) */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#ffb690]/5 border border-[#ffb690]/15 w-max text-sm font-semibold text-[#ffb690]/95 shadow-[0_0_15px_rgba(255,182,144,0.03)] uppercase tracking-wider">
               <Sparkles className="w-3.5 h-3.5 text-[#ffb690] animate-pulse" />
@@ -168,10 +169,14 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Right Column: Floating Glassmorphism Card */}
-          <div className="lg:col-span-6 flex justify-center items-center w-full relative mt-12 lg:mt-0">
-            {/* Subtle premium background glow behind the glass card */}
-            <div className="absolute -inset-10 bg-radial from-[#52a3dd]/15 via-[#e47939]/5 to-transparent opacity-50 blur-3xl pointer-events-none" />
+          {/* Right Column: Floating Glassmorphism Card & Wavy Sphere */}
+          <div className="lg:col-span-6 flex justify-center items-center w-full relative mt-12 lg:mt-0 min-h-[550px] md:min-h-[650px] z-20">
+            {/* 3D Wavy Sphere Canvas centered on the glass card with overflow-allowed sizing to prevent clipping */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160%] h-[160%] z-10 pointer-events-none flex items-center justify-center overflow-visible">
+              <WavySphereCanvas />
+            </div>
+            
+            {/* Beautiful floating glass card positioned in front (z-20) */}
             <div className="relative w-full max-w-xl z-20">
               <FloatingGlassCard />
             </div>
