@@ -1,180 +1,230 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { Loader2 } from "lucide-react";
 
 export const HeroTorusCanvas: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const modelRef = useRef<THREE.Group | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    const container = containerRef.current;
+    if (!container) return;
 
     // 1. Setup Scene, Camera and Renderer
     const scene = new THREE.Scene();
-    const width = containerRef.current.clientWidth || 400;
-    const height = containerRef.current.clientHeight || 400;
-    
+    const width = container.clientWidth || 400;
+    const height = container.clientHeight || 400;
+
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.z = 24;
+    camera.position.set(0, 0, 14);
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    containerRef.current.appendChild(renderer.domElement);
+    container.appendChild(renderer.domElement);
 
-    // 2. Add subtle lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    // 2. Add gorgeous premium dual-tone gradient lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
     scene.add(ambientLight);
 
-    const pointLight = new THREE.PointLight(0x90cdff, 2, 50);
-    pointLight.position.set(10, 10, 10);
-    scene.add(pointLight);
+    // Cyan/blue main directional light from top-left
+    const dirLight1 = new THREE.DirectionalLight(0x90cdff, 3.5);
+    dirLight1.position.set(10, 12, 10);
+    scene.add(dirLight1);
 
-    // 3. Create the Main Torus Mesh (glowing outer structure)
-    // Using a sleek wireframe Torus geometry
-    const torusGeom = new THREE.TorusGeometry(6, 1.8, 16, 100);
-    const torusMat = new THREE.MeshBasicMaterial({
-      color: 0x52a3dd,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.25,
-      blending: THREE.AdditiveBlending,
-    });
-    const mainTorus = new THREE.Mesh(torusGeom, torusMat);
-    scene.add(mainTorus);
+    // Orange/peach secondary directional light from bottom-right
+    const dirLight2 = new THREE.DirectionalLight(0xffb690, 2.5);
+    dirLight2.position.set(-10, -12, -10);
+    scene.add(dirLight2);
 
-    // 4. Create the Orbiting Particles
-    const particleCount = 600;
-    const particlesGeom = new THREE.BufferGeometry();
-    const positions = new Float32Array(particleCount * 3);
-    const angles = new Float32Array(particleCount);
-    const tubeAngles = new Float32Array(particleCount);
-    const speeds = new Float32Array(particleCount);
-    const offsets = new Float32Array(particleCount);
+    // Purple point light for additional highlight details
+    const purpleLight = new THREE.PointLight(0xd946ef, 3.0, 30);
+    purpleLight.position.set(5, 5, 5);
+    scene.add(purpleLight);
 
-    const R = 6.0; // Torus Major Radius
-    const r = 1.8; // Torus Minor Radius
+    // 3. Load GLB Model
+    const loader = new GLTFLoader();
+    loader.load(
+      "/sec1.glb",
+      (gltf) => {
+        const model = gltf.scene;
 
-    for (let i = 0; i < particleCount; i++) {
-      // theta goes around the major ring
-      const theta = Math.random() * Math.PI * 2;
-      // phi goes around the tube
-      const phi = Math.random() * Math.PI * 2;
+        // Auto-center and auto-scale model to fit a standard size
+        const box = new THREE.Box3().setFromObject(model);
+        const size = new THREE.Vector3();
+        box.getSize(size);
+        const center = new THREE.Vector3();
+        box.getCenter(center);
 
-      angles[i] = theta;
-      tubeAngles[i] = phi;
-      speeds[i] = 0.008 + Math.random() * 0.012;
-      offsets[i] = Math.random() * Math.PI * 2;
+        // Adjust position to center of bounding box
+        model.position.x += -center.x;
+        model.position.y += -center.y;
+        model.position.z += -center.z;
 
-      // Position calculations for Torus
-      const x = (R + r * Math.cos(phi)) * Math.cos(theta);
-      const y = (R + r * Math.cos(phi)) * Math.sin(theta);
-      const z = r * Math.sin(phi);
+        // Scale to standard height/width
+        const maxDim = Math.max(size.x, size.y, size.z);
+        if (maxDim > 0) {
+          const scale = 9.5 / maxDim;
+          model.scale.set(scale, scale, scale);
+        }
 
-      positions[i * 3] = x;
-      positions[i * 3 + 1] = y;
-      positions[i * 3 + 2] = z;
-    }
+        scene.add(model);
+        modelRef.current = model;
+        setLoading(false);
+      },
+      undefined,
+      (error) => {
+        console.error("Error loading GLB:", error);
+        setLoading(false);
+      },
+    );
 
-    particlesGeom.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    // 4. Setup Interactivity Tracking (Mouse and Scroll) with Spring Physics
+    const MAX_ROTATION_OTHER = (5 * Math.PI) / 180; // 5 degrees in radians (0.0873)
+    const MAX_ROTATION_Y = (15 * Math.PI) / 180; // 15 degrees in radians (0.2618)
 
-    // Sleek cyan points material
-    const particlesMat = new THREE.PointsMaterial({
-      color: 0x90cdff,
-      size: 0.12,
-      transparent: true,
-      opacity: 0.85,
-      blending: THREE.AdditiveBlending,
-    });
-
-    const particles = new THREE.Points(particlesGeom, particlesMat);
-    scene.add(particles);
-
-    // 5. Setup Cursor Tracking
     let mouseX = 0;
     let mouseY = 0;
-    let targetX = 0;
-    let targetY = 0;
+    let targetMouseX = 0;
+    let targetMouseY = 0;
+    let scrollY = 0;
+
+    // Physics state tracking variables
+    let currentRotX = 0;
+    let currentRotY = 0;
+    let currentRotZ = 0;
+
+    let velX = 0;
+    let velY = 0;
+    let velZ = 0;
 
     const handleMouseMove = (event: MouseEvent) => {
-      const rect = containerRef.current?.getBoundingClientRect();
-      if (!rect) return;
-      // Get mouse position relative to container center
-      const x = event.clientX - (rect.left + rect.width / 2);
-      const y = event.clientY - (rect.top + rect.height / 2);
-      mouseX = x * 0.015;
-      mouseY = y * 0.015;
+      // Normalize coordinate: -1 to 1 across the screen
+      mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+      mouseY = (event.clientY / window.innerHeight) * 2 - 1;
+    };
+
+    const handleScroll = () => {
+      scrollY = window.scrollY;
     };
 
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("scroll", handleScroll);
 
-    // 6. Animation Loop
+    // 5. Animation Loop
     let animationFrameId: number;
-    let clock = new THREE.Clock();
+    const clock = new THREE.Clock();
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
       const time = clock.getElapsedTime();
 
-      // Smooth camera interpolation based on cursor tracking
-      targetX += (mouseX - targetX) * 0.05;
-      targetY += (mouseY - targetY) * 0.05;
+      // Smooth interpolation for mouse inputs
+      targetMouseX += (mouseX - targetMouseX) * 0.05;
+      targetMouseY += (mouseY - targetMouseY) * 0.05;
 
-      camera.position.x = targetX;
-      camera.position.y = -targetY;
-      camera.lookAt(scene.position);
+      // 1. Calculate target rotations with strict clamp locks
+      // Scroll mapping: 0px to 800px scroll shifts Y-rotation by up to +/- 7.5 degrees
+      const scrollProgress = Math.min(scrollY / 800, 1);
+      const scrollRotY = (scrollProgress - 0.5) * ((15 * Math.PI) / 180);
 
-      // Rotate the main Torus
-      mainTorus.rotation.x = time * 0.12;
-      mainTorus.rotation.y = time * 0.18;
+      // Mouse mapping: cursor shifts Y-rotation by up to +/- 5 degrees
+      const mouseRotY = targetMouseX * ((5 * Math.PI) / 180);
 
-      // Animate flowing particles orbiting the Torus tube
-      const posAttr = particlesGeom.getAttribute("position") as THREE.BufferAttribute;
-      const array = posAttr.array as Float32Array;
+      // Idle pendulum: gentle oscillation on Y-axis (up to 2 degrees)
+      const idleRotY = Math.sin(time * 0.8) * ((2 * Math.PI) / 180);
 
-      for (let i = 0; i < particleCount; i++) {
-        const speed = speeds[i] ?? 0;
-        const currentAngle = angles[i] ?? 0;
-        const currentTubeAngle = tubeAngles[i] ?? 0;
+      // Ensure the combined target Y-rotation NEVER exceeds the 15-degree hard limit
+      const targetY = Math.max(
+        -MAX_ROTATION_Y,
+        Math.min(MAX_ROTATION_Y, scrollRotY + mouseRotY + idleRotY),
+      );
 
-        const nextAngle = currentAngle + speed;
-        const nextTubeAngle = currentTubeAngle + speed * 2;
+      // X-axis target: mouse-move (+/- 3 degrees) + slow wave vertical bobbing (+/- 1.5 degrees)
+      // Ensure the combined target X-rotation NEVER exceeds the 5-degree hard limit
+      const mouseRotX = targetMouseY * ((3 * Math.PI) / 180);
+      const idleRotX = Math.sin(time * 0.5) * ((1.5 * Math.PI) / 180);
+      const targetX = Math.max(
+        -MAX_ROTATION_OTHER,
+        Math.min(MAX_ROTATION_OTHER, mouseRotX + idleRotX),
+      );
 
-        angles[i] = nextAngle;
-        tubeAngles[i] = nextTubeAngle;
+      // Z-axis target: gentle roll proportional to mouse-move X (+/- 2 degrees)
+      // Ensure the target Z-rotation NEVER exceeds the 5-degree hard limit
+      const targetZ = Math.max(
+        -MAX_ROTATION_OTHER,
+        Math.min(MAX_ROTATION_OTHER, targetMouseX * ((2 * Math.PI) / 180)),
+      );
 
-        const theta = nextAngle;
-        const phi = nextTubeAngle;
-        const offsetVal = offsets[i] ?? 0;
+      // 2. Physics Simulation: High-Fidelity Spring + Boundary Collisions
+      // X-Axis (Strictly locked to 5 degrees)
+      let forceX = (targetX - currentRotX) * 0.18;
+      velX += forceX;
+      velX *= 0.8; // friction/damping
+      currentRotX += velX;
 
-        // Add a slight wave/breathing distortion to make it look organic
-        const currentR = R + Math.sin(time * 0.5 + offsetVal) * 0.3;
-        const currentr = r + Math.cos(time * 1.5 + offsetVal) * 0.15;
-
-        const x = (currentR + currentr * Math.cos(phi)) * Math.cos(theta);
-        const y = (currentR + currentr * Math.cos(phi)) * Math.sin(theta);
-        const z = currentr * Math.sin(phi);
-
-        array[i * 3] = x;
-        array[i * 3 + 1] = y;
-        array[i * 3 + 2] = z;
+      // Handle soft momentum-reversal bounce when hitting boundaries
+      if (currentRotX > MAX_ROTATION_OTHER) {
+        currentRotX = MAX_ROTATION_OTHER;
+        velX = -velX * 0.55; // bounce back with 55% energy
+      } else if (currentRotX < -MAX_ROTATION_OTHER) {
+        currentRotX = -MAX_ROTATION_OTHER;
+        velX = -velX * 0.55; // bounce back
       }
-      posAttr.needsUpdate = true;
 
-      // Spin particles structure overall as well
-      particles.rotation.x = time * 0.12;
-      particles.rotation.y = time * 0.18;
+      // Y-Axis (Strictly locked to 15 degrees)
+      let forceY = (targetY - currentRotY) * 0.18;
+      velY += forceY;
+      velY *= 0.8;
+      currentRotY += velY;
+
+      // Elastic rebound bounce on Y-boundary
+      if (currentRotY > MAX_ROTATION_Y) {
+        currentRotY = MAX_ROTATION_Y;
+        velY = -velY * 0.55;
+      } else if (currentRotY < -MAX_ROTATION_Y) {
+        currentRotY = -MAX_ROTATION_Y;
+        velY = -velY * 0.55;
+      }
+
+      // Z-Axis (Strictly locked to 5 degrees)
+      let forceZ = (targetZ - currentRotZ) * 0.18;
+      velZ += forceZ;
+      velZ *= 0.8;
+      currentRotZ += velZ;
+
+      // Elastic rebound bounce on Z-boundary
+      if (currentRotZ > MAX_ROTATION_OTHER) {
+        currentRotZ = MAX_ROTATION_OTHER;
+        velZ = -velZ * 0.55;
+      } else if (currentRotZ < -MAX_ROTATION_OTHER) {
+        currentRotZ = -MAX_ROTATION_OTHER;
+        velZ = -velZ * 0.55;
+      }
+
+      if (modelRef.current) {
+        // Apply physics-calculated rotations to the model (with Y rotated 180 degrees by default)
+        modelRef.current.rotation.x = currentRotX;
+        modelRef.current.rotation.y = Math.PI + currentRotY;
+        modelRef.current.rotation.z = currentRotZ;
+
+        // Dynamic vertical float animation
+        modelRef.current.position.y = Math.sin(time * 1.5) * 0.25;
+      }
 
       renderer.render(scene, camera);
     };
 
     animate();
 
-    // 7. Handle Resize
+    // 6. Handle Resize
     const handleResize = () => {
-      if (!containerRef.current) return;
-      const w = containerRef.current.clientWidth;
-      const h = containerRef.current.clientHeight;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
@@ -182,27 +232,29 @@ export const HeroTorusCanvas: React.FC = () => {
 
     window.addEventListener("resize", handleResize);
 
-    // 8. Cleanup
+    // 7. Cleanup
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleResize);
-      if (containerRef.current && renderer.domElement) {
-        containerRef.current.removeChild(renderer.domElement);
+      if (container && renderer.domElement) {
+        container.removeChild(renderer.domElement);
       }
-      torusGeom.dispose();
-      torusMat.dispose();
-      particlesGeom.dispose();
-      particlesMat.dispose();
       renderer.dispose();
     };
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full h-full min-h-[320px] md:min-h-[400px] flex items-center justify-center bg-transparent relative overflow-hidden"
-    />
+    <div className="relative w-full h-full min-h-[320px] md:min-h-[400px] flex items-center justify-center bg-transparent overflow-hidden">
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-sm z-20">
+          <Loader2 className="w-8 h-8 animate-spin text-[#90cdff]" />
+        </div>
+      )}
+      <div ref={containerRef} className="w-full h-full flex items-center justify-center" />
+    </div>
   );
 };
+
 export default HeroTorusCanvas;
