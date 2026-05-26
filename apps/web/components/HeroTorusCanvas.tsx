@@ -214,7 +214,20 @@ export const HeroTorusCanvas: React.FC = () => {
         modelRef.current.rotation.z = currentRotZ;
 
         // Dynamic vertical float animation centered around the lowered base Y position
-        modelRef.current.position.y = -1.25 + Math.sin(time * 1.5) * 0.25;
+        const bobY = Math.sin(time * 1.5) * 0.25;
+        modelRef.current.position.y = -1.25 + bobY;
+
+        // Dispatch 3D movement to synchronize FloatingGlassCard overlay in real-time
+        window.dispatchEvent(
+          new CustomEvent("3d-model-move", {
+            detail: {
+              rotX: currentRotX,
+              rotY: currentRotY,
+              rotZ: currentRotZ,
+              bobY: bobY,
+            },
+          })
+        );
       }
 
       renderer.render(scene, camera);

@@ -6,6 +6,7 @@ import { trpc } from "~/trpc/client";
 import { InteractiveBackground } from "~/components/InteractiveBackground";
 import { HeroTorusCanvas } from "~/components/HeroTorusCanvas";
 import { FeatureSphereCanvas } from "~/components/FeatureSphereCanvas";
+import { FloatingGlassCard } from "~/components/FloatingGlassCard";
 import {
   Sparkles,
   ArrowRight,
@@ -173,6 +174,13 @@ export default function Home() {
           <div className="lg:col-span-6 flex justify-center items-center w-full">
             <div className="relative w-full max-w-4xl aspect-square translate-y-[130px]">
               <HeroTorusCanvas />
+              {/* Beautiful floating glass card positioned at the top Y-axis of the 3D model */}
+              <div
+                className="absolute top-[-15%] md:top-[-20%] left-1/2 -translate-x-1/2 w-[92%] sm:w-[85%] z-20 pointer-events-auto"
+                style={{ marginTop: "50px" }}
+              >
+                <FloatingGlassCard />
+              </div>
             </div>
           </div>
         </div>
