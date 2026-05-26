@@ -141,3 +141,54 @@
   background-size: 200% 100%;
   animation: spatial-gradient 5.5s ease-in-out infinite;
 }
+
+/* Navbar animated gradient border shimmer */
+@keyframes navbar-gradient-sweep {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.navbar-gradient-border {
+  position: fixed;
+  overflow: hidden;
+}
+
+.navbar-gradient-border::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #52a3dd 20%,
+    #e47939 50%,
+    #52a3dd 80%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: navbar-gradient-sweep 4s ease-in-out infinite;
+  opacity: 0.9;
+}
+
+/* Navbar background gradient sweep (referenced via inline style) */
+@keyframes navbar-bg-sweep {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

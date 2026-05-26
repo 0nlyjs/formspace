@@ -38,12 +38,17 @@ export default function Home() {
   );
 
   return (
-    <main className="relative min-h-screen text-zinc-100 overflow-x-hidden bg-[#050505] font-sans flex flex-col">
-      {/* 3D Solar Coordinate Particle Background */}
-      <InteractiveBackground />
-
+    <main className="relative min-h-screen text-zinc-100 bg-[#050505] font-sans flex flex-col">
       {/* Header / Navbar */}
-      <header className="sticky top-0 w-full z-50 bg-[#050505]/40 backdrop-blur-xl border-b border-white/5 py-4 px-6 md:px-12 flex justify-between items-center transition-all">
+      <header
+        className="top-0 left-0 right-0 w-full z-50 backdrop-blur-xl py-4 px-6 md:px-12 flex justify-between items-center navbar-gradient-border"
+        style={{
+          background: "linear-gradient(90deg, rgba(5,5,5,0.92) 0%, rgba(82,163,221,0.13) 30%, rgba(228,121,57,0.10) 55%, rgba(82,163,221,0.13) 80%, rgba(5,5,5,0.92) 100%)",
+          animation: "navbar-bg-sweep 7s ease-in-out infinite",
+          backgroundSize: "300% 100%",
+        }}
+      >
+
         <Link href="/" className="flex items-center group">
           <img
             src="/logo.png"
@@ -92,6 +97,9 @@ export default function Home() {
           )}
         </div>
       </header>
+
+      {/* 3D Solar Coordinate Particle Background */}
+      <InteractiveBackground />
 
       {/* Hero Section */}
       <section className="relative flex-grow flex items-center px-6 py-16 md:py-28 md:px-12 max-w-7xl mx-auto w-full z-10">
