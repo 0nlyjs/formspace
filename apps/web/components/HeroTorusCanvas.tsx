@@ -20,7 +20,8 @@ export const HeroTorusCanvas: React.FC = () => {
     const height = container.clientHeight || 400;
 
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.set(0, 0, 14);
+    camera.position.set(0, 1.6, 21.5);
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setSize(width, height);
@@ -49,7 +50,7 @@ export const HeroTorusCanvas: React.FC = () => {
     // 3. Load GLB Model
     const loader = new GLTFLoader();
     loader.load(
-      "/sec1.glb",
+      "/secone.glb",
       (gltf) => {
         const model = gltf.scene;
 
@@ -60,15 +61,15 @@ export const HeroTorusCanvas: React.FC = () => {
         const center = new THREE.Vector3();
         box.getCenter(center);
 
-        // Adjust position to center of bounding box
+        // Adjust position to center of bounding box and shift base Y position down to prevent top-edge clipping
         model.position.x += -center.x;
-        model.position.y += -center.y;
+        model.position.y += -center.y - 1.25;
         model.position.z += -center.z;
 
         // Scale to standard height/width
         const maxDim = Math.max(size.x, size.y, size.z);
         if (maxDim > 0) {
-          const scale = 9.5 / maxDim;
+          const scale = 11.2 / maxDim;
           model.scale.set(scale, scale, scale);
         }
 
@@ -212,8 +213,8 @@ export const HeroTorusCanvas: React.FC = () => {
         modelRef.current.rotation.y = Math.PI + currentRotY;
         modelRef.current.rotation.z = currentRotZ;
 
-        // Dynamic vertical float animation
-        modelRef.current.position.y = Math.sin(time * 1.5) * 0.25;
+        // Dynamic vertical float animation centered around the lowered base Y position
+        modelRef.current.position.y = -1.25 + Math.sin(time * 1.5) * 0.25;
       }
 
       renderer.render(scene, camera);
@@ -246,7 +247,7 @@ export const HeroTorusCanvas: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative w-full h-full min-h-[320px] md:min-h-[400px] flex items-center justify-center bg-transparent overflow-hidden">
+    <div className="relative w-full h-full min-h-[550px] md:min-h-[750px] flex items-center justify-center bg-transparent overflow-hidden">
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-sm z-20">
           <Loader2 className="w-8 h-8 animate-spin text-[#90cdff]" />

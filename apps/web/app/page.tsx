@@ -43,12 +43,12 @@ export default function Home() {
       <header
         className="top-0 left-0 right-0 w-full z-50 backdrop-blur-xl py-4 px-6 md:px-12 flex justify-between items-center navbar-gradient-border"
         style={{
-          background: "linear-gradient(90deg, rgba(5,5,5,0.92) 0%, rgba(82,163,221,0.13) 30%, rgba(228,121,57,0.10) 55%, rgba(82,163,221,0.13) 80%, rgba(5,5,5,0.92) 100%)",
+          background:
+            "linear-gradient(90deg, rgba(5,5,5,0.92) 0%, rgba(82,163,221,0.13) 30%, rgba(228,121,57,0.10) 55%, rgba(82,163,221,0.13) 80%, rgba(5,5,5,0.92) 100%)",
           animation: "navbar-bg-sweep 7s ease-in-out infinite",
           backgroundSize: "300% 100%",
         }}
       >
-
         <Link href="/" className="flex items-center group">
           <img
             src="/logo.png"
@@ -84,7 +84,10 @@ export default function Home() {
             </Link>
           ) : (
             <div className="flex items-center gap-6">
-              <Link href="/login" className="text-sm font-bold uppercase tracking-wider text-zinc-400 hover:text-white transition-colors">
+              <Link
+                href="/login"
+                className="text-sm font-bold uppercase tracking-wider text-zinc-400 hover:text-white transition-colors"
+              >
                 Sign In
               </Link>
               <Link
@@ -105,7 +108,7 @@ export default function Home() {
       <section className="relative flex-grow flex items-center px-6 py-16 md:py-28 md:px-12 max-w-7xl mx-auto w-full z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center w-full">
           {/* Left Column: Heading & CTAs */}
-          <div className="lg:col-span-7 flex flex-col gap-6 text-left">
+          <div className="lg:col-span-6 flex flex-col gap-6 text-left">
             {/* Holographic Badge (text-xs to text-sm) */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#ffb690]/5 border border-[#ffb690]/15 w-max text-sm font-semibold text-[#ffb690]/95 shadow-[0_0_15px_rgba(255,182,144,0.03)] uppercase tracking-wider">
               <Sparkles className="w-3.5 h-3.5 text-[#ffb690] animate-pulse" />
@@ -115,22 +118,24 @@ export default function Home() {
             {/* Big Premium Header (text-5xl/text-7xl to text-6xl/text-8xl) */}
             <h1 className="text-6xl md:text-8xl font-black tracking-tight leading-[1.05] text-white">
               Build the <br />
-              <span 
+              <span
                 className="bg-clip-text text-transparent animate-spatial-gradient filter drop-shadow-[0_0_30px_rgba(144,205,255,0.15)] inline-block"
                 style={{
-                  backgroundImage: "linear-gradient(90deg, #52a3dd 0%, #e47939 33%, #52a3dd 66%, #e47939 100%)",
-                  backgroundSize: "200% 100%"
+                  backgroundImage:
+                    "linear-gradient(90deg, #52a3dd 0%, #e47939 33%, #52a3dd 66%, #e47939 100%)",
+                  backgroundSize: "200% 100%",
                 }}
               >
                 future of
               </span>
               <br />
-              <span 
+              <span
                 className="bg-clip-text text-transparent animate-spatial-gradient filter drop-shadow-[0_0_30px_rgba(144,205,255,0.15)] inline-block"
                 style={{
-                  backgroundImage: "linear-gradient(90deg, #52a3dd 0%, #e47939 33%, #52a3dd 66%, #e47939 100%)",
+                  backgroundImage:
+                    "linear-gradient(90deg, #52a3dd 0%, #e47939 33%, #52a3dd 66%, #e47939 100%)",
                   backgroundSize: "200% 100%",
-                  animationDelay: "-2.75s"
+                  animationDelay: "-2.75s",
                 }}
               >
                 forms.
@@ -139,7 +144,9 @@ export default function Home() {
 
             {/* Description Subtext (text-sm/text-base to text-base/text-lg) */}
             <p className="text-zinc-400 text-base md:text-lg leading-relaxed max-w-xl font-medium font-sans">
-              Create interactive, three-dimensional survey spaces that captivate participants. With high-fidelity reactive characters, dynamic transitions, and real-time response capture, FormSpace redefines user inputs for the spatial web.
+              Create interactive, three-dimensional survey spaces that captivate participants. With
+              high-fidelity reactive characters, dynamic transitions, and real-time response
+              capture, FormSpace redefines user inputs for the spatial web.
             </p>
 
             {/* Action Buttons (text-xs to text-sm) */}
@@ -163,8 +170,8 @@ export default function Home() {
           </div>
 
           {/* Right Column: Beautiful Holographic 3D Model */}
-          <div className="lg:col-span-5 flex justify-center items-center w-full">
-            <div className="relative w-full max-w-lg aspect-square">
+          <div className="lg:col-span-6 flex justify-center items-center w-full">
+            <div className="relative w-full max-w-4xl aspect-square translate-y-[130px]">
               <HeroTorusCanvas />
             </div>
           </div>
@@ -172,7 +179,10 @@ export default function Home() {
       </section>
 
       {/* Feature Section (Interactive coordinates sphere) */}
-      <section id="features" className="relative px-6 py-20 md:py-32 md:px-12 max-w-7xl mx-auto w-full z-10 border-t border-white/5">
+      <section
+        id="features"
+        className="relative px-6 py-20 md:py-32 md:px-12 max-w-7xl mx-auto w-full z-10 border-t border-white/5"
+      >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center w-full">
           {/* Left Column: Beautiful 3D Sphere Mesh inside Card */}
           <div className="lg:col-span-5 order-last lg:order-first flex justify-center items-center w-full">
@@ -193,11 +203,12 @@ export default function Home() {
             {/* Glowing Header (text-4xl/text-5xl to text-5xl/text-6xl) */}
             <h2 className="text-5xl md:text-6xl font-black text-white leading-tight">
               Give your questions a <br />
-              <span 
+              <span
                 className="bg-clip-text text-transparent animate-spatial-gradient filter drop-shadow-[0_0_25px_rgba(255,182,144,0.15)] inline-block"
                 style={{
-                  backgroundImage: "linear-gradient(90deg, #52a3dd 0%, #e47939 33%, #52a3dd 66%, #e47939 100%)",
-                  backgroundSize: "200% 100%"
+                  backgroundImage:
+                    "linear-gradient(90deg, #52a3dd 0%, #e47939 33%, #52a3dd 66%, #e47939 100%)",
+                  backgroundSize: "200% 100%",
                 }}
               >
                 sense of space.
@@ -206,7 +217,10 @@ export default function Home() {
 
             {/* Paragraph Subtext (text-sm/text-base to text-base/text-lg) */}
             <p className="text-zinc-400 text-base md:text-lg leading-relaxed max-w-xl font-medium">
-              Transform monotonous surveys into immersive spatial environments. Our engine translates form logic into interactive 3D coordinates, giving every input field, drop-down, and slide a literal dimension. Increase engagement up to 180% with layouts designed for the spatial computing age.
+              Transform monotonous surveys into immersive spatial environments. Our engine
+              translates form logic into interactive 3D coordinates, giving every input field,
+              drop-down, and slide a literal dimension. Increase engagement up to 180% with layouts
+              designed for the spatial computing age.
             </p>
 
             {/* CTA Glass Button (text-xs to text-sm) */}
@@ -223,7 +237,10 @@ export default function Home() {
       </section>
 
       {/* PUBLIC EXPLORE & TEMPLATE GALLERY */}
-      <section id="public-forms" className="relative px-6 py-20 md:py-32 md:px-12 max-w-7xl mx-auto w-full z-10 border-t border-white/5 flex flex-col gap-12">
+      <section
+        id="public-forms"
+        className="relative px-6 py-20 md:py-32 md:px-12 max-w-7xl mx-auto w-full z-10 border-t border-white/5 flex flex-col gap-12"
+      >
         <div className="text-center md:text-left flex flex-col items-center md:items-start gap-4">
           {/* badge (text-xs to text-sm) */}
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#52a3dd]/5 border border-[#52a3dd]/15 w-max text-sm font-semibold text-[#90cdff] uppercase tracking-wider">
@@ -236,7 +253,8 @@ export default function Home() {
           </h2>
           {/* description (text-sm/text-base to text-base/text-lg) */}
           <p className="text-zinc-400 text-base md:text-lg max-w-xl font-medium">
-            Explore interactive spaces created by our community. Test custom 3D animations and live reactions.
+            Explore interactive spaces created by our community. Test custom 3D animations and live
+            reactions.
           </p>
         </div>
 
@@ -347,7 +365,10 @@ export default function Home() {
       </section>
 
       {/* PRICING PLANS SECTION */}
-      <section id="pricing" className="relative px-6 py-20 md:py-32 md:px-12 max-w-7xl mx-auto w-full z-10 border-t border-white/5 flex flex-col gap-16">
+      <section
+        id="pricing"
+        className="relative px-6 py-20 md:py-32 md:px-12 max-w-7xl mx-auto w-full z-10 border-t border-white/5 flex flex-col gap-16"
+      >
         <div className="text-center flex flex-col items-center gap-4">
           {/* badge (text-xs to text-sm) */}
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#ffb690]/5 border border-[#ffb690]/15 w-max text-sm font-semibold text-[#ffb690] uppercase tracking-wider">
@@ -375,7 +396,9 @@ export default function Home() {
             <div className="flex flex-col gap-6">
               <div>
                 {/* label (text-xs to text-sm) */}
-                <span className="text-[#90cdff] text-sm font-bold uppercase tracking-widest">Free</span>
+                <span className="text-[#90cdff] text-sm font-bold uppercase tracking-widest">
+                  Free
+                </span>
                 {/* price (text-4xl to text-5xl, text-xs to text-sm) */}
                 <div className="flex items-baseline gap-1 mt-2 text-white">
                   <span className="text-5xl font-black">$0</span>
@@ -383,7 +406,8 @@ export default function Home() {
                 </div>
                 {/* description (text-xs to text-sm) */}
                 <p className="text-zinc-400 text-sm mt-3 leading-relaxed">
-                  Perfect for personal forms, light surveys, and testing out the interactive features.
+                  Perfect for personal forms, light surveys, and testing out the interactive
+                  features.
                 </p>
               </div>
 
@@ -399,13 +423,17 @@ export default function Home() {
                   <div className="w-5 h-5 rounded-full bg-[#52a3dd]/25 border border-[#52a3dd]/40 flex items-center justify-center mt-0.5">
                     <Check className="w-3.5 h-3.5 text-[#90cdff]" />
                   </div>
-                  <span className="text-sm text-zinc-200 font-medium">50 Monthly active responses</span>
+                  <span className="text-sm text-zinc-200 font-medium">
+                    50 Monthly active responses
+                  </span>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-5 h-5 rounded-full bg-[#52a3dd]/25 border border-[#52a3dd]/40 flex items-center justify-center mt-0.5">
                     <Check className="w-3.5 h-3.5 text-[#90cdff]" />
                   </div>
-                  <span className="text-sm text-zinc-200 font-medium">Standard character templates</span>
+                  <span className="text-sm text-zinc-200 font-medium">
+                    Standard character templates
+                  </span>
                 </div>
               </div>
             </div>
@@ -430,7 +458,9 @@ export default function Home() {
             <div className="flex flex-col gap-6">
               <div>
                 {/* label (text-xs to text-sm) */}
-                <span className="text-zinc-400 text-sm font-bold uppercase tracking-widest">Standard</span>
+                <span className="text-zinc-400 text-sm font-bold uppercase tracking-widest">
+                  Standard
+                </span>
                 {/* price (text-4xl to text-5xl, text-xs to text-sm) */}
                 <div className="flex items-baseline gap-1 mt-2 text-white">
                   <span className="text-5xl font-black">$29</span>
@@ -438,7 +468,8 @@ export default function Home() {
                 </div>
                 {/* description (text-xs to text-sm) */}
                 <p className="text-zinc-500 text-sm mt-3 leading-relaxed">
-                  Best for creators, growing startups, and companies building rich interactive workflows.
+                  Best for creators, growing startups, and companies building rich interactive
+                  workflows.
                 </p>
               </div>
 
@@ -488,7 +519,9 @@ export default function Home() {
             <div className="flex flex-col gap-6">
               <div>
                 {/* label (text-xs to text-sm) */}
-                <span className="text-[#ffb690] text-sm font-bold uppercase tracking-widest">Pro</span>
+                <span className="text-[#ffb690] text-sm font-bold uppercase tracking-widest">
+                  Pro
+                </span>
                 {/* price (text-4xl to text-5xl, text-xs to text-sm) */}
                 <div className="flex items-baseline gap-1 mt-2 text-white">
                   <span className="text-5xl font-black">$89</span>
@@ -496,7 +529,8 @@ export default function Home() {
                 </div>
                 {/* description (text-xs to text-sm) */}
                 <p className="text-zinc-500 text-sm mt-3 leading-relaxed">
-                  Tailored for corporations requiring absolute customization, enterprise scale, and support.
+                  Tailored for corporations requiring absolute customization, enterprise scale, and
+                  support.
                 </p>
               </div>
 
@@ -557,17 +591,34 @@ export default function Home() {
             </Link>
             {/* description (text-xs to text-sm) */}
             <p className="text-zinc-500 text-sm leading-relaxed mt-1">
-              Building the future of spatial questionnaires. Create gorgeously optimized, 3D interactive surveys with character reactions, Scalar analytics integration, and gorgeous templates.
+              Building the future of spatial questionnaires. Create gorgeously optimized, 3D
+              interactive surveys with character reactions, Scalar analytics integration, and
+              gorgeous templates.
             </p>
             {/* Social Icons */}
             <div className="flex gap-4 mt-2">
-              <a href="https://github.com/0nlyjs" target="_blank" rel="noreferrer" className="text-zinc-600 hover:text-white transition-colors">
+              <a
+                href="https://github.com/0nlyjs"
+                target="_blank"
+                rel="noreferrer"
+                className="text-zinc-600 hover:text-white transition-colors"
+              >
                 <Github className="w-4 h-4" />
               </a>
-              <a href="https://x.com/mistjsx" target="_blank" rel="noreferrer" className="text-zinc-600 hover:text-[#90cdff] transition-colors">
+              <a
+                href="https://x.com/mistjsx"
+                target="_blank"
+                rel="noreferrer"
+                className="text-zinc-600 hover:text-[#90cdff] transition-colors"
+              >
                 <Twitter className="w-4 h-4" />
               </a>
-              <a href="https://linkedin.com/in/mistjs" target="_blank" rel="noreferrer" className="text-zinc-600 hover:text-[#90cdff] transition-colors">
+              <a
+                href="https://linkedin.com/in/mistjs"
+                target="_blank"
+                rel="noreferrer"
+                className="text-zinc-600 hover:text-[#90cdff] transition-colors"
+              >
                 <Linkedin className="w-4 h-4" />
               </a>
             </div>
@@ -576,27 +627,52 @@ export default function Home() {
           {/* Navigation Columns (text-xs to text-sm) */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="flex flex-col gap-3">
-              <span className="text-white text-sm font-bold uppercase tracking-widest">Product</span>
-              <Link href="#features" className="text-zinc-500 hover:text-zinc-300 text-sm transition-colors">Features</Link>
-              <Link href="#features" className="text-zinc-500 hover:text-zinc-300 text-sm transition-colors">Templates</Link>
-              <Link href="#pricing" className="text-zinc-500 hover:text-zinc-300 text-sm transition-colors">Pricing</Link>
+              <span className="text-white text-sm font-bold uppercase tracking-widest">
+                Product
+              </span>
+              <Link
+                href="#features"
+                className="text-zinc-500 hover:text-zinc-300 text-sm transition-colors"
+              >
+                Features
+              </Link>
+              <Link
+                href="#features"
+                className="text-zinc-500 hover:text-zinc-300 text-sm transition-colors"
+              >
+                Templates
+              </Link>
+              <Link
+                href="#pricing"
+                className="text-zinc-500 hover:text-zinc-300 text-sm transition-colors"
+              >
+                Pricing
+              </Link>
             </div>
             <div className="flex flex-col gap-3">
-              <span className="text-white text-sm font-bold uppercase tracking-widest">Company</span>
+              <span className="text-white text-sm font-bold uppercase tracking-widest">
+                Company
+              </span>
               <span className="text-zinc-500 text-sm">About Us</span>
               <span className="text-zinc-500 text-sm">Careers</span>
               <span className="text-zinc-500 text-sm">Contact</span>
             </div>
             <div className="flex flex-col gap-3">
-              <span className="text-white text-sm font-bold uppercase tracking-widest">Resources</span>
+              <span className="text-white text-sm font-bold uppercase tracking-widest">
+                Resources
+              </span>
               <span className="text-zinc-500 text-sm">Documentation</span>
               <span className="text-zinc-500 text-sm">Help Center</span>
               <span className="text-zinc-500 text-sm">Community</span>
             </div>
             <div className="flex flex-col gap-3">
               <span className="text-white text-sm font-bold uppercase tracking-widest">Legal</span>
-              <span className="text-zinc-500 text-sm hover:text-zinc-300 cursor-pointer">Privacy Policy</span>
-              <span className="text-zinc-500 text-sm hover:text-zinc-300 cursor-pointer">Terms of Service</span>
+              <span className="text-zinc-500 text-sm hover:text-zinc-300 cursor-pointer">
+                Privacy Policy
+              </span>
+              <span className="text-zinc-500 text-sm hover:text-zinc-300 cursor-pointer">
+                Terms of Service
+              </span>
             </div>
           </div>
         </div>
