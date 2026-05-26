@@ -18,6 +18,7 @@ import {
   Twitter,
   Github,
   Linkedin,
+  Lock,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -358,58 +359,7 @@ export default function Home() {
 
         {/* Pricing Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto w-full">
-          {/* Card 1: Free Tier */}
-          <div className="relative group bg-[#0c0c0e]/80 border border-white/5 p-8 rounded-[2rem] flex flex-col justify-between backdrop-blur-xl hover:border-white/10 transition-colors duration-300">
-            <div className="flex flex-col gap-6">
-              <div>
-                {/* label (text-xs to text-sm) */}
-                <span className="text-zinc-400 text-sm font-bold uppercase tracking-widest">Free</span>
-                {/* price (text-4xl to text-5xl, text-xs to text-sm) */}
-                <div className="flex items-baseline gap-1 mt-2 text-white">
-                  <span className="text-5xl font-black">$0</span>
-                  <span className="text-zinc-500 text-sm font-semibold">/ mo</span>
-                </div>
-                {/* description (text-xs to text-sm) */}
-                <p className="text-zinc-500 text-sm mt-3 leading-relaxed">
-                  Perfect for personal forms, light surveys, and testing out the interactive features.
-                </p>
-              </div>
-
-              {/* Feature Checklist (text-xs to text-sm) */}
-              <div className="border-t border-white/5 pt-6 flex flex-col gap-4">
-                <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-[#52a3dd]/10 border border-[#52a3dd]/20 flex items-center justify-center mt-0.5">
-                    <Check className="w-3.5 h-3.5 text-[#90cdff]" />
-                  </div>
-                  <span className="text-sm text-zinc-300">3 Active survey spaces</span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-[#52a3dd]/10 border border-[#52a3dd]/20 flex items-center justify-center mt-0.5">
-                    <Check className="w-3.5 h-3.5 text-[#90cdff]" />
-                  </div>
-                  <span className="text-sm text-zinc-300">50 Monthly active responses</span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-[#52a3dd]/10 border border-[#52a3dd]/20 flex items-center justify-center mt-0.5">
-                    <Check className="w-3.5 h-3.5 text-[#90cdff]" />
-                  </div>
-                  <span className="text-sm text-zinc-300">Standard character templates</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8">
-              {/* button (text-xs to text-sm) */}
-              <Link
-                href="/signup"
-                className="w-full text-center block bg-white/5 hover:bg-white/10 text-white border border-white/10 hover:border-white/20 py-3.5 rounded-xl text-sm font-bold uppercase tracking-wider transition-all cursor-pointer"
-              >
-                Get Started
-              </Link>
-            </div>
-          </div>
-
-          {/* Card 2: Standard Plan (Highlighted / Featured) */}
+          {/* Card 1: Free Tier (Highlighted / Featured) */}
           <div className="relative group bg-[#0c0c0e]/90 border border-[#52a3dd]/40 p-8 rounded-[2rem] flex flex-col justify-between backdrop-blur-xl shadow-[0_0_50px_rgba(82,163,221,0.15)] hover:border-[#52a3dd]/70 transition-all duration-300">
             {/* "Popular" floating badge (text-[9px] to text-[11px]) */}
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#52a3dd] text-black font-black uppercase text-[11px] tracking-widest px-4 py-1.5 rounded-full shadow-lg">
@@ -419,14 +369,69 @@ export default function Home() {
             <div className="flex flex-col gap-6">
               <div>
                 {/* label (text-xs to text-sm) */}
-                <span className="text-[#90cdff] text-sm font-bold uppercase tracking-widest">Standard</span>
+                <span className="text-[#90cdff] text-sm font-bold uppercase tracking-widest">Free</span>
+                {/* price (text-4xl to text-5xl, text-xs to text-sm) */}
+                <div className="flex items-baseline gap-1 mt-2 text-white">
+                  <span className="text-5xl font-black">$0</span>
+                  <span className="text-zinc-500 text-sm font-semibold">/ mo</span>
+                </div>
+                {/* description (text-xs to text-sm) */}
+                <p className="text-zinc-400 text-sm mt-3 leading-relaxed">
+                  Perfect for personal forms, light surveys, and testing out the interactive features.
+                </p>
+              </div>
+
+              {/* Feature Checklist (text-xs to text-sm) */}
+              <div className="border-t border-white/5 pt-6 flex flex-col gap-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-5 h-5 rounded-full bg-[#52a3dd]/25 border border-[#52a3dd]/40 flex items-center justify-center mt-0.5">
+                    <Check className="w-3.5 h-3.5 text-[#90cdff]" />
+                  </div>
+                  <span className="text-sm text-zinc-200 font-medium">3 Active survey spaces</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-5 h-5 rounded-full bg-[#52a3dd]/25 border border-[#52a3dd]/40 flex items-center justify-center mt-0.5">
+                    <Check className="w-3.5 h-3.5 text-[#90cdff]" />
+                  </div>
+                  <span className="text-sm text-zinc-200 font-medium">50 Monthly active responses</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-5 h-5 rounded-full bg-[#52a3dd]/25 border border-[#52a3dd]/40 flex items-center justify-center mt-0.5">
+                    <Check className="w-3.5 h-3.5 text-[#90cdff]" />
+                  </div>
+                  <span className="text-sm text-zinc-200 font-medium">Standard character templates</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8">
+              {/* button (text-xs to text-sm) - Pressed but no redirect */}
+              <Link
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  toast.success("Free plan selected! Welcome to FormSpace.");
+                }}
+                className="w-full text-center block bg-[#90cdff] hover:bg-[#52a3dd] text-black font-black py-3.5 rounded-xl text-sm uppercase tracking-wider shadow-[0_0_20px_rgba(82,163,221,0.25)] transition-all hover:scale-[1.02] duration-300 cursor-pointer active:scale-95 duration-200"
+              >
+                Get Started
+              </Link>
+            </div>
+          </div>
+
+          {/* Card 2: Standard Plan */}
+          <div className="relative group bg-[#0c0c0e]/80 border border-white/5 p-8 rounded-[2rem] flex flex-col justify-between backdrop-blur-xl hover:border-white/10 transition-colors duration-300">
+            <div className="flex flex-col gap-6">
+              <div>
+                {/* label (text-xs to text-sm) */}
+                <span className="text-zinc-400 text-sm font-bold uppercase tracking-widest">Standard</span>
                 {/* price (text-4xl to text-5xl, text-xs to text-sm) */}
                 <div className="flex items-baseline gap-1 mt-2 text-white">
                   <span className="text-5xl font-black">$29</span>
                   <span className="text-zinc-500 text-sm font-semibold">/ mo</span>
                 </div>
                 {/* description (text-xs to text-sm) */}
-                <p className="text-zinc-400 text-sm mt-3 leading-relaxed">
+                <p className="text-zinc-500 text-sm mt-3 leading-relaxed">
                   Best for creators, growing startups, and companies building rich interactive workflows.
                 </p>
               </div>
@@ -434,39 +439,40 @@ export default function Home() {
               {/* Feature Checklist (text-xs to text-sm) */}
               <div className="border-t border-white/5 pt-6 flex flex-col gap-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-[#52a3dd]/20 border border-[#52a3dd]/40 flex items-center justify-center mt-0.5">
+                  <div className="w-5 h-5 rounded-full bg-[#52a3dd]/10 border border-[#52a3dd]/20 flex items-center justify-center mt-0.5">
                     <Check className="w-3.5 h-3.5 text-[#90cdff]" />
                   </div>
-                  <span className="text-sm text-zinc-200 font-medium">Unlimited survey spaces</span>
+                  <span className="text-sm text-zinc-300">Unlimited survey spaces</span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-[#52a3dd]/20 border border-[#52a3dd]/40 flex items-center justify-center mt-0.5">
+                  <div className="w-5 h-5 rounded-full bg-[#52a3dd]/10 border border-[#52a3dd]/20 flex items-center justify-center mt-0.5">
                     <Check className="w-3.5 h-3.5 text-[#90cdff]" />
                   </div>
-                  <span className="text-sm text-zinc-200 font-medium">2,000 Active responses / mo</span>
+                  <span className="text-sm text-zinc-300">2,000 Active responses / mo</span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-[#52a3dd]/20 border border-[#52a3dd]/40 flex items-center justify-center mt-0.5">
+                  <div className="w-5 h-5 rounded-full bg-[#52a3dd]/10 border border-[#52a3dd]/20 flex items-center justify-center mt-0.5">
                     <Check className="w-3.5 h-3.5 text-[#90cdff]" />
                   </div>
-                  <span className="text-sm text-zinc-200 font-medium">High-fidelity 3D templates</span>
+                  <span className="text-sm text-zinc-300">High-fidelity 3D templates</span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-[#52a3dd]/20 border border-[#52a3dd]/40 flex items-center justify-center mt-0.5">
+                  <div className="w-5 h-5 rounded-full bg-[#52a3dd]/10 border border-[#52a3dd]/20 flex items-center justify-center mt-0.5">
                     <Check className="w-3.5 h-3.5 text-[#90cdff]" />
                   </div>
-                  <span className="text-sm text-zinc-200 font-medium">Scalar API integrations</span>
+                  <span className="text-sm text-zinc-300">Scalar API integrations</span>
                 </div>
               </div>
             </div>
 
             <div className="mt-8">
-              {/* button (text-xs to text-sm) */}
+              {/* button (text-xs to text-sm) - Functionally Locked */}
               <Link
-                href="/signup"
-                className="w-full text-center block bg-[#90cdff] hover:bg-[#52a3dd] text-black font-black py-3.5 rounded-xl text-sm uppercase tracking-wider shadow-[0_0_20px_rgba(82,163,221,0.25)] transition-all hover:scale-[1.02] duration-300 cursor-pointer"
+                href="#"
+                onClick={(e) => e.preventDefault()}
+                className="w-full text-center block bg-white/5 hover:bg-white/10 text-white border border-white/10 hover:border-white/20 py-3.5 rounded-xl text-sm font-bold uppercase tracking-wider transition-all cursor-pointer pointer-events-none"
               >
-                Buy Standard
+                Coming Soon
               </Link>
             </div>
           </div>
@@ -518,12 +524,13 @@ export default function Home() {
             </div>
 
             <div className="mt-8">
-              {/* button (text-xs to text-sm) */}
+              {/* button (text-xs to text-sm) - Functionally Locked */}
               <Link
-                href="/signup"
-                className="w-full text-center block bg-white/5 hover:bg-white/10 text-white border border-white/10 hover:border-[#ffb690]/40 py-3.5 rounded-xl text-sm font-bold uppercase tracking-wider transition-all hover:text-[#ffb690] cursor-pointer"
+                href="#"
+                onClick={(e) => e.preventDefault()}
+                className="w-full text-center block bg-white/5 hover:bg-white/10 text-white border border-white/10 hover:border-[#ffb690]/40 py-3.5 rounded-xl text-sm font-bold uppercase tracking-wider transition-all hover:text-[#ffb690] cursor-pointer pointer-events-none"
               >
-                Get Started
+                Coming Soon
               </Link>
             </div>
           </div>
