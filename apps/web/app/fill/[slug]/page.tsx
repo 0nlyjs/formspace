@@ -19,6 +19,7 @@ import {
   CheckSquare,
 } from "lucide-react";
 import { Abstract3DBackground } from "~/components/Abstract3DBackground";
+import { JungleSpatialBackground } from "~/components/JungleSpatialBackground";
 
 // Custom ambient floating particles configuration (micro-scale, slow drifting)
 const AMBIENT_PARTICLES = Array.from({ length: 12 }).map((_, idx) => {
@@ -331,6 +332,8 @@ export default function FormFillingPage() {
       {/* Immersive Landing Page background theme & glowing orbs */}
       {form.theme === "pure abstract" ? (
         <Abstract3DBackground />
+      ) : form.theme === "fresh leaf" ? (
+        <JungleSpatialBackground />
       ) : (
         <div className="absolute inset-0 w-full h-full bg-[#050505] z-0 pointer-events-none select-none overflow-hidden">
           {/* Subtle Cyberpunk/Tech Grid Overlay */}
@@ -367,10 +370,14 @@ export default function FormFillingPage() {
 
       {/* Landing Page Top Bar locked to top - Brand Logo Only */}
       <header
-        className="fixed top-0 left-0 right-0 w-full z-50 backdrop-blur-xl py-4 px-6 md:px-12 flex justify-start items-center navbar-gradient-border"
+        className={`fixed top-0 left-0 right-0 w-full z-50 backdrop-blur-xl py-4 px-6 md:px-12 flex justify-start items-center ${
+          form.theme === "fresh leaf" ? "navbar-twilight-border" : "navbar-gradient-border"
+        }`}
         style={{
           background:
-            "linear-gradient(90deg, rgba(5,5,5,0.92) 0%, rgba(82,163,221,0.13) 30%, rgba(228,121,57,0.10) 55%, rgba(82,163,221,0.13) 80%, rgba(5,5,5,0.92) 100%)",
+            form.theme === "fresh leaf"
+              ? "linear-gradient(90deg, rgba(3,8,16,0.96) 0%, rgba(24,44,79,0.18) 30%, rgba(244,63,94,0.04) 55%, rgba(24,44,79,0.18) 80%, rgba(3,8,16,0.96) 100%)"
+              : "linear-gradient(90deg, rgba(5,5,5,0.92) 0%, rgba(82,163,221,0.13) 30%, rgba(228,121,57,0.10) 55%, rgba(82,163,221,0.13) 80%, rgba(5,5,5,0.92) 100%)",
           animation: "navbar-bg-sweep 7s ease-in-out infinite",
           backgroundSize: "300% 100%",
         }}
@@ -385,7 +392,11 @@ export default function FormFillingPage() {
       </header>
 
       {/* Centered Liquid Glass Card */}
-      <div className="w-full max-w-2xl bg-white/[0.04] backdrop-blur-3xl border border-white/[0.08] p-8 md:p-12 rounded-2xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.7)] flex flex-col justify-between min-h-[420px] relative overflow-hidden transition-all duration-300 hover:border-white/[0.12] hover:bg-white/[0.06] z-10">
+      <div className={`w-full max-w-2xl backdrop-blur-3xl p-8 md:p-12 rounded-2xl flex flex-col justify-between min-h-[420px] relative overflow-hidden transition-all duration-300 z-10 ${
+        form.theme === "fresh leaf"
+          ? "bg-[#040d09]/82 border-emerald-500/20 hover:border-emerald-500/30 hover:bg-[#040d09]/88 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.92)]"
+          : "bg-white/[0.04] border-white/[0.08] hover:border-white/[0.12] hover:bg-white/[0.06] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.7)]"
+      }`}>
         
         {/* Background Liquid Glass reflection effects inside the card */}
         <div className="absolute -top-[30%] -right-[20%] w-[60%] h-[60%] rounded-full bg-white/[0.02] filter blur-[40px] pointer-events-none" />

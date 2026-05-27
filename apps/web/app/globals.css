@@ -181,6 +181,31 @@
   opacity: 0.9;
 }
 
+.navbar-twilight-border {
+  position: fixed;
+  overflow: hidden;
+}
+
+.navbar-twilight-border::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #60a5fa 20%,
+    #f43f5e 50%,
+    #60a5fa 80%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: navbar-gradient-sweep 4s ease-in-out infinite;
+  opacity: 0.95;
+}
+
 /* Navbar background gradient sweep (referenced via inline style) */
 @keyframes navbar-bg-sweep {
   0% {
@@ -199,7 +224,8 @@
   .animate-spatial-gradient,
   .animate-orb-1,
   .animate-orb-2,
-  .navbar-gradient-border::after {
+  .navbar-gradient-border::after,
+  .navbar-twilight-border::after {
     animation: none;
   }
 }

@@ -6,6 +6,8 @@ import { useParams, useRouter } from "next/navigation";
 import { trpc } from "~/trpc/client";
 import { toast } from "sonner";
 import { RightInteractiveParticles } from "~/components/RightInteractiveParticles";
+import { JungleSpatialBackground } from "~/components/JungleSpatialBackground";
+import { Abstract3DBackground } from "~/components/Abstract3DBackground";
 import {
   ArrowLeft,
   Save,
@@ -489,7 +491,13 @@ export default function FormBuilderPage() {
 
   return (
     <div className="min-h-screen bg-[#050505] text-[#e5e2e1] flex flex-col font-sans relative overflow-hidden select-none">
-      <StaticBackground />
+      {theme === "pure abstract" ? (
+        <Abstract3DBackground />
+      ) : theme === "fresh leaf" ? (
+        <JungleSpatialBackground />
+      ) : (
+        <StaticBackground />
+      )}
       {/* Top Header / Action Bar */}
       <header className="border-b border-white/5 bg-[#050505]/40 backdrop-blur-md px-6 py-4 flex flex-wrap justify-between items-center z-20 gap-4 relative">
         <div className="flex items-center gap-3">
