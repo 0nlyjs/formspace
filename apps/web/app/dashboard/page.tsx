@@ -239,7 +239,7 @@ export default function DashboardPage() {
     createFormMutation.mutate({
       title: newTitle,
       description: newDesc,
-      theme: newTheme,
+      theme: (newTheme === "manga pop" ? "anime" : newTheme === "fresh leaf" ? "tech" : "retro") as "anime" | "tech" | "retro",
       visibility: newVisibility,
     });
   };

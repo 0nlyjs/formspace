@@ -438,7 +438,7 @@ export default function FormBuilderPage() {
       title,
       description: description || null,
       slug: slug.toLowerCase().replace(/[^a-z0-9-_]+/g, "-"),
-      theme,
+      theme: (theme === "manga pop" ? "anime" : theme === "fresh leaf" ? "tech" : "retro") as "anime" | "tech" | "retro",
       visibility,
       status,
       password: enablePassword && password ? password : null,
