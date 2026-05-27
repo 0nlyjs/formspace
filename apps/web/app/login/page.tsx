@@ -47,12 +47,7 @@ export default function LoginPage() {
     loginMutation.mutate({ email, password });
   };
 
-  const handleDemoLogin = () => {
-    setEmail("test@mistjs.com");
-    setPassword("mist@2434");
-    toast.success("Demo credentials loaded! Logging in...");
-    loginMutation.mutate({ email: "test@mistjs.com", password: "mist@2434" });
-  };
+
 
   // While verifying, show a high-fidelity loading gate to skip the form flash
   if (meLoading || me) {
@@ -176,21 +171,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Demo Fast Login Option */}
-          <div className="relative flex py-1 items-center">
-            <div className="flex-grow border-t border-white/5"></div>
-            <span className="flex-shrink mx-4 text-[10px] uppercase font-bold text-neutral-500">Fast Mode</span>
-            <div className="flex-grow border-t border-white/5"></div>
-          </div>
 
-          <button 
-            id="demo-login-btn"
-            type="button"
-            onClick={handleDemoLogin}
-            className="w-full py-2.5 px-4 rounded-lg bg-white/5 hover:bg-white/10 text-neutral-300 font-medium text-xs border border-white/5 hover:text-white transition-all cursor-pointer text-center"
-          >
-            🔑 Quick Sign In with Demo Account
-          </button>
 
           {/* Footer Link */}
           <div className="text-center pt-2">

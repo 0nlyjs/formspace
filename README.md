@@ -49,10 +49,13 @@ pnpm db:seed
 
 ## Demo Account
 
-Use these for testing the dashboard:
+Use the following pre-seeded account to evaluate the dashboard, explore existing surveys, and view analytical charts:
 
+- **Username**: `demo`
 - **Email**: `test@mistjs.com`
 - **Password**: `mist@2434`
+
+*Note: This account is fully configured and pre-populated with 9 diverse high-fidelity forms (representing tech, anime, sports, music, sci-fi, Marvel, automobile, gaming, and travel surveys) along with 10-20 sample timeline responses for each form to immediately populate the analytical dashboards.*
 
 ## API Reference
 
