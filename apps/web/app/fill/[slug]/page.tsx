@@ -400,12 +400,12 @@ export default function FormFillingPage() {
           ? "bg-[#040d09]/82 border-emerald-500/20 hover:border-emerald-500/30 hover:bg-[#040d09]/88 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.92)]"
           : form.theme === "manga pop" || form.theme === "anime"
             ? "bg-[rgba(51,43,56,0.88)] border-pink-500/30 hover:border-pink-500/45 hover:bg-[rgba(61,52,68,0.90)] shadow-[0_0_0_1px_rgba(255,255,255,0.12),0_0_40px_8px_rgba(255,255,255,0.08),0_32px_64px_-16px_rgba(0,0,0,0.95)]"
-            : "bg-white/[0.18] border-white/[0.14] hover:border-white/[0.20] hover:bg-white/[0.21] shadow-[0_0_0_1px_rgba(255,255,255,0.09),0_32px_64px_-16px_rgba(0,0,0,0.7)]"
+            : "bg-[#121212]/75 border-white/40 hover:border-white/60 hover:bg-[#121212]/80 shadow-[0_0_0_1px_rgba(255,255,255,0.25),0_0_20px_4px_rgba(255,255,255,0.12),0_0_60px_12px_rgba(255,255,255,0.06),0_32px_64px_-16px_rgba(0,0,0,0.9)] hover:shadow-[0_0_0_1px_rgba(255,255,255,0.35),0_0_25px_6px_rgba(255,255,255,0.18),0_0_70px_16px_rgba(255,255,255,0.08),0_32px_64px_-16px_rgba(0,0,0,0.95)]"
       }`}>
         
         {/* Background Liquid Glass reflection effects inside the card */}
-        <div className="absolute -top-[30%] -right-[20%] w-[60%] h-[60%] rounded-full bg-white/[0.048] filter blur-[40px] pointer-events-none" />
-        <div className="absolute -bottom-[30%] -left-[20%] w-[60%] h-[60%] rounded-full bg-white/[0.032] filter blur-[40px] pointer-events-none" />
+        <div className="absolute -top-[30%] -right-[20%] w-[60%] h-[60%] rounded-full bg-white/[0.06] filter blur-[40px] pointer-events-none" />
+        <div className="absolute -bottom-[30%] -left-[20%] w-[60%] h-[60%] rounded-full bg-white/[0.04] filter blur-[40px] pointer-events-none" />
 
         {/* Card Header (Clean & Minimal with Auto-Advance Toggle) */}
         {!isSubmitted && (
