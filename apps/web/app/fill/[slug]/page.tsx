@@ -329,11 +329,10 @@ export default function FormFillingPage() {
 
   return (
     <div className="min-h-screen text-white flex items-center justify-center p-4 md:p-8 font-sans relative overflow-hidden pt-28">
-      
-      {/* Immersive Landing Page background theme & glowing orbs */}
-      {form.theme === "pure abstract" ? (
+          {/* Immersive Landing Page background theme & glowing orbs */}
+      {form.theme === "pure abstract" || form.theme === "retro" ? (
         <Abstract3DBackground />
-      ) : form.theme === "fresh leaf" ? (
+      ) : form.theme === "fresh leaf" || form.theme === "tech" ? (
         <JungleSpatialBackground />
       ) : form.theme === "manga pop" || form.theme === "anime" ? (
         <AnimeSpatialBackground />
@@ -374,11 +373,11 @@ export default function FormFillingPage() {
       {/* Landing Page Top Bar locked to top - Brand Logo Only */}
       <header
         className={`fixed top-0 left-0 right-0 w-full z-50 backdrop-blur-xl py-4 px-6 md:px-12 flex justify-start items-center ${
-          form.theme === "fresh leaf" ? "navbar-twilight-border" : "navbar-gradient-border"
+          form.theme === "fresh leaf" || form.theme === "tech" ? "navbar-twilight-border" : "navbar-gradient-border"
         }`}
         style={{
           background:
-            form.theme === "fresh leaf"
+            form.theme === "fresh leaf" || form.theme === "tech"
               ? "linear-gradient(90deg, rgba(3,8,16,0.96) 0%, rgba(24,44,79,0.18) 30%, rgba(244,63,94,0.04) 55%, rgba(24,44,79,0.18) 80%, rgba(3,8,16,0.96) 100%)"
               : "linear-gradient(90deg, rgba(5,5,5,0.92) 0%, rgba(82,163,221,0.13) 30%, rgba(228,121,57,0.10) 55%, rgba(82,163,221,0.13) 80%, rgba(5,5,5,0.92) 100%)",
           animation: "navbar-bg-sweep 7s ease-in-out infinite",
@@ -396,11 +395,11 @@ export default function FormFillingPage() {
 
       {/* Centered Liquid Glass Card */}
       <div className={`w-full max-w-2xl backdrop-blur-3xl p-8 md:p-12 rounded-2xl flex flex-col justify-between min-h-[420px] relative overflow-hidden transition-all duration-300 z-10 ${
-        form.theme === "fresh leaf"
+        form.theme === "fresh leaf" || form.theme === "tech"
           ? "bg-[#040d09]/82 border-emerald-500/20 hover:border-emerald-500/30 hover:bg-[#040d09]/88 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.92)]"
           : form.theme === "manga pop" || form.theme === "anime"
             ? "bg-[rgba(51,43,56,0.88)] border-pink-500/30 hover:border-pink-500/45 hover:bg-[rgba(61,52,68,0.90)] shadow-[0_0_0_1px_rgba(255,255,255,0.12),0_0_40px_8px_rgba(255,255,255,0.08),0_32px_64px_-16px_rgba(0,0,0,0.95)]"
-            : "bg-[#121212]/75 border-white/40 hover:border-white/60 hover:bg-[#121212]/80 shadow-[0_0_0_1px_rgba(255,255,255,0.25),0_0_20px_4px_rgba(255,255,255,0.12),0_0_60px_12px_rgba(255,255,255,0.06),0_32px_64px_-16px_rgba(0,0,0,0.9)] hover:shadow-[0_0_0_1px_rgba(255,255,255,0.35),0_0_25px_6px_rgba(255,255,255,0.18),0_0_70px_16px_rgba(255,255,255,0.08),0_32px_64px_-16px_rgba(0,0,0,0.95)]"
+            : "bg-[#121212]/75 border-white/40 hover:border-white/60 hover:bg-[#121212]/80 shadow-[0_0_0_1px_rgba(255,255,255,0.25),0_0_20px_4px_rgba(255,255,255,0.12),0_0_60px_12px_rgba(255,255,255,0.06),0_32px_64px_-16px_rgba(0,0,0,0.95)] hover:shadow-[0_0_0_1px_rgba(255,255,255,0.35),0_0_25px_6px_rgba(255,255,255,0.18),0_0_70px_16px_rgba(255,255,255,0.08),0_32px_64px_-16px_rgba(0,0,0,0.95)]"
       }`}>
         
         {/* Background Liquid Glass reflection effects inside the card */}
