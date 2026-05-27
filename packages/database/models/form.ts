@@ -20,7 +20,7 @@ export const formsTable = pgTable("forms", {
   slug: varchar("slug", { length: 255 }).notNull().unique(),
   theme: varchar("theme", { length: 50 }).default("anime").notNull(), // 'anime' | 'tech' | 'retro'
   visibility: varchar("visibility", { length: 50 }).default("public").notNull(), // 'public' | 'unlisted'
-  status: varchar("status", { length: 50 }).default("draft").notNull(), // 'draft' | 'published'
+  status: varchar("status", { length: 50 }).default("published").notNull(), // 'draft' | 'published'
   password: text("password"),
   expiresAt: timestamp("expires_at"),
   responseLimit: integer("response_limit"),

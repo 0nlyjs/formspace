@@ -18,7 +18,7 @@ import {
   Flame,
   CheckSquare,
 } from "lucide-react";
-// 3D Canvas elements removed for flat themed layouts
+import { Abstract3DBackground } from "~/components/Abstract3DBackground";
 
 // Custom ambient floating particles configuration (micro-scale, slow drifting)
 const AMBIENT_PARTICLES = Array.from({ length: 12 }).map((_, idx) => {
@@ -329,37 +329,41 @@ export default function FormFillingPage() {
     <div className="min-h-screen text-white flex items-center justify-center p-4 md:p-8 font-sans relative overflow-hidden pt-28">
       
       {/* Immersive Landing Page background theme & glowing orbs */}
-      <div className="absolute inset-0 w-full h-full bg-[#050505] z-0 pointer-events-none select-none overflow-hidden">
-        {/* Subtle Cyberpunk/Tech Grid Overlay */}
-        <div 
-          className="absolute inset-0 opacity-[0.35]"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px)
-            `,
-            backgroundSize: '48px 48px',
-          }}
-        />
-        
-        {/* Luminous Top-Left Brand Blue Orb */}
-        <div 
-          className="absolute -top-[15%] -left-[10%] w-[55vw] h-[55vw] rounded-full opacity-[0.5]"
-          style={{
-            background: getOrbGradient(form.theme).blueOrb,
-            filter: 'blur(60px)',
-          }}
-        />
+      {form.theme === "pure abstract" ? (
+        <Abstract3DBackground />
+      ) : (
+        <div className="absolute inset-0 w-full h-full bg-[#050505] z-0 pointer-events-none select-none overflow-hidden">
+          {/* Subtle Cyberpunk/Tech Grid Overlay */}
+          <div 
+            className="absolute inset-0 opacity-[0.35]"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px)
+              `,
+              backgroundSize: '48px 48px',
+            }}
+          />
+          
+          {/* Luminous Top-Left Brand Blue Orb */}
+          <div 
+            className="absolute -top-[15%] -left-[10%] w-[55vw] h-[55vw] rounded-full opacity-[0.5]"
+            style={{
+              background: getOrbGradient(form.theme).blueOrb,
+              filter: 'blur(60px)',
+            }}
+          />
 
-        {/* Luminous Bottom-Right Brand Orange Orb */}
-        <div 
-          className="absolute -bottom-[15%] -right-[10%] w-[55vw] h-[55vw] rounded-full opacity-[0.3]"
-          style={{
-            background: getOrbGradient(form.theme).orangeOrb,
-            filter: 'blur(60px)',
-          }}
-        />
-      </div>
+          {/* Luminous Bottom-Right Brand Orange Orb */}
+          <div 
+            className="absolute -bottom-[15%] -right-[10%] w-[55vw] h-[55vw] rounded-full opacity-[0.3]"
+            style={{
+              background: getOrbGradient(form.theme).orangeOrb,
+              filter: 'blur(60px)',
+            }}
+          />
+        </div>
+      )}
 
       {/* Landing Page Top Bar locked to top - Brand Logo Only */}
       <header
@@ -556,6 +560,14 @@ export default function FormFillingPage() {
                           nextList = [...currentList, opt];
                         }
                         handleAnswerChange(nextList);
+
+                        // Smart debounced auto-advance for multiple selection
+                        if (autoAdvance) {
+                          clearAutoAdvance();
+                          autoAdvanceTimeoutRef.current = setTimeout(() => {
+                            handleNext();
+                          }, 1500); // 1.5s delay to let users pick multiple items before advancing
+                        }
                       };
 
                       return (
@@ -587,7 +599,16 @@ export default function FormFillingPage() {
                 {activeField?.type === "checkbox" && (
                   <button
                     type="button"
-                    onClick={() => handleAnswerChange(answers[activeField.id] === "Yes" ? "No" : "Yes")}
+                    onClick={() => {
+                      const newVal = answers[activeField.id] === "Yes" ? "No" : "Yes";
+                      handleAnswerChange(newVal);
+                      if (autoAdvance && newVal === "Yes") {
+                        clearAutoAdvance();
+                        autoAdvanceTimeoutRef.current = setTimeout(() => {
+                          handleNext();
+                        }, 350);
+                      }
+                    }}
                     className={`w-full p-4 rounded-xl border text-left font-semibold text-xs transition-all flex justify-between items-center cursor-pointer ${
                       answers[activeField.id] === "Yes"
                         ? style.activeBg

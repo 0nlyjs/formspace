@@ -67,7 +67,7 @@ export const formRouter = router({
           slug,
           theme: input.theme,
           visibility: input.visibility,
-          status: "draft",
+          status: "published",
         })
         .returning();
 

@@ -48,7 +48,7 @@ async function main() {
       title: "Anime & Manga Explorer",
       description: "Discover community tastes in animation quality, titles, and characters.",
       slug: "anime-survey",
-      theme: "anime",
+      theme: "pure abstract",
       visibility: "public",
       status: "published",
     })
@@ -165,7 +165,7 @@ async function main() {
       title: "Cyberpunk Developer OS Survey",
       description: "Explore the ultimate neon grids, host terminal preferences, and modern package compilers.",
       slug: "tech-os-survey",
-      theme: "tech",
+      theme: "pure abstract",
       visibility: "public",
       status: "published",
     })
@@ -243,7 +243,7 @@ async function main() {
       title: "Retro Games & Sci-Fi Trivia",
       description: "A nostalgic portal to pixel platforms and interstellar space travel.",
       slug: "retro-sci-fi",
-      theme: "retro",
+      theme: "pure abstract",
       visibility: "public",
       status: "published",
     })

@@ -100,7 +100,7 @@ export default function FormBuilderPage() {
   const [slug, setSlug] = useState("");
   const [theme, setTheme] = useState<"manga pop" | "fresh leaf" | "pure abstract">("manga pop");
   const [visibility, setVisibility] = useState<"public" | "unlisted">("public");
-  const [status, setStatus] = useState<"draft" | "published">("draft");
+  const [status, setStatus] = useState<"draft" | "published">("published");
   const [password, setPassword] = useState("");
   const [enablePassword, setEnablePassword] = useState(false);
   const [responseLimit, setResponseLimit] = useState<number | "">("");
@@ -149,7 +149,7 @@ export default function FormBuilderPage() {
         setTheme("pure abstract");
       }
       setVisibility(formData.visibility as "public" | "unlisted");
-      setStatus(formData.status as "draft" | "published");
+      setStatus((formData.status || "published") as "draft" | "published");
       if (formData.password) {
         setPassword(formData.password);
         setEnablePassword(true);
