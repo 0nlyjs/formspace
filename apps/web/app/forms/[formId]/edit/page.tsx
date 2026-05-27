@@ -31,6 +31,7 @@ import {
   Calendar,
   Lock,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface FieldState {
   id?: string;
@@ -112,6 +113,7 @@ export default function FormBuilderPage() {
 
   // Selected Field for detailed custom options editing
   const [selectedFieldIdx, setSelectedFieldIdx] = useState<number | null>(null);
+  const [showExitModal, setShowExitModal] = useState(false);
 
   // Queries
   const { data: formData, isLoading: formLoading, error: loadError } = trpc.form.get.useQuery(
@@ -188,6 +190,88 @@ export default function FormBuilderPage() {
       );
     }
   }, [formData]);
+
+  // ----------------------------------------------------
+  // Unsaved Changes Tracking & Navigation Guard
+  // ----------------------------------------------------
+  const hasUnsavedChanges = () => {
+    if (!formData) return false;
+    
+    const initialTheme = formData.theme === "anime" || formData.theme === "manga pop" 
+      ? "manga pop" 
+      : formData.theme === "tech" || formData.theme === "fresh leaf" 
+        ? "fresh leaf" 
+        : "pure abstract";
+
+    const hasPasswordChanged = formData.password
+      ? (!enablePassword || password !== formData.password)
+      : (enablePassword && password.trim() !== "");
+
+    // Expiry date comparison
+    let initialExpires = "";
+    if (formData.expiresAt) {
+      const dateObj = new Date(formData.expiresAt);
+      const yyyy = dateObj.getFullYear();
+      const mm = String(dateObj.getMonth() + 1).padStart(2, "0");
+      const dd = String(dateObj.getDate()).padStart(2, "0");
+      const hh = String(dateObj.getHours()).padStart(2, "0");
+      const min = String(dateObj.getMinutes()).padStart(2, "0");
+      initialExpires = `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+    }
+    const hasExpiryChanged = expiresAt !== initialExpires;
+
+    // Fields comparison
+    const initialFields = [...(formData.fields || [])]
+      .sort((a, b) => a.order - b.order)
+      .map((f) => ({
+        type: f.type,
+        label: f.label || "",
+        description: f.description || "",
+        required: !!f.required,
+        placeholder: f.placeholder || "",
+        options: Array.isArray(f.options) ? f.options : [],
+      }));
+
+    const currentFields = fields.map((f) => ({
+      type: f.type,
+      label: f.label || "",
+      description: f.description || "",
+      required: !!f.required,
+      placeholder: f.placeholder || "",
+      options: f.options || [],
+    }));
+
+    const hasFieldsChanged = JSON.stringify(initialFields) !== JSON.stringify(currentFields);
+
+    return (
+      title !== formData.title ||
+      description !== (formData.description || "") ||
+      slug !== formData.slug ||
+      theme !== initialTheme ||
+      visibility !== formData.visibility ||
+      status !== formData.status ||
+      hasPasswordChanged ||
+      responseLimit !== (formData.responseLimit || "") ||
+      emailNotifications !== (formData.emailNotifications ?? true) ||
+      emailConfirmations !== (formData.emailConfirmations ?? true) ||
+      hasExpiryChanged ||
+      hasFieldsChanged
+    );
+  };
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges()) {
+        e.preventDefault();
+        e.returnValue = "You have unsaved changes. Are you sure you want to leave?";
+        return e.returnValue;
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [formData, title, description, slug, theme, visibility, status, enablePassword, password, responseLimit, emailNotifications, emailConfirmations, expiresAt, fields]);
 
   if (formLoading) {
     return (
@@ -409,19 +493,37 @@ export default function FormBuilderPage() {
       {/* Top Header / Action Bar */}
       <header className="border-b border-white/5 bg-[#050505]/40 backdrop-blur-md px-6 py-4 flex flex-wrap justify-between items-center z-20 gap-4 relative">
         <div className="flex items-center gap-3">
-          <Link
-            href="/dashboard"
-            className="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-zinc-300 transition-all duration-200"
+          <button
+            type="button"
+            onClick={() => {
+              if (hasUnsavedChanges()) {
+                setShowExitModal(true);
+              } else {
+                router.push("/dashboard");
+              }
+            }}
+            className="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-zinc-300 transition-all duration-200 cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
-          </Link>
-          <img 
-            id="app-logo"
-            alt="FormSpace Logo" 
-            className="h-7 object-contain w-auto select-none mr-1.5" 
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIN8_hMTBYEGrpk3uRvOfz07E8YNUiGE687uhRHfb1clW0yc8X6UDsun8-_OG6Dlx6QnaLaltNfBAqCsAy1i1bW_45Npo79qXLRzOMICMhscWGiyqAQyqPKVIxlQgjpt5Xe9iD5GQoQYzk3PP3VtwvbJQ7EYNTrYYxpHaC4RIk9M6dUIDW3qZ8VNf5uhSzI2aMiFE3XrnYmjlNgTj3lPGYH_0lP8uT0CwAz5nWqZbfVqbN2YP6uwyLCshPyrGGTFuppmqo_L3XBvM7"
-            referrerPolicy="no-referrer"
-          />
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              if (hasUnsavedChanges()) {
+                setShowExitModal(true);
+              } else {
+                router.push("/dashboard");
+              }
+            }}
+            className="flex items-center group cursor-pointer"
+          >
+            <img 
+              id="app-logo"
+              alt="FormSpace Logo" 
+              className="h-7 object-contain w-auto select-none mr-1.5 brightness-100 group-hover:opacity-90 transition-opacity" 
+              src="/logo.png"
+            />
+          </button>
           <div className="border-l border-white/10 pl-3">
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-bold text-[#52a3dd] uppercase tracking-widest">
@@ -467,7 +569,7 @@ export default function FormBuilderPage() {
             ) : (
               <Save className="w-3.5 h-3.5" />
             )}
-            Save Schema
+            Save
           </button>
         </div>
       </header>
@@ -477,23 +579,13 @@ export default function FormBuilderPage() {
         
         {/* LEFT COLUMN: Cyberpunk Form Settings Control panel */}
         <aside className="w-full lg:w-[360px] border-b lg:border-b-0 lg:border-r border-white/5 bg-[#08090b] p-6 overflow-y-auto shrink-0 flex flex-col gap-6 scrollbar-thin relative z-10">
-          <div className="flex items-center gap-3 border-b border-white/5 pb-4">
-            <img 
-              src="https://api.dicebear.com/7.x/avataaars/svg?seed=Shepard" 
-              className="w-10 h-10 rounded-full bg-[#13151a] border border-white/10 p-0.5 select-none" 
-              alt="Avatar" 
-            />
-            <div>
-              <p className="text-xs font-bold text-white leading-tight">Commander Shepard</p>
-              <p className="text-[9px] text-[#52a3dd] mt-0.5 leading-none font-semibold uppercase tracking-wider">Form Architect</p>
-            </div>
-          </div>
+
 
           <div className="flex flex-col gap-4">
             {/* Title input */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
-                Title
+              <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-1">
+                Title <span className="text-red-400 font-bold">*</span>
               </label>
               <input
                 type="text"
@@ -520,8 +612,8 @@ export default function FormBuilderPage() {
 
             {/* Slug input */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
-                Unique Slug URL
+              <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-1">
+                Unique Slug URL <span className="text-red-400 font-bold">*</span>
               </label>
               <div className="flex bg-[#050505]/50 border border-white/10 rounded-xl items-center overflow-hidden focus-within:border-[#52a3dd] focus-within:ring-1 focus-within:ring-[#52a3dd]/50 transition-all">
                 <span className="text-[10px] text-zinc-500 bg-zinc-900/50 border-r border-white/5 px-2.5 py-2 font-mono">
@@ -553,7 +645,7 @@ export default function FormBuilderPage() {
                       : "text-zinc-500 hover:text-zinc-300"
                   }`}
                 >
-                  <Flame className="w-4 h-4" />
+                  <span className="text-sm select-none">🌸</span>
                   <span className="text-[8px] font-extrabold uppercase">Manga Pop</span>
                 </button>
 
@@ -566,7 +658,7 @@ export default function FormBuilderPage() {
                       : "text-zinc-500 hover:text-zinc-300"
                   }`}
                 >
-                  <Terminal className="w-4 h-4" />
+                  <span className="text-sm select-none">🌿</span>
                   <span className="text-[8px] font-extrabold uppercase">Fresh Leaf</span>
                 </button>
 
@@ -575,11 +667,11 @@ export default function FormBuilderPage() {
                   onClick={() => setTheme("pure abstract")}
                   className={`flex flex-col items-center justify-center gap-1 py-2 px-1 rounded-lg text-center transition-all cursor-pointer ${
                     theme === "pure abstract"
-                      ? "bg-zinc-500/10 border border-zinc-500/30 text-zinc-300"
+                      ? "bg-white/10 border border-white/20 text-white"
                       : "text-zinc-500 hover:text-zinc-300"
                   }`}
                 >
-                  <Sparkles className="w-4 h-4" />
+                  <span className="text-sm select-none">⚪</span>
                   <span className="text-[8px] font-extrabold uppercase">Pure Abstract</span>
                 </button>
               </div>
@@ -1041,6 +1133,69 @@ export default function FormBuilderPage() {
           </div>
         </main>
       </div>
+
+      {/* Custom Glassmorphic Exit Warning Confirmation Modal */}
+      <AnimatePresence>
+        {showExitModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowExitModal(false)}
+              className="absolute inset-0 bg-[#050505]/80 backdrop-blur-md"
+            />
+
+            {/* Premium Glass Modal Box */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              className="w-full max-w-sm bg-[#08090b]/90 backdrop-blur-2xl border border-white/[0.08] p-7 rounded-2xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.8)] z-10 flex flex-col gap-5 relative overflow-hidden"
+            >
+              {/* Internal ambient glowing liquid light blobs */}
+              <div className="absolute -top-[30%] -right-[30%] w-[60%] h-[60%] rounded-full bg-orange-500/5 filter blur-[40px] pointer-events-none" />
+              <div className="absolute -bottom-[30%] -left-[30%] w-[60%] h-[60%] rounded-full bg-blue-500/5 filter blur-[40px] pointer-events-none" />
+
+              {/* Warning Header */}
+              <div className="flex flex-col gap-2 relative z-10">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-orange-400 bg-orange-500/10 border border-orange-500/25 px-2.5 py-0.5 rounded-md w-max select-none">
+                  Unsaved Changes
+                </span>
+                <h3 className="text-lg font-light text-white font-sans mt-1">
+                  Exit without saving?
+                </h3>
+                <p className="text-xs text-zinc-400 leading-relaxed font-sans">
+                  You have modified your schema settings. Leaving now will discard all unsaved edits.
+                </p>
+              </div>
+
+              {/* Action Buttons using brand theme */}
+              <div className="flex gap-3 relative z-10 mt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowExitModal(false)}
+                  className="flex-1 bg-white/5 border border-white/10 hover:bg-white/10 text-zinc-300 font-semibold py-2.5 rounded-xl text-xs cursor-pointer transition-all active:scale-[0.98] font-sans"
+                >
+                  No, Keep Editing
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowExitModal(false);
+                    router.push("/dashboard");
+                  }}
+                  className="flex-1 text-white font-semibold py-2.5 rounded-xl text-xs cursor-pointer shadow-md hover:shadow-[0_0_15px_rgba(228,121,57,0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all font-sans"
+                  style={{ background: 'linear-gradient(90deg, #52A3DD 0%, #E47939 100%)' }}
+                >
+                  Yes, Discard Edits
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

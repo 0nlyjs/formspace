@@ -256,7 +256,7 @@ export default function DashboardPage() {
       case "tech":
         return {
           label: "Fresh Leaf",
-          icon: <Terminal className="w-4.5 h-4.5" />,
+          icon: <span className="text-sm select-none">🌿</span>,
           iconBg: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20",
           badgeBg: "border-emerald-500/20 bg-emerald-500/5 text-emerald-400"
         };
@@ -264,16 +264,16 @@ export default function DashboardPage() {
       case "retro":
         return {
           label: "Pure Abstract",
-          icon: <Gamepad2 className="w-4.5 h-4.5" />,
-          iconBg: "bg-zinc-500/10 text-zinc-300 border border-zinc-500/20",
-          badgeBg: "border-zinc-500/20 bg-zinc-500/5 text-zinc-300"
+          icon: <span className="text-sm select-none">⚪</span>,
+          iconBg: "bg-white/10 text-white border border-white/20",
+          badgeBg: "border-white/20 bg-white/5 text-white"
         };
       case "manga pop":
       case "anime":
       default:
         return {
           label: "Manga Pop",
-          icon: <Flame className="w-4.5 h-4.5" />,
+          icon: <span className="text-sm select-none">🌸</span>,
           iconBg: "bg-pink-500/10 text-pink-400 border border-pink-500/20",
           badgeBg: "border-pink-500/20 bg-pink-500/5 text-pink-400"
         };
@@ -292,9 +292,8 @@ export default function DashboardPage() {
             <img 
               id="app-logo"
               alt="FormSpace Logo" 
-              className="h-10 object-contain w-auto select-none" 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIN8_hMTBYEGrpk3uRvOfz07E8YNUiGE687uhRHfb1clW0yc8X6UDsun8-_OG6Dlx6QnaLaltNfBAqCsAy1i1bW_45Npo79qXLRzOMICMhscWGiyqAQyqPKVIxlQgjpt5Xe9iD5GQoQYzk3PP3VtwvbJQ7EYNTrYYxpHaC4RIk9M6dUIDW3qZ8VNf5uhSzI2aMiFE3XrnYmjlNgTj3lPGYH_0lP8uT0CwAz5nWqZbfVqbN2YP6uwyLCshPyrGGTFuppmqo_L3XBvM7"
-              referrerPolicy="no-referrer"
+              className="h-10 object-contain w-auto select-none brightness-100" 
+              src="/logo.png"
             />
           </Link>
 
@@ -843,7 +842,9 @@ export default function DashboardPage() {
 
                 <form onSubmit={handleCreateFormSubmit} className="flex flex-col gap-4 mt-6">
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider">Form Title</label>
+                    <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider flex items-center gap-1">
+                      Form Title <span className="text-red-400 font-bold">*</span>
+                    </label>
                     <div className="relative input-glow rounded-lg transition-all duration-300 bg-[rgba(255,255,255,0.02)] border border-white/5 focus-within:border-[#52a3dd]">
                       <input
                         type="text"
@@ -883,8 +884,8 @@ export default function DashboardPage() {
                             : "bg-[#0e0e0e]/40 border-white/5 text-neutral-400 hover:border-white/10 hover:scale-[1.02]"
                         }`}
                       >
-                        <Flame className="w-5 h-5" />
-                        <span className="text-[10px] font-bold">Manga Pop</span>
+                        <span className="text-xl select-none">🌸</span>
+                        <span className="text-[10px] font-bold uppercase tracking-wider">MANGA POP</span>
                       </button>
 
                       {/* Fresh Leaf */}
@@ -897,8 +898,8 @@ export default function DashboardPage() {
                             : "bg-[#0e0e0e]/40 border-white/5 text-neutral-400 hover:border-white/10 hover:scale-[1.02]"
                         }`}
                       >
-                        <Terminal className="w-5 h-5" />
-                        <span className="text-[10px] font-bold">Fresh Leaf</span>
+                        <span className="text-xl select-none">🌿</span>
+                        <span className="text-[10px] font-bold uppercase tracking-wider">FRESH LEAF</span>
                       </button>
 
                       {/* Pure Abstract */}
@@ -907,12 +908,12 @@ export default function DashboardPage() {
                         onClick={() => setNewTheme("pure abstract")}
                         className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-center transition-all duration-200 cursor-pointer ${
                           newTheme === "pure abstract"
-                            ? "bg-zinc-500/10 border-zinc-500/40 text-zinc-300 scale-[1.03] shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+                            ? "bg-white/10 border-white/40 text-white scale-[1.03] shadow-[0_0_15px_rgba(255,255,255,0.15)]"
                             : "bg-[#0e0e0e]/40 border-white/5 text-neutral-400 hover:border-white/10 hover:scale-[1.02]"
                         }`}
                       >
-                        <Gamepad2 className="w-5 h-5" />
-                        <span className="text-[10px] font-bold">Pure Abstract</span>
+                        <span className="text-xl select-none">⚪</span>
+                        <span className="text-[10px] font-bold uppercase tracking-wider">PURE ABSTRACT</span>
                       </button>
                     </div>
                   </div>
@@ -953,9 +954,10 @@ export default function DashboardPage() {
                     <button
                       type="submit"
                       disabled={createFormMutation.isPending}
-                      className="flex-1 bg-[#52a3dd] hover:bg-[#90cdff] text-[#003755] hover:text-[#001e30] py-3 rounded-xl text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer shadow-[0_0_20px_rgba(82,163,221,0.15)] disabled:opacity-60"
+                      className="flex-1 text-white py-3 rounded-xl text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer shadow-[0_0_20px_rgba(82,163,221,0.2)] hover:opacity-90 disabled:opacity-60"
+                      style={{ background: 'linear-gradient(90deg, #52A3DD 0%, #E47939 100%)' }}
                     >
-                      {createFormMutation.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
+                      {createFormMutation.isPending && <Loader2 className="w-4 h-4 animate-spin text-white" />}
                       Confirm
                     </button>
                   </div>
