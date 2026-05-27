@@ -73,10 +73,10 @@ export default function Home() {
 
         {/* Navigation Items (text-xs to text-sm) */}
         <nav className="hidden md:flex items-center gap-8 text-sm font-semibold uppercase tracking-wider text-zinc-400">
-          <Link href="#features" className="hover:text-white transition-colors">
+          <Link href="#section1" className="hover:text-white transition-colors">
             Product
           </Link>
-          <Link href="#features" className="hover:text-white transition-colors">
+          <Link href="#section2" className="hover:text-white transition-colors">
             Templates
           </Link>
           <Link href="#public-forms" className="hover:text-white transition-colors">
@@ -119,7 +119,7 @@ export default function Home() {
       <InteractiveBackground />
 
       {/* Hero Section */}
-      <section className="relative flex-grow flex items-center px-6 py-16 md:py-28 md:px-12 max-w-7xl mx-auto w-full z-10">
+      <section id="section1" className="relative flex-grow flex items-center px-6 py-16 md:py-28 md:px-12 max-w-7xl mx-auto w-full z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center w-full relative z-20">
           {/* Left Column: Heading & CTAs */}
           <div className="lg:col-span-6 flex flex-col gap-6 text-left relative z-20">
@@ -171,14 +171,6 @@ export default function Home() {
                 Get Started
                 <ArrowRight className="w-4 h-4" />
               </Link>
-
-              <Link
-                href="/fill/anime-survey"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-sm font-bold uppercase tracking-wider text-white border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 backdrop-blur-md transition-all hover:scale-[1.02] duration-300"
-              >
-                <Play className="w-3.5 h-3.5 fill-current text-zinc-300" />
-                Test 3D Form
-              </Link>
             </div>
           </div>
 
@@ -208,7 +200,7 @@ export default function Home() {
         </div>
 
         <section
-          id="features"
+          id="section2"
           className="relative px-6 py-20 md:py-32 md:px-12 max-w-7xl mx-auto w-full z-10 border-t border-white/5"
         >
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center w-full relative z-20">
@@ -254,12 +246,24 @@ export default function Home() {
 
               {/* CTA Glass Button (text-xs to text-sm) */}
               <div className="mt-2">
-                <Link
-                  href="/fill/anime-survey"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold uppercase tracking-wider text-white border border-[#52a3dd]/40 hover:border-[#90cdff] hover:bg-[#52a3dd]/10 shadow-[0_0_15px_rgba(82,163,221,0.05)] hover:shadow-[0_0_20px_rgba(82,163,221,0.15)] transition-all duration-300"
+                <button
+                  onClick={() => {
+                    if (publicForms && publicForms.length > 0) {
+                      const randomIndex = Math.floor(Math.random() * publicForms.length);
+                      const randomForm = publicForms[randomIndex];
+                      if (randomForm && randomForm.slug) {
+                        window.open(`/fill/${randomForm.slug}`, "_blank");
+                      } else {
+                        window.open("/fill/anime-survey", "_blank");
+                      }
+                    } else {
+                      window.open("/fill/anime-survey", "_blank");
+                    }
+                  }}
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold uppercase tracking-wider text-white border border-[#52a3dd]/40 hover:border-[#90cdff] hover:bg-[#52a3dd]/10 shadow-[0_0_15px_rgba(82,163,221,0.05)] hover:shadow-[0_0_20px_rgba(82,163,221,0.15)] transition-all duration-300 cursor-pointer"
                 >
                   Explore Templates
-                </Link>
+                </button>
               </div>
             </div>
           </div>
@@ -706,16 +710,16 @@ export default function Home() {
                 Product
               </span>
               <Link
-                href="#features"
+                href="#section1"
                 className="text-zinc-500 hover:text-zinc-300 text-sm transition-colors"
               >
-                Features
+                Product Section
               </Link>
               <Link
-                href="#features"
+                href="#section2"
                 className="text-zinc-500 hover:text-zinc-300 text-sm transition-colors"
               >
-                Templates
+                Templates Section
               </Link>
               <Link
                 href="#pricing"
