@@ -18,8 +18,7 @@ import {
   Flame,
   CheckSquare,
 } from "lucide-react";
-import { ThreeBackground } from "~/components/ThreeBackground";
-import { InteractiveCharacterCanvas } from "~/components/InteractiveCharacterCanvas";
+// 3D Canvas elements removed for flat themed layouts
 
 export default function FormFillingPage() {
   const params = useParams();
@@ -96,9 +95,8 @@ export default function FormFillingPage() {
   // Handle Form Lock Screen
   if (formError || !form) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-white p-6 relative">
-        <ThreeBackground theme="anime" />
-        <div className="bg-zinc-900/80 backdrop-blur-md border border-white/10 p-8 rounded-3xl text-center max-w-sm flex flex-col gap-4 items-center z-10 shadow-2xl">
+      <div className="min-h-screen bg-[#0d0d0d] flex items-center justify-center text-white p-6 relative">
+        <div className="bg-white/[0.04] backdrop-blur-md border border-white/10 p-8 rounded-3xl text-center max-w-sm flex flex-col gap-4 items-center z-10 shadow-2xl">
           <Lock className="w-12 h-12 text-rose-400 animate-pulse" />
           <div>
             <h2 className="text-xl font-bold">Closed Portal</h2>
@@ -133,9 +131,8 @@ export default function FormFillingPage() {
     };
 
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-white p-6 relative">
-        <ThreeBackground theme="tech" />
-        <div className="bg-zinc-900/85 backdrop-blur-xl border border-white/10 p-8 rounded-3xl text-center max-w-sm w-full flex flex-col gap-5 items-center z-10 shadow-2xl">
+      <div className="min-h-screen bg-[#0d0d0d] flex items-center justify-center text-white p-6 relative">
+        <div className="bg-white/[0.04] backdrop-blur-xl border border-white/10 p-8 rounded-3xl text-center max-w-sm w-full flex flex-col gap-5 items-center z-10 shadow-2xl">
           <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center">
             <Lock className="w-5 h-5 text-indigo-400" />
           </div>
@@ -170,43 +167,42 @@ export default function FormFillingPage() {
 
   const fields = form.fields || [];
 
-  // Theme-specific styles config
-  const getThemeStyles = () => {
-    switch (form.theme) {
+  const getOrbGradient = (themeName: string) => {
+    switch (themeName) {
+      case "manga pop":
+      case "anime":
+        return {
+          blueOrb: 'radial-gradient(circle, rgba(236, 72, 153, 0.35) 0%, rgba(236, 72, 153, 0.1) 45%, rgba(5, 5, 5, 0) 75%)',
+          orangeOrb: 'radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, rgba(5, 5, 5, 0) 75%)',
+        };
+      case "fresh leaf":
       case "tech":
         return {
-          themeName: "tech" as const,
-          primaryText: "text-emerald-400",
-          primaryBorder: "border-emerald-500/20",
-          focusBorder: "focus:border-emerald-400",
-          glowBorder: "border-emerald-500/40 shadow-emerald-500/10",
-          activeBg: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
-          buttonColor: "bg-emerald-500 text-black hover:bg-emerald-400 shadow-emerald-500/20",
-          icon: <Terminal className="w-4 h-4 text-emerald-400" />,
+          blueOrb: 'radial-gradient(circle, rgba(16, 185, 129, 0.35) 0%, rgba(16, 185, 129, 0.1) 45%, rgba(5, 5, 5, 0) 75%)',
+          orangeOrb: 'radial-gradient(circle, rgba(56, 189, 248, 0.08) 0%, rgba(5, 5, 5, 0) 75%)',
         };
+      case "pure abstract":
       case "retro":
-        return {
-          themeName: "retro" as const,
-          primaryText: "text-amber-400",
-          primaryBorder: "border-amber-500/20",
-          focusBorder: "focus:border-amber-400",
-          glowBorder: "border-amber-500/40 shadow-amber-500/10",
-          activeBg: "bg-amber-500/10 text-amber-400 border-amber-500/30",
-          buttonColor: "bg-amber-500 text-black hover:bg-amber-400 shadow-amber-500/20",
-          icon: <Sparkles className="w-4 h-4 text-amber-400" />,
-        };
       default:
         return {
-          themeName: "anime" as const,
-          primaryText: "text-pink-400",
-          primaryBorder: "border-pink-500/20",
-          focusBorder: "focus:border-pink-400",
-          glowBorder: "border-pink-500/40 shadow-pink-500/10",
-          activeBg: "bg-pink-500/10 text-pink-400 border-pink-500/30",
-          buttonColor: "bg-pink-500 text-black hover:bg-pink-400 shadow-pink-500/20",
-          icon: <Flame className="w-4 h-4 text-pink-400" />,
+          blueOrb: 'radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.03) 45%, rgba(5, 5, 5, 0) 75%)',
+          orangeOrb: 'radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, rgba(5, 5, 5, 0) 75%)',
         };
     }
+  };
+
+  // Theme-specific styles config (Unified premium liquid glass interaction)
+  const getThemeStyles = () => {
+    return {
+      themeName: form.theme,
+      primaryText: "text-zinc-200",
+      primaryBorder: "border-white/10",
+      focusBorder: "focus:border-white/30 focus:bg-white/[0.08]",
+      glowBorder: "border-white/20 shadow-white/5",
+      activeBg: "bg-white/[0.1] text-white border-white/20 shadow-[0_8px_32px_0_rgba(255,255,255,0.05)]",
+      buttonColor: "bg-white text-zinc-950 hover:bg-zinc-200 shadow-[0_8px_24px_rgba(255,255,255,0.15)]",
+      icon: <Sparkles className="w-4 h-4 text-zinc-300" />,
+    };
   };
 
   const style = getThemeStyles();
@@ -307,370 +303,400 @@ export default function FormFillingPage() {
     : 0;
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white flex flex-col font-sans relative overflow-hidden">
+    <div className="min-h-screen text-white flex items-center justify-center p-4 md:p-8 font-sans relative overflow-hidden pt-28">
       
-      {/* Immersive 3D Space Background */}
-      <ThreeBackground theme={style.themeName} />
-
-      {/* Main Container */}
-      <div className="flex-grow flex flex-col lg:flex-row z-10">
+      {/* Immersive Landing Page background theme & glowing orbs */}
+      <div className="absolute inset-0 w-full h-full bg-[#050505] z-0 pointer-events-none select-none overflow-hidden">
+        {/* Subtle Cyberpunk/Tech Grid Overlay */}
+        <div 
+          className="absolute inset-0 opacity-[0.35]"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px)
+            `,
+            backgroundSize: '48px 48px',
+          }}
+        />
         
-        {/* LEFT PANEL: 2D Step Questionnaire */}
-        <div className="w-full lg:w-[60%] flex flex-col justify-between p-6 md:p-16 lg:p-24 bg-zinc-950/85 backdrop-blur-md border-r border-white/5 h-screen overflow-y-auto">
-          
-          {/* Header */}
-          <div className="flex justify-between items-center mb-10">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-indigo-500 to-pink-500 flex items-center justify-center">
-                <span className="font-extrabold text-[10px] text-black">FS</span>
-              </div>
-              <span className="font-bold text-xs tracking-wider text-zinc-300">formspace.</span>
-            </div>
+        {/* Luminous Top-Left Brand Blue Orb */}
+        <div 
+          className="absolute -top-[15%] -left-[10%] w-[55vw] h-[55vw] rounded-full opacity-[0.5]"
+          style={{
+            background: getOrbGradient(form.theme).blueOrb,
+            filter: 'blur(60px)',
+          }}
+        />
 
-            <div className="flex items-center gap-2 bg-zinc-900 border border-white/5 px-3 py-1.5 rounded-full text-[10px] text-zinc-400">
-              {style.icon}
-              <span className="font-bold uppercase tracking-wider">{form.title}</span>
-            </div>
-          </div>
+        {/* Luminous Bottom-Right Brand Orange Orb */}
+        <div 
+          className="absolute -bottom-[15%] -right-[10%] w-[55vw] h-[55vw] rounded-full opacity-[0.3]"
+          style={{
+            background: getOrbGradient(form.theme).orangeOrb,
+            filter: 'blur(60px)',
+          }}
+        />
+      </div>
 
-          <AnimatePresence mode="wait">
-            {!isSubmitted ? (
-              <motion.div
-                key={currentIndex}
-                initial={{ opacity: 0, x: 40 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -40 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="flex-grow flex flex-col justify-center max-w-xl w-full mx-auto gap-6"
-              >
-                {/* Question counter */}
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className={`text-xs font-bold uppercase tracking-widest ${style.primaryText}`}>
-                      Question {currentIndex + 1} of {fields.length}
+      {/* Landing Page Top Bar locked to top - Brand Logo Only */}
+      <header
+        className="fixed top-0 left-0 right-0 w-full z-50 backdrop-blur-xl py-4 px-6 md:px-12 flex justify-start items-center navbar-gradient-border"
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(5,5,5,0.92) 0%, rgba(82,163,221,0.13) 30%, rgba(228,121,57,0.10) 55%, rgba(82,163,221,0.13) 80%, rgba(5,5,5,0.92) 100%)",
+          animation: "navbar-bg-sweep 7s ease-in-out infinite",
+          backgroundSize: "300% 100%",
+        }}
+      >
+        <Link href="/" className="flex items-center group">
+          <img
+            src="/logo.png"
+            alt="FormSpace Logo"
+            className="h-10 w-auto object-contain brightness-100 group-hover:opacity-90 transition-opacity"
+          />
+        </Link>
+      </header>
+
+      {/* Centered Liquid Glass Card */}
+      <div className="w-full max-w-2xl bg-white/[0.04] backdrop-blur-3xl border border-white/[0.08] p-8 md:p-12 rounded-2xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.7)] flex flex-col justify-between min-h-[420px] relative overflow-hidden transition-all duration-300 hover:border-white/[0.12] hover:bg-white/[0.06] z-10">
+        
+        {/* Background Liquid Glass reflection effects inside the card */}
+        <div className="absolute -top-[30%] -right-[20%] w-[60%] h-[60%] rounded-full bg-white/[0.02] filter blur-[40px] pointer-events-none" />
+        <div className="absolute -bottom-[30%] -left-[20%] w-[60%] h-[60%] rounded-full bg-white/[0.01] filter blur-[40px] pointer-events-none" />
+
+        {/* Card Header (Clean & Minimal) */}
+        <div className="flex justify-between items-center mb-6 relative z-10">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 bg-white/5 border border-white/10 px-2.5 py-1 rounded-md">
+            Live Schema
+          </span>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-300">
+            {form.title}
+          </span>
+        </div>
+
+        <AnimatePresence mode="wait">
+          {!isSubmitted ? (
+            <motion.div
+              key={currentIndex}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="flex-grow flex flex-col justify-center w-full gap-6 relative z-10"
+            >
+              {/* Question counter */}
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold uppercase tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-[#52a3dd] to-[#e47939] font-sans">
+                    Question {currentIndex + 1} of {fields.length}
+                  </span>
+                  {activeField?.required && (
+                    <span className="text-[10px] bg-rose-500/10 border border-rose-500/25 text-rose-400 font-bold px-2 py-0.5 rounded-full">
+                      Required
                     </span>
-                    {activeField?.required && (
-                      <span className="text-[10px] bg-rose-500/10 border border-rose-500/25 text-rose-400 font-bold px-2 py-0.5 rounded-full">
-                        Required
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Question label prompt */}
-                  <h2 className="text-xl md:text-3xl font-black text-white leading-tight">
-                    {activeField?.label}
-                  </h2>
-                  {activeField?.description && (
-                    <p className="text-sm text-zinc-400 mt-1">{activeField.description}</p>
                   )}
                 </div>
 
-                {/* Input Elements Render Switch */}
-                <div className="my-6">
-                  {/* Short Text */}
-                  {activeField?.type === "short_text" && (
-                    <input
-                      ref={inputRef}
-                      type="text"
-                      placeholder={activeField.placeholder || "Type your answer here..."}
-                      value={answers[activeField.id] || ""}
-                      onChange={(e) => handleAnswerChange(e.target.value)}
-                      onFocus={() => setIsTyping(true)}
-                      onBlur={() => setIsTyping(false)}
-                      onKeyDown={handleKeyPress}
-                      className={`w-full bg-zinc-900/60 border border-white/10 rounded-2xl px-5 py-4 text-base focus:outline-none transition-all ${style.focusBorder}`}
-                    />
-                  )}
+                {/* Question label prompt */}
+                <h2 className="text-xl md:text-2xl font-semibold text-white leading-tight font-sans">
+                  {activeField?.label}
+                </h2>
+                {activeField?.description && (
+                  <p className="text-xs text-zinc-400 mt-1">{activeField.description}</p>
+                )}
+              </div>
 
-                  {/* Essay / Long Text */}
-                  {activeField?.type === "long_text" && (
-                    <textarea
-                      ref={inputRef}
-                      placeholder={activeField.placeholder || "Type detailed answer here..."}
-                      value={answers[activeField.id] || ""}
-                      onChange={(e) => handleAnswerChange(e.target.value)}
-                      onFocus={() => setIsTyping(true)}
-                      onBlur={() => setIsTyping(false)}
-                      className={`w-full bg-zinc-900/60 border border-white/10 rounded-2xl px-5 py-4 text-base focus:outline-none transition-all h-32 resize-none ${style.focusBorder}`}
-                    />
-                  )}
+              {/* Input Elements Render Switch */}
+              <div className="my-4">
+                {/* Short Text */}
+                {activeField?.type === "short_text" && (
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    placeholder={activeField.placeholder || "Type your answer here..."}
+                    value={answers[activeField.id] || ""}
+                    onChange={(e) => handleAnswerChange(e.target.value)}
+                    onFocus={() => setIsTyping(true)}
+                    onBlur={() => setIsTyping(false)}
+                    onKeyDown={handleKeyPress}
+                    className={`w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-sm focus:outline-none transition-all ${style.focusBorder}`}
+                  />
+                )}
 
-                  {/* Email */}
-                  {activeField?.type === "email" && (
-                    <input
-                      ref={inputRef}
-                      type="email"
-                      placeholder={activeField.placeholder || "name@example.com"}
-                      value={answers[activeField.id] || ""}
-                      onChange={(e) => handleAnswerChange(e.target.value)}
-                      onFocus={() => setIsTyping(true)}
-                      onBlur={() => setIsTyping(false)}
-                      onKeyDown={handleKeyPress}
-                      className={`w-full bg-zinc-900/60 border border-white/10 rounded-2xl px-5 py-4 text-base focus:outline-none transition-all ${style.focusBorder}`}
-                    />
-                  )}
+                {/* Essay / Long Text */}
+                {activeField?.type === "long_text" && (
+                  <textarea
+                    ref={inputRef}
+                    placeholder={activeField.placeholder || "Type detailed answer here..."}
+                    value={answers[activeField.id] || ""}
+                    onChange={(e) => handleAnswerChange(e.target.value)}
+                    onFocus={() => setIsTyping(true)}
+                    onBlur={() => setIsTyping(false)}
+                    className={`w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-sm focus:outline-none transition-all h-28 resize-none ${style.focusBorder}`}
+                  />
+                )}
 
-                  {/* Number */}
-                  {activeField?.type === "number" && (
-                    <input
-                      ref={inputRef}
-                      type="number"
-                      placeholder={activeField.placeholder || "Enter a number"}
-                      value={answers[activeField.id] || ""}
-                      onChange={(e) => handleAnswerChange(e.target.value)}
-                      onFocus={() => setIsTyping(true)}
-                      onBlur={() => setIsTyping(false)}
-                      onKeyDown={handleKeyPress}
-                      className={`w-full bg-zinc-900/60 border border-white/10 rounded-2xl px-5 py-4 text-base focus:outline-none transition-all ${style.focusBorder}`}
-                    />
-                  )}
+                {/* Email */}
+                {activeField?.type === "email" && (
+                  <input
+                    ref={inputRef}
+                    type="email"
+                    placeholder={activeField.placeholder || "name@example.com"}
+                    value={answers[activeField.id] || ""}
+                    onChange={(e) => handleAnswerChange(e.target.value)}
+                    onFocus={() => setIsTyping(true)}
+                    onBlur={() => setIsTyping(false)}
+                    onKeyDown={handleKeyPress}
+                    className={`w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-sm focus:outline-none transition-all ${style.focusBorder}`}
+                  />
+                )}
 
-                  {/* Single Choice Select */}
-                  {activeField?.type === "single_select" && (
-                    <div className="flex flex-col gap-3">
-                      {(activeField.options as string[])?.map((opt, oIdx) => {
-                        const isSelected = answers[activeField.id] === opt;
-                        return (
-                          <button
-                            key={oIdx}
-                            type="button"
-                            onClick={() => {
-                              handleAnswerChange(opt);
-                              clearAutoAdvance();
-                              autoAdvanceTimeoutRef.current = setTimeout(() => {
-                                handleNext();
-                              }, 350);
-                            }}
-                            className={`w-full p-4 rounded-2xl border text-left font-bold text-sm transition-all flex justify-between items-center cursor-pointer ${
-                              isSelected
-                                ? style.activeBg
-                                : "bg-zinc-900/40 border-white/5 hover:border-white/15"
+                {/* Number */}
+                {activeField?.type === "number" && (
+                  <input
+                    ref={inputRef}
+                    type="number"
+                    placeholder={activeField.placeholder || "Enter a number"}
+                    value={answers[activeField.id] || ""}
+                    onChange={(e) => handleAnswerChange(e.target.value)}
+                    onFocus={() => setIsTyping(true)}
+                    onBlur={() => setIsTyping(false)}
+                    onKeyDown={handleKeyPress}
+                    className={`w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-sm focus:outline-none transition-all ${style.focusBorder}`}
+                  />
+                )}
+
+                {/* Single Choice Select */}
+                {activeField?.type === "single_select" && (
+                  <div className="flex flex-col gap-2.5 max-h-[220px] overflow-y-auto pr-1 scrollbar-thin">
+                    {(activeField.options as string[])?.map((opt, oIdx) => {
+                      const isSelected = answers[activeField.id] === opt;
+                      return (
+                        <button
+                          key={oIdx}
+                          type="button"
+                          onClick={() => {
+                            handleAnswerChange(opt);
+                            clearAutoAdvance();
+                            autoAdvanceTimeoutRef.current = setTimeout(() => {
+                              handleNext();
+                            }, 350);
+                          }}
+                          className={`w-full p-4 rounded-xl border text-left font-semibold text-xs transition-all flex justify-between items-center cursor-pointer ${
+                            isSelected
+                              ? style.activeBg
+                              : "bg-white/[0.02] border-white/5 hover:border-white/15"
+                          }`}
+                        >
+                          <span>{opt}</span>
+                          {isSelected && <Check className="w-3.5 h-3.5 shrink-0" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Multi Select */}
+                {activeField?.type === "multi_select" && (
+                  <div className="flex flex-col gap-2.5 max-h-[220px] overflow-y-auto pr-1 scrollbar-thin">
+                    {(activeField.options as string[])?.map((opt, oIdx) => {
+                      const currentList = Array.isArray(answers[activeField.id])
+                        ? (answers[activeField.id] as string[])
+                        : [];
+                      const isSelected = currentList.includes(opt);
+
+                      const toggleChoice = () => {
+                        let nextList;
+                        if (isSelected) {
+                          nextList = currentList.filter((item) => item !== opt);
+                        } else {
+                          nextList = [...currentList, opt];
+                        }
+                        handleAnswerChange(nextList);
+                      };
+
+                      return (
+                        <button
+                          key={oIdx}
+                          type="button"
+                          onClick={toggleChoice}
+                          className={`w-full p-4 rounded-xl border text-left font-semibold text-xs transition-all flex justify-between items-center cursor-pointer ${
+                            isSelected
+                              ? style.activeBg
+                              : "bg-white/[0.02] border-white/5 hover:border-white/15"
+                          }`}
+                        >
+                          <span>{opt}</span>
+                          <div
+                            className={`w-4.5 h-4.5 rounded-md border flex items-center justify-center transition-all ${
+                              isSelected ? "bg-white border-white text-black" : "border-white/20 bg-transparent"
                             }`}
                           >
-                            <span>{opt}</span>
-                            {isSelected && <Check className="w-4 h-4 shrink-0" />}
-                          </button>
-                        );
-                      })}
+                            {isSelected && <Check className="w-3 h-3 text-zinc-950 stroke-[3]" />}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Yes/No Checkbox */}
+                {activeField?.type === "checkbox" && (
+                  <button
+                    type="button"
+                    onClick={() => handleAnswerChange(answers[activeField.id] === "Yes" ? "No" : "Yes")}
+                    className={`w-full p-4 rounded-xl border text-left font-semibold text-xs transition-all flex justify-between items-center cursor-pointer ${
+                      answers[activeField.id] === "Yes"
+                        ? style.activeBg
+                        : "bg-white/[0.02] border-white/5 hover:border-white/15"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <CheckSquare className={`w-4.5 h-4.5 ${answers[activeField.id] === "Yes" ? "text-white" : "text-zinc-500"}`} />
+                      <span>I accept/agree to this statement</span>
                     </div>
-                  )}
-
-                  {/* Multi Select */}
-                  {activeField?.type === "multi_select" && (
-                    <div className="flex flex-col gap-3">
-                      {(activeField.options as string[])?.map((opt, oIdx) => {
-                        const currentList = Array.isArray(answers[activeField.id])
-                          ? (answers[activeField.id] as string[])
-                          : [];
-                        const isSelected = currentList.includes(opt);
-
-                        const toggleChoice = () => {
-                          let nextList;
-                          if (isSelected) {
-                            nextList = currentList.filter((item) => item !== opt);
-                          } else {
-                            nextList = [...currentList, opt];
-                          }
-                          handleAnswerChange(nextList);
-                        };
-
-                        return (
-                          <button
-                            key={oIdx}
-                            type="button"
-                            onClick={toggleChoice}
-                            className={`w-full p-4 rounded-2xl border text-left font-bold text-sm transition-all flex justify-between items-center cursor-pointer ${
-                              isSelected
-                                ? style.activeBg
-                                : "bg-zinc-900/40 border-white/5 hover:border-white/15"
-                            }`}
-                          >
-                            <span>{opt}</span>
-                            <div
-                              className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all ${
-                                isSelected ? "bg-white border-white text-black" : "border-white/20 bg-transparent"
-                              }`}
-                            >
-                              {isSelected && <Check className="w-3.5 h-3.5" />}
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-
-                  {/* Yes/No Checkbox */}
-                  {activeField?.type === "checkbox" && (
-                    <button
-                      type="button"
-                      onClick={() => handleAnswerChange(answers[activeField.id] === "Yes" ? "No" : "Yes")}
-                      className={`w-full p-5 rounded-2xl border text-left font-bold text-sm transition-all flex justify-between items-center cursor-pointer ${
+                    <div
+                      className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${
                         answers[activeField.id] === "Yes"
-                          ? style.activeBg
-                          : "bg-zinc-900/40 border-white/5 hover:border-white/15"
+                          ? "bg-white border-white text-black"
+                          : "border-white/20 bg-transparent"
                       }`}
                     >
-                      <div className="flex items-center gap-3">
-                        <CheckSquare className={`w-5 h-5 ${answers[activeField.id] === "Yes" ? style.primaryText : "text-zinc-500"}`} />
-                        <span>I accept/agree to this statement</span>
-                      </div>
-                      <div
-                        className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all ${
-                          answers[activeField.id] === "Yes"
-                            ? "bg-white border-white text-black"
-                            : "border-white/20 bg-transparent"
-                        }`}
-                      >
-                        {answers[activeField.id] === "Yes" && <Check className="w-4 h-4" />}
-                      </div>
-                    </button>
-                  )}
-
-                  {/* Star Rating (1-5) */}
-                  {activeField?.type === "rating" && (
-                    <div className="flex items-center justify-center gap-4 py-4">
-                      {[1, 2, 3, 4, 5].map((starVal) => {
-                        const isSelected = Number(answers[activeField.id]) >= starVal;
-                        return (
-                          <button
-                            key={starVal}
-                            type="button"
-                            onClick={() => {
-                              handleAnswerChange(starVal);
-                              clearAutoAdvance();
-                              autoAdvanceTimeoutRef.current = setTimeout(() => {
-                                handleNext();
-                              }, 350);
-                            }}
-                            className="p-1 hover:scale-110 active:scale-95 transition-transform cursor-pointer"
-                          >
-                            <Star
-                              className={`w-12 h-12 transition-all ${
-                                isSelected
-                                  ? "text-yellow-400 fill-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.4)]"
-                                  : "text-zinc-600 hover:text-zinc-400"
-                              }`}
-                            />
-                          </button>
-                        );
-                      })}
+                      {answers[activeField.id] === "Yes" && <Check className="w-3.5 h-3.5 text-zinc-950 stroke-[3]" />}
                     </div>
-                  )}
-
-                  {/* Date Selector */}
-                  {activeField?.type === "date" && (
-                    <input
-                      ref={inputRef}
-                      type="date"
-                      value={answers[activeField.id] || ""}
-                      onChange={(e) => handleAnswerChange(e.target.value)}
-                      onKeyDown={handleKeyPress}
-                      className={`w-full bg-zinc-900/60 border border-white/10 rounded-2xl px-5 py-4 text-base focus:outline-none transition-all text-zinc-300 ${style.focusBorder}`}
-                    />
-                  )}
-                </div>
-
-                {/* Footer Controls */}
-                <div className="flex justify-between items-center mt-6 pt-4 border-t border-white/5 gap-4 relative z-20">
-                  {/* Previous button */}
-                  <button
-                    type="button"
-                    onClick={handlePrev}
-                    disabled={currentIndex === 0}
-                    className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-white disabled:opacity-30 disabled:hover:text-zinc-400 cursor-pointer relative z-30"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                    Back
                   </button>
+                )}
 
-                  {/* Next / Submit button */}
-                  <button
-                    type="button"
-                    onClick={handleNext}
-                    disabled={submitMutation.isPending}
-                    className={`px-6 py-3 font-extrabold rounded-2xl text-xs flex items-center gap-1.5 cursor-pointer shadow-md transition-all active:scale-[0.98] ${style.buttonColor} relative z-30`}
-                  >
-                    {submitMutation.isPending ? (
-                      <>
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                        Submitting...
-                      </>
-                    ) : currentIndex === fields.length - 1 ? (
-                      <>
-                        Submit Response
-                        <Check className="w-3.5 h-3.5" />
-                      </>
-                    ) : (
-                      <>
-                        Continue
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </>
-                    )}
-                  </button>
-                </div>
-              </motion.div>
-            ) : (
-              // Success Screen layout
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="flex-grow flex flex-col justify-center items-center text-center max-w-md w-full mx-auto gap-5"
-              >
-                <div className={`w-16 h-16 rounded-3xl border flex items-center justify-center animate-bounce shadow-lg ${style.glowBorder} bg-zinc-900`}>
-                  {style.icon}
-                </div>
-                <div>
-                  <h2 className="text-2xl font-black text-white">Transmission Received</h2>
-                  <p className="text-sm text-zinc-400 mt-2">
-                    Thank you! Your responses have been saved securely in our space hub database.
-                  </p>
-                </div>
-                
+                {/* Star Rating (1-5) */}
+                {activeField?.type === "rating" && (
+                  <div className="flex items-center justify-center gap-3 py-2">
+                    {[1, 2, 3, 4, 5].map((starVal) => {
+                      const isSelected = Number(answers[activeField.id]) >= starVal;
+                      return (
+                        <button
+                          key={starVal}
+                          type="button"
+                          onClick={() => {
+                            handleAnswerChange(starVal);
+                            clearAutoAdvance();
+                            autoAdvanceTimeoutRef.current = setTimeout(() => {
+                              handleNext();
+                            }, 350);
+                          }}
+                          className="p-1 hover:scale-110 active:scale-95 transition-transform cursor-pointer"
+                        >
+                          <Star
+                            className={`w-10 h-10 transition-all ${
+                              isSelected
+                                ? "text-yellow-400 fill-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.4)]"
+                                : "text-zinc-600 hover:text-zinc-400"
+                            }`}
+                          />
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Date Selector */}
+                {activeField?.type === "date" && (
+                  <input
+                    ref={inputRef}
+                    type="date"
+                    value={answers[activeField.id] || ""}
+                    onChange={(e) => handleAnswerChange(e.target.value)}
+                    onKeyDown={handleKeyPress}
+                    className={`w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-sm focus:outline-none transition-all text-zinc-300 ${style.focusBorder}`}
+                  />
+                )}
+              </div>
+
+              {/* Footer Controls */}
+              <div className="flex justify-between items-center mt-4 pt-4 border-t border-white/5 gap-4 relative z-20">
+                {/* Previous button */}
                 <button
-                  onClick={() => {
-                    answersRef.current = {};
-                    setAnswers({});
-                    setCurrentIndex(0);
-                    setIsSubmitted(false);
-                  }}
-                  className="px-5 py-2.5 bg-white/5 border border-white/10 hover:bg-white/10 text-zinc-300 font-bold rounded-xl text-xs cursor-pointer transition-colors"
+                  type="button"
+                  onClick={handlePrev}
+                  disabled={currentIndex === 0}
+                  className="flex items-center gap-1.5 text-xs font-semibold text-zinc-400 hover:text-white disabled:opacity-30 disabled:hover:text-zinc-400 cursor-pointer relative z-30 font-sans"
                 >
-                  Submit another response
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  Back
                 </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
 
-          {/* Stepper Progress indicators */}
-          <div className="mt-10 flex flex-col gap-2 max-w-xl mx-auto w-full pointer-events-none">
-            <div className="flex justify-between items-center text-[10px] text-zinc-500 font-bold">
-              <span>PROGRESS</span>
-              <span>{progressPercent}% COMPLETE</span>
-            </div>
-            <div className="w-full h-1 bg-zinc-900 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-indigo-500 to-pink-500 transition-all duration-300 rounded-full"
-                style={{ width: `${progressPercent}%` }}
-              />
-            </div>
+                {/* Next / Submit button */}
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  disabled={submitMutation.isPending}
+                  className="px-5 py-3 font-semibold rounded-xl text-xs flex items-center gap-1.5 cursor-pointer shadow-md hover:shadow-[0_0_20px_rgba(82,163,221,0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all text-white relative z-30 font-sans"
+                  style={{ background: 'linear-gradient(90deg, #52A3DD 0%, #E47939 100%)' }}
+                >
+                  {submitMutation.isPending ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      Submitting...
+                    </>
+                  ) : currentIndex === fields.length - 1 ? (
+                    <>
+                      Submit Response
+                      <Check className="w-3.5 h-3.5" />
+                    </>
+                  ) : (
+                    <>
+                      Continue
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </>
+                  )}
+                </button>
+              </div>
+            </motion.div>
+          ) : (
+            // Success Screen layout
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex-grow flex flex-col justify-center items-center text-center max-w-sm w-full mx-auto gap-5 relative z-10"
+            >
+              <div className={`w-14 h-14 rounded-2xl border flex items-center justify-center animate-bounce shadow-lg ${style.glowBorder} bg-white/5`}>
+                {style.icon}
+              </div>
+              <div>
+                <h2 className="text-xl font-black text-white font-sans">Transmission Received</h2>
+                <p className="text-xs text-zinc-400 mt-2 leading-relaxed font-sans">
+                  Thank you! Your responses have been saved securely in our space hub database.
+                </p>
+              </div>
+              
+              <button
+                onClick={() => {
+                  answersRef.current = {};
+                  setAnswers({});
+                  setCurrentIndex(0);
+                  setIsSubmitted(false);
+                }}
+                className="px-5 py-2.5 bg-white/5 border border-white/10 hover:bg-white/10 text-zinc-300 font-bold rounded-xl text-xs cursor-pointer transition-colors font-sans"
+              >
+                Submit another response
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Stepper Progress indicators */}
+        <div className="mt-8 flex flex-col gap-2 w-full pointer-events-none relative z-10">
+          <div className="flex justify-between items-center text-[9px] text-zinc-500 font-bold font-sans">
+            <span>PROGRESS</span>
+            <span>{progressPercent}% COMPLETE</span>
           </div>
-        </div>
-
-        {/* RIGHT PANEL: Dynamic 3D Character Sandbox */}
-        <div className="hidden lg:flex lg:w-[40%] bg-zinc-900/10 border-l border-white/5 items-center justify-center p-6 h-full min-h-screen relative">
-          
-          <div className="w-full h-[500px] flex items-center justify-center z-10">
-            <InteractiveCharacterCanvas
-              isTyping={isTyping}
-              activeField={activeField?.id || null}
-              isSubmitting={submitMutation.isPending || isSubmitted}
-              theme={form.theme}
+          <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-indigo-500 to-pink-500 transition-all duration-300 rounded-full"
+              style={{ width: `${progressPercent}%` }}
             />
           </div>
-
-          {/* Ambient overlays */}
-          <div className="absolute inset-0 bg-radial-gradient from-transparent via-zinc-950/20 to-zinc-950/50 pointer-events-none" />
         </div>
+
       </div>
     </div>
   );

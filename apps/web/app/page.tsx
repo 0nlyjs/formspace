@@ -353,11 +353,11 @@ export default function Home() {
                 {/* Glowing theme-color overlay on card hover */}
                 <div
                   className={`absolute -inset-10 bg-radial ${
-                    form.theme === "anime"
+                    form.theme === "manga pop" || form.theme === "anime"
                       ? "from-pink-500/5"
-                      : form.theme === "tech"
+                      : form.theme === "fresh leaf" || form.theme === "tech"
                         ? "from-emerald-500/5"
-                        : "from-amber-500/5"
+                        : "from-zinc-500/5"
                   } via-transparent to-transparent opacity-0 group-hover/explore:opacity-100 transition-opacity duration-300 pointer-events-none`}
                 />
 
@@ -366,18 +366,18 @@ export default function Home() {
                     {/* Theme Badge (text-[10px] to text-xs) */}
                     <span
                       className={`text-xs font-bold px-2 py-0.5 rounded-md uppercase tracking-wider ${
-                        form.theme === "anime"
+                        form.theme === "manga pop" || form.theme === "anime"
                           ? "bg-pink-500/10 text-pink-400 border border-pink-500/20"
-                          : form.theme === "tech"
+                          : form.theme === "fresh leaf" || form.theme === "tech"
                             ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                            : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                            : "bg-zinc-500/10 text-zinc-300 border border-zinc-500/20"
                       }`}
                     >
-                      {form.theme === "anime"
-                        ? "🌸 Anime"
-                        : form.theme === "tech"
-                          ? "🌐 Cyberpunk"
-                          : "👾 Retro"}
+                      {form.theme === "manga pop" || form.theme === "anime"
+                        ? "🌸 Manga Pop"
+                        : form.theme === "fresh leaf" || form.theme === "tech"
+                          ? "🌿 Fresh Leaf"
+                          : "⚪ Pure Abstract"}
                     </span>
 
                     {/* Date (text-[10px] to text-xs) */}

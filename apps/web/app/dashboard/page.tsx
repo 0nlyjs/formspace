@@ -88,7 +88,7 @@ export default function DashboardPage() {
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newDesc, setNewDesc] = useState("");
-  const [newTheme, setNewTheme] = useState<"anime" | "tech" | "retro">("anime");
+  const [newTheme, setNewTheme] = useState<"manga pop" | "fresh leaf" | "pure abstract">("manga pop");
   const [newVisibility, setNewVisibility] = useState<"public" | "unlisted">("public");
 
   // Smooth close: trigger exit animation, then unmount
@@ -252,26 +252,30 @@ export default function DashboardPage() {
   // Helper to get theme details
   const getThemeDetails = (themeName: string) => {
     switch (themeName) {
+      case "fresh leaf":
       case "tech":
         return {
-          label: "Cyberpunk Tech",
+          label: "Fresh Leaf",
           icon: <Terminal className="w-4.5 h-4.5" />,
           iconBg: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20",
           badgeBg: "border-emerald-500/20 bg-emerald-500/5 text-emerald-400"
         };
+      case "pure abstract":
       case "retro":
         return {
-          label: "Classic Retro",
+          label: "Pure Abstract",
           icon: <Gamepad2 className="w-4.5 h-4.5" />,
-          iconBg: "bg-[#e47939]/10 text-[#e47939] border border-[#e47939]/20",
-          badgeBg: "border-[#e47939]/20 bg-[#e47939]/5 text-[#e47939]"
+          iconBg: "bg-zinc-500/10 text-zinc-300 border border-zinc-500/20",
+          badgeBg: "border-zinc-500/20 bg-zinc-500/5 text-zinc-300"
         };
+      case "manga pop":
+      case "anime":
       default:
         return {
-          label: "Anime & Manga",
+          label: "Manga Pop",
           icon: <Flame className="w-4.5 h-4.5" />,
-          iconBg: "bg-[#52a3dd]/10 text-[#52a3dd] border border-[#52a3dd]/20",
-          badgeBg: "border-[#52a3dd]/20 bg-[#52a3dd]/5 text-[#52a3dd]"
+          iconBg: "bg-pink-500/10 text-pink-400 border border-pink-500/20",
+          badgeBg: "border-pink-500/20 bg-pink-500/5 text-pink-400"
         };
     }
   };
@@ -869,46 +873,46 @@ export default function DashboardPage() {
                     <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider">Choose Theme Template</label>
                     
                     <div className="grid grid-cols-3 gap-2.5">
-                      {/* Anime */}
+                      {/* Manga Pop */}
                       <button
                         type="button"
-                        onClick={() => setNewTheme("anime")}
+                        onClick={() => setNewTheme("manga pop")}
                         className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-center transition-all duration-200 cursor-pointer ${
-                          newTheme === "anime"
-                            ? "bg-[#52a3dd]/10 border-[#52a3dd]/40 text-[#52a3dd] scale-[1.03] shadow-[0_0_15px_rgba(82,163,221,0.1)]"
+                          newTheme === "manga pop"
+                            ? "bg-pink-500/10 border-pink-500/40 text-pink-400 scale-[1.03] shadow-[0_0_15px_rgba(244,63,94,0.1)]"
                             : "bg-[#0e0e0e]/40 border-white/5 text-neutral-400 hover:border-white/10 hover:scale-[1.02]"
                         }`}
                       >
                         <Flame className="w-5 h-5" />
-                        <span className="text-[10px] font-bold">Anime</span>
+                        <span className="text-[10px] font-bold">Manga Pop</span>
                       </button>
 
-                      {/* Tech */}
+                      {/* Fresh Leaf */}
                       <button
                         type="button"
-                        onClick={() => setNewTheme("tech")}
+                        onClick={() => setNewTheme("fresh leaf")}
                         className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-center transition-all duration-200 cursor-pointer ${
-                          newTheme === "tech"
+                          newTheme === "fresh leaf"
                             ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-400 scale-[1.03] shadow-[0_0_15px_rgba(16,185,129,0.1)]"
                             : "bg-[#0e0e0e]/40 border-white/5 text-neutral-400 hover:border-white/10 hover:scale-[1.02]"
                         }`}
                       >
                         <Terminal className="w-5 h-5" />
-                        <span className="text-[10px] font-bold">Cyberpunk</span>
+                        <span className="text-[10px] font-bold">Fresh Leaf</span>
                       </button>
 
-                      {/* Retro */}
+                      {/* Pure Abstract */}
                       <button
                         type="button"
-                        onClick={() => setNewTheme("retro")}
+                        onClick={() => setNewTheme("pure abstract")}
                         className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-center transition-all duration-200 cursor-pointer ${
-                          newTheme === "retro"
-                            ? "bg-[#e47939]/10 border-[#e47939]/40 text-[#e47939] scale-[1.03] shadow-[0_0_15px_rgba(228,121,57,0.1)]"
+                          newTheme === "pure abstract"
+                            ? "bg-zinc-500/10 border-zinc-500/40 text-zinc-300 scale-[1.03] shadow-[0_0_15px_rgba(255,255,255,0.1)]"
                             : "bg-[#0e0e0e]/40 border-white/5 text-neutral-400 hover:border-white/10 hover:scale-[1.02]"
                         }`}
                       >
                         <Gamepad2 className="w-5 h-5" />
-                        <span className="text-[10px] font-bold">Retro</span>
+                        <span className="text-[10px] font-bold">Pure Abstract</span>
                       </button>
                     </div>
                   </div>

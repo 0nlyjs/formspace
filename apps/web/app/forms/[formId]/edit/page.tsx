@@ -97,7 +97,7 @@ export default function FormBuilderPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [slug, setSlug] = useState("");
-  const [theme, setTheme] = useState<"anime" | "tech" | "retro">("anime");
+  const [theme, setTheme] = useState<"manga pop" | "fresh leaf" | "pure abstract">("manga pop");
   const [visibility, setVisibility] = useState<"public" | "unlisted">("public");
   const [status, setStatus] = useState<"draft" | "published">("draft");
   const [password, setPassword] = useState("");
@@ -138,7 +138,14 @@ export default function FormBuilderPage() {
       setTitle(formData.title);
       setDescription(formData.description || "");
       setSlug(formData.slug);
-      setTheme(formData.theme as "anime" | "tech" | "retro");
+      const loadedTheme = formData.theme;
+      if (loadedTheme === "anime" || loadedTheme === "manga pop") {
+        setTheme("manga pop");
+      } else if (loadedTheme === "tech" || loadedTheme === "fresh leaf") {
+        setTheme("fresh leaf");
+      } else {
+        setTheme("pure abstract");
+      }
       setVisibility(formData.visibility as "public" | "unlisted");
       setStatus(formData.status as "draft" | "published");
       if (formData.password) {
@@ -539,41 +546,41 @@ export default function FormBuilderPage() {
               <div className="grid grid-cols-3 gap-2 bg-[#050505]/50 border border-white/10 p-1 rounded-xl">
                 <button
                   type="button"
-                  onClick={() => setTheme("anime")}
+                  onClick={() => setTheme("manga pop")}
                   className={`flex flex-col items-center justify-center gap-1 py-2 px-1 rounded-lg text-center transition-all cursor-pointer ${
-                    theme === "anime"
+                    theme === "manga pop"
                       ? "bg-pink-500/10 border border-pink-500/30 text-pink-400"
                       : "text-zinc-500 hover:text-zinc-300"
                   }`}
                 >
                   <Flame className="w-4 h-4" />
-                  <span className="text-[8px] font-extrabold uppercase">Anime</span>
+                  <span className="text-[8px] font-extrabold uppercase">Manga Pop</span>
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => setTheme("tech")}
+                  onClick={() => setTheme("fresh leaf")}
                   className={`flex flex-col items-center justify-center gap-1 py-2 px-1 rounded-lg text-center transition-all cursor-pointer ${
-                    theme === "tech"
+                    theme === "fresh leaf"
                       ? "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
                       : "text-zinc-500 hover:text-zinc-300"
                   }`}
                 >
                   <Terminal className="w-4 h-4" />
-                  <span className="text-[8px] font-extrabold uppercase">Cyberpunk</span>
+                  <span className="text-[8px] font-extrabold uppercase">Fresh Leaf</span>
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => setTheme("retro")}
+                  onClick={() => setTheme("pure abstract")}
                   className={`flex flex-col items-center justify-center gap-1 py-2 px-1 rounded-lg text-center transition-all cursor-pointer ${
-                    theme === "retro"
-                      ? "bg-amber-500/10 border border-amber-500/30 text-amber-400"
+                    theme === "pure abstract"
+                      ? "bg-zinc-500/10 border border-zinc-500/30 text-zinc-300"
                       : "text-zinc-500 hover:text-zinc-300"
                   }`}
                 >
                   <Sparkles className="w-4 h-4" />
-                  <span className="text-[8px] font-extrabold uppercase">Retro</span>
+                  <span className="text-[8px] font-extrabold uppercase">Pure Abstract</span>
                 </button>
               </div>
             </div>

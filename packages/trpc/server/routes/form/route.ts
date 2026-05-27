@@ -39,7 +39,7 @@ export const formRouter = router({
       z.object({
         title: z.string().min(1, "Title is required"),
         description: z.string().optional(),
-        theme: z.enum(["anime", "tech", "retro"]).default("anime"),
+        theme: z.enum(["manga pop", "fresh leaf", "pure abstract", "anime", "tech", "retro"]).default("manga pop"),
         visibility: z.enum(["public", "unlisted"]).default("public"),
       })
     )
@@ -206,7 +206,7 @@ export const formRouter = router({
         title: z.string().min(1),
         description: z.string().optional().nullable(),
         slug: z.string().min(1),
-        theme: z.enum(["anime", "tech", "retro"]),
+        theme: z.enum(["manga pop", "fresh leaf", "pure abstract", "anime", "tech", "retro"]),
         visibility: z.enum(["public", "unlisted"]),
         status: z.enum(["draft", "published"]),
         password: z.string().optional().nullable(),
