@@ -349,7 +349,7 @@ export default function Home() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {publicForms.map((form) => (
+            {publicForms.slice(0, 5).map((form) => (
               <div
                 key={form.id}
                 className="group/explore bg-[#0c0c0e]/80 border border-white/5 hover:border-white/10 hover:shadow-md p-6 rounded-2xl flex flex-col justify-between gap-5 transition-all duration-300 relative overflow-hidden backdrop-blur-xl"
@@ -439,6 +439,34 @@ export default function Home() {
                 </div>
               </div>
             ))}
+
+            {/* "Explore More" beautiful heavy frosted glass card if count exceeds 5 */}
+            {publicForms.length > 5 && (
+              <Link
+                href="/public-forms"
+                className="group/explore bg-[#0c0c0e]/85 border border-[#52a3dd]/30 hover:border-[#52a3dd]/60 hover:shadow-lg p-6 rounded-2xl flex flex-col items-center justify-center gap-4 transition-all duration-300 relative overflow-hidden backdrop-blur-xl min-h-[300px] cursor-pointer"
+              >
+                {/* Glowing theme-color overlay */}
+                <div className="absolute -inset-10 bg-radial from-[#52a3dd]/10 via-transparent to-transparent opacity-0 group-hover/explore:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                
+                <div className="flex flex-col items-center gap-3 relative z-10 text-center">
+                  <div className="w-12 h-12 rounded-full bg-[#52a3dd]/10 border border-[#52a3dd]/20 flex items-center justify-center group-hover/explore:scale-110 transition-transform duration-300">
+                    <Sparkles className="w-6 h-6 text-[#90cdff]" />
+                  </div>
+                  <h4 className="font-extrabold text-xl text-zinc-100 group-hover/explore:text-white transition-colors">
+                    Explore More
+                  </h4>
+                  <p className="text-sm text-zinc-400 max-w-[200px] leading-relaxed">
+                    View all {publicForms.length} publicly shared interactive forms from our community.
+                  </p>
+                </div>
+                
+                <div className="relative z-10 flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-[#90cdff] group-hover/explore:text-white transition-colors mt-2">
+                  View All Forms
+                  <ArrowRight className="w-4 h-4 group-hover/explore:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+            )}
           </div>
         )}
       </section>
