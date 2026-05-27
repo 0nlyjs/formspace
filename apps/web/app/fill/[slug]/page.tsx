@@ -20,6 +20,28 @@ import {
 } from "lucide-react";
 // 3D Canvas elements removed for flat themed layouts
 
+// Custom ambient floating particles configuration (micro-scale, slow drifting)
+const AMBIENT_PARTICLES = Array.from({ length: 12 }).map((_, idx) => {
+  const startX = (Math.random() * 260) - 130; // -130px to 130px
+  const startY = (Math.random() * 160) - 80;  // -80px to 80px
+  const driftX = 15 + Math.random() * 20;     // drift 15-35px horizontally
+  const driftY = 20 + Math.random() * 25;     // drift 20-45px vertically
+  
+  const colors = ["#818CF8", "#34D399", "#FBBF24", "#F87171", "#60A5FA", "#F472B6"];
+  const color = colors[idx % colors.length];
+  const size = 1.5 + Math.random() * 2; // microscopic floating specs (1.5px - 3.5px)
+  
+  const shapes = ["square", "rectangle", "triangle"];
+  const shape = shapes[idx % shapes.length];
+  const width = size;
+  const height = shape === "rectangle" ? size * 1.5 : size;
+  
+  const duration = 8 + Math.random() * 6; // very slow drifting (8s - 14s)
+  const delay = Math.random() * -10; // offset starting times so they are out of sync on load
+  
+  return { id: idx, startX, startY, driftX, driftY, color, width, height, shape, duration, delay };
+});
+
 export default function FormFillingPage() {
   const params = useParams();
   const slug = params.slug as string;
@@ -33,6 +55,7 @@ export default function FormFillingPage() {
   const [answers, setAnswers] = useState<Record<string, any>>({});
   const [isTyping, setIsTyping] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [autoAdvance, setAutoAdvance] = useState(false);
 
   // Synchronous answer ref to prevent state-batching race conditions
   const answersRef = useRef<Record<string, any>>({});
@@ -364,15 +387,33 @@ export default function FormFillingPage() {
         <div className="absolute -top-[30%] -right-[20%] w-[60%] h-[60%] rounded-full bg-white/[0.02] filter blur-[40px] pointer-events-none" />
         <div className="absolute -bottom-[30%] -left-[20%] w-[60%] h-[60%] rounded-full bg-white/[0.01] filter blur-[40px] pointer-events-none" />
 
-        {/* Card Header (Clean & Minimal) */}
-        <div className="flex justify-between items-center mb-6 relative z-10">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 bg-white/5 border border-white/10 px-2.5 py-1 rounded-md">
-            Live Schema
-          </span>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-300">
-            {form.title}
-          </span>
-        </div>
+        {/* Card Header (Clean & Minimal with Auto-Advance Toggle) */}
+        {!isSubmitted && (
+          <div className="flex justify-end items-center mb-6 relative z-10">
+            <div className="flex items-center gap-2.5">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
+                Auto Next
+              </span>
+              <button
+                type="button"
+                onClick={() => setAutoAdvance(!autoAdvance)}
+                className={`w-9 h-5 rounded-full p-0.5 transition-all duration-300 relative flex items-center cursor-pointer border ${
+                  autoAdvance
+                    ? "bg-white/20 border-white/30 shadow-[0_0_10px_rgba(255,255,255,0.1)]"
+                    : "bg-white/[0.03] border-white/10"
+                }`}
+              >
+                <div
+                  className={`w-3.5 h-3.5 rounded-full shadow-sm transform transition-all duration-300 ${
+                    autoAdvance
+                      ? "translate-x-4 bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]"
+                      : "translate-x-0 bg-zinc-500"
+                  }`}
+                />
+              </button>
+            </div>
+          </div>
+        )}
 
         <AnimatePresence mode="wait">
           {!isSubmitted ? (
@@ -477,10 +518,12 @@ export default function FormFillingPage() {
                           type="button"
                           onClick={() => {
                             handleAnswerChange(opt);
-                            clearAutoAdvance();
-                            autoAdvanceTimeoutRef.current = setTimeout(() => {
-                              handleNext();
-                            }, 350);
+                            if (autoAdvance) {
+                              clearAutoAdvance();
+                              autoAdvanceTimeoutRef.current = setTimeout(() => {
+                                handleNext();
+                              }, 350);
+                            }
                           }}
                           className={`w-full p-4 rounded-xl border text-left font-semibold text-xs transition-all flex justify-between items-center cursor-pointer ${
                             isSelected
@@ -578,10 +621,12 @@ export default function FormFillingPage() {
                           type="button"
                           onClick={() => {
                             handleAnswerChange(starVal);
-                            clearAutoAdvance();
-                            autoAdvanceTimeoutRef.current = setTimeout(() => {
-                              handleNext();
-                            }, 350);
+                            if (autoAdvance) {
+                              clearAutoAdvance();
+                              autoAdvanceTimeoutRef.current = setTimeout(() => {
+                                handleNext();
+                              }, 350);
+                            }
                           }}
                           className="p-1 hover:scale-110 active:scale-95 transition-transform cursor-pointer"
                         >
@@ -658,27 +703,62 @@ export default function FormFillingPage() {
               animate={{ opacity: 1, scale: 1 }}
               className="flex-grow flex flex-col justify-center items-center text-center max-w-sm w-full mx-auto gap-5 relative z-10"
             >
-              <div className={`w-14 h-14 rounded-2xl border flex items-center justify-center animate-bounce shadow-lg ${style.glowBorder} bg-white/5`}>
-                {style.icon}
+              {/* Container for smiley emoji and its background confetti burst */}
+              <div className="relative flex items-center justify-center w-20 h-20 mb-2">
+                {/* Ambient micro floating particles (delicate & slow) */}
+                <div className="absolute inset-0 pointer-events-none overflow-visible flex items-center justify-center z-0">
+                  {AMBIENT_PARTICLES.map((p) => (
+                    <motion.div
+                      key={p.id}
+                      className="absolute"
+                      initial={{ x: p.startX, y: p.startY, opacity: 0.3 }}
+                      animate={{
+                        x: [p.startX, p.startX + p.driftX, p.startX - p.driftX, p.startX],
+                        y: [p.startY, p.startY - p.driftY, p.startY + p.driftY, p.startY],
+                        opacity: [0.3, 0.8, 0.4, 0.9, 0.3],
+                        scale: [0.8, 1.1, 0.9, 1.2, 0.8],
+                        rotate: [0, 120, 240, 360]
+                      }}
+                      transition={{
+                        duration: p.duration,
+                        repeat: Infinity,
+                        delay: p.delay,
+                        ease: "easeInOut"
+                      }}
+                      style={{
+                        width: p.shape !== "triangle" ? p.width : undefined,
+                        height: p.shape !== "triangle" ? p.height : undefined,
+                        backgroundColor: p.shape !== "triangle" ? p.color : undefined,
+                        borderRadius: "0.5px", // clean sharp edges
+                        borderLeft: p.shape === "triangle" ? `${p.width / 2}px solid transparent` : undefined,
+                        borderRight: p.shape === "triangle" ? `${p.width / 2}px solid transparent` : undefined,
+                        borderBottom: p.shape === "triangle" ? `${p.height}px solid ${p.color}` : undefined,
+                      }}
+                    />
+                  ))}
+                </div>
+
+                {/* Static smiley emoji */}
+                <div className="text-4xl select-none z-10 relative">
+                  😊
+                </div>
               </div>
-              <div>
-                <h2 className="text-xl font-black text-white font-sans">Transmission Received</h2>
-                <p className="text-xs text-zinc-400 mt-2 leading-relaxed font-sans">
-                  Thank you! Your responses have been saved securely in our space hub database.
+              
+              <div className="z-10">
+                <h2 className="text-xl font-light text-white font-sans">Submission Successful! 🎉</h2>
+                <p className="text-xs text-zinc-400 mt-1.5 font-sans">
+                  Thank you for your response.
                 </p>
               </div>
               
-              <button
-                onClick={() => {
-                  answersRef.current = {};
-                  setAnswers({});
-                  setCurrentIndex(0);
-                  setIsSubmitted(false);
-                }}
-                className="px-5 py-2.5 bg-white/5 border border-white/10 hover:bg-white/10 text-zinc-300 font-bold rounded-xl text-xs cursor-pointer transition-colors font-sans"
+              <Link
+                href="/"
+                className="px-6 py-3 text-white font-medium rounded-xl text-xs cursor-pointer shadow-md hover:shadow-[0_0_20px_rgba(82,163,221,0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-1.5 z-10"
+                style={{ background: 'linear-gradient(90deg, #52A3DD 0%, #E47939 100%)' }}
               >
-                Submit another response
-              </button>
+                <span>Return to FormSpace</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
             </motion.div>
           )}
         </AnimatePresence>
@@ -691,7 +771,7 @@ export default function FormFillingPage() {
           </div>
           <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-indigo-500 to-pink-500 transition-all duration-300 rounded-full"
+              className="h-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.4)] transition-all duration-300 rounded-full"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
