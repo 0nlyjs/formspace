@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { RightInteractiveParticles } from "~/components/RightInteractiveParticles";
 import { JungleSpatialBackground } from "~/components/JungleSpatialBackground";
 import { Abstract3DBackground } from "~/components/Abstract3DBackground";
+import { AnimeSpatialBackground } from "~/components/AnimeSpatialBackground";
 import {
   ArrowLeft,
   Save,
@@ -495,6 +496,8 @@ export default function FormBuilderPage() {
         <Abstract3DBackground />
       ) : theme === "fresh leaf" ? (
         <JungleSpatialBackground />
+      ) : theme === "manga pop" ? (
+        <AnimeSpatialBackground />
       ) : (
         <StaticBackground />
       )}

@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { Abstract3DBackground } from "~/components/Abstract3DBackground";
 import { JungleSpatialBackground } from "~/components/JungleSpatialBackground";
+import { AnimeSpatialBackground } from "~/components/AnimeSpatialBackground";
 
 // Custom ambient floating particles configuration (micro-scale, slow drifting)
 const AMBIENT_PARTICLES = Array.from({ length: 12 }).map((_, idx) => {
@@ -334,6 +335,8 @@ export default function FormFillingPage() {
         <Abstract3DBackground />
       ) : form.theme === "fresh leaf" ? (
         <JungleSpatialBackground />
+      ) : form.theme === "manga pop" || form.theme === "anime" ? (
+        <AnimeSpatialBackground />
       ) : (
         <div className="absolute inset-0 w-full h-full bg-[#050505] z-0 pointer-events-none select-none overflow-hidden">
           {/* Subtle Cyberpunk/Tech Grid Overlay */}
@@ -395,7 +398,9 @@ export default function FormFillingPage() {
       <div className={`w-full max-w-2xl backdrop-blur-3xl p-8 md:p-12 rounded-2xl flex flex-col justify-between min-h-[420px] relative overflow-hidden transition-all duration-300 z-10 ${
         form.theme === "fresh leaf"
           ? "bg-[#040d09]/82 border-emerald-500/20 hover:border-emerald-500/30 hover:bg-[#040d09]/88 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.92)]"
-          : "bg-white/[0.04] border-white/[0.08] hover:border-white/[0.12] hover:bg-white/[0.06] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.7)]"
+          : form.theme === "manga pop" || form.theme === "anime"
+            ? "bg-black/85 border-pink-500/25 hover:border-pink-500/35 hover:bg-black/90 shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_0_40px_8px_rgba(255,255,255,0.06),0_32px_64px_-16px_rgba(0,0,0,0.98)]"
+            : "bg-white/[0.04] border-white/[0.08] hover:border-white/[0.12] hover:bg-white/[0.06] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.7)]"
       }`}>
         
         {/* Background Liquid Glass reflection effects inside the card */}
