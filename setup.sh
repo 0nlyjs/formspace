@@ -17,4 +17,4 @@ for dir in apps/* packages/*; do
       fi
     fi
   fi
-done
+done``

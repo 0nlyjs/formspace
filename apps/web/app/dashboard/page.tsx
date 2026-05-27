@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { trpc } from "~/trpc/client";
 import { toast } from "sonner";
+import { RightInteractiveParticles } from "~/components/RightInteractiveParticles";
 import {
   Plus,
   Trash2,
@@ -66,6 +67,9 @@ const StaticBackground = () => (
         background: 'radial-gradient(circle, rgba(228, 121, 57, 0.07) 0%, rgba(5, 5, 5, 0) 75%)',
       }}
     />
+
+    {/* Interactive repelling particles on the right-side content background */}
+    <RightInteractiveParticles pageType="dashboard" />
   </div>
 );
 
