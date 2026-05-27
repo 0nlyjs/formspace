@@ -108,8 +108,8 @@ export const WavySphereCanvas: React.FC<{ shape?: "sphere" | "box" }> = ({ shape
       // Subdivision-rich 3D box/cube — 8×8×8 segments (was 14×14×14, saves ~17k vertices)
       sphereGeometry = new THREE.BoxGeometry(3.3, 3.3, 3.3, 8, 8, 8);
     } else {
-      // Base 3D wireframe sphere — detail 3 (642 verts) vs detail 5 (10,242 verts)
-      sphereGeometry = new THREE.IcosahedronGeometry(2.8, 3);
+      // Base 3D wireframe sphere — restored to original detail 5 (10,242 vertices)
+      sphereGeometry = new THREE.IcosahedronGeometry(2.8, 5);
     }
     const sphereMesh = new THREE.Mesh(sphereGeometry, shaderMaterial);
     scene.add(sphereMesh);
