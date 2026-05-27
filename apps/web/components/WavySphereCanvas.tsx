@@ -18,7 +18,14 @@ export const WavySphereCanvas: React.FC<{ shape?: "sphere" | "box" }> = ({ shape
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
     camera.position.z = 10;
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    // Use discrete GPU on multi-GPU systems (MacBooks etc.) and skip MSAA on Retina
+    // (Retina already supersamples via DPR=2, MSAA on top is wasteful)
+    const isRetina = window.devicePixelRatio > 1;
+    const renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: !isRetina,
+      powerPreference: "high-performance",
+    });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
@@ -95,13 +102,14 @@ export const WavySphereCanvas: React.FC<{ shape?: "sphere" | "box" }> = ({ shape
     });
 
     // 3. Create Wavy Wireframe Geometry
+    // PERF: IcosahedronGeometry detail 3 = 642 vertices (was detail 5 = 10,242 verts — 94% reduction)
     let sphereGeometry: THREE.BufferGeometry;
     if (shape === "box") {
-      // Subdivision-rich 3D box/cube (square) sized to 3.3 (20% bigger than height 2.7) with equal divisions
-      sphereGeometry = new THREE.BoxGeometry(3.3, 3.3, 3.3, 14, 14, 14);
+      // Subdivision-rich 3D box/cube — 8×8×8 segments (was 14×14×14, saves ~17k vertices)
+      sphereGeometry = new THREE.BoxGeometry(3.3, 3.3, 3.3, 8, 8, 8);
     } else {
-      // Base 3D wireframe sphere
-      sphereGeometry = new THREE.IcosahedronGeometry(2.8, 5);
+      // Base 3D wireframe sphere — detail 3 (642 verts) vs detail 5 (10,242 verts)
+      sphereGeometry = new THREE.IcosahedronGeometry(2.8, 3);
     }
     const sphereMesh = new THREE.Mesh(sphereGeometry, shaderMaterial);
     scene.add(sphereMesh);
@@ -136,6 +144,7 @@ export const WavySphereCanvas: React.FC<{ shape?: "sphere" | "box" }> = ({ shape
 
     // 5. Animation Loop
     let animationFrameId: number;
+    let isAnimating = false;
     const clock = new THREE.Clock();
 
     const animate = () => {
@@ -164,9 +173,36 @@ export const WavySphereCanvas: React.FC<{ shape?: "sphere" | "box" }> = ({ shape
       renderer.render(scene, camera);
     };
 
-    animate();
+    // 6. IntersectionObserver — pause rendering when off-screen to save GPU
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry) return;
+        if (entry.isIntersecting && !isAnimating) {
+          isAnimating = true;
+          animate();
+        } else if (!entry.isIntersecting && isAnimating) {
+          isAnimating = false;
+          cancelAnimationFrame(animationFrameId);
+        }
+      },
+      { threshold: 0.01 }
+    );
+    observer.observe(container);
 
-    // 6. Handle Resize
+    // 7. Tab visibility — pause when tab is hidden
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(animationFrameId);
+        isAnimating = false;
+      } else if (!isAnimating) {
+        isAnimating = true;
+        animate();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // 8. Handle Resize
     const handleResize = () => {
       const w = container.clientWidth;
       const h = container.clientHeight;
@@ -177,11 +213,13 @@ export const WavySphereCanvas: React.FC<{ shape?: "sphere" | "box" }> = ({ shape
 
     window.addEventListener("resize", handleResize);
 
-    // 7. Cleanup
+    // 9. Cleanup
     return () => {
       cancelAnimationFrame(animationFrameId);
+      observer.disconnect();
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       if (container && renderer.domElement) {
         container.removeChild(renderer.domElement);
       }

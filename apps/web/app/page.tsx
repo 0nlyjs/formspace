@@ -3,11 +3,24 @@
 import React from "react";
 import Link from "next/link";
 import { trpc } from "~/trpc/client";
-import { InteractiveBackground } from "~/components/InteractiveBackground";
+import dynamic from "next/dynamic";
+
+// Lazy-load all Three.js / Canvas components — keeps Three.js (~165KB gzip) OUT of the initial bundle
+// These load asynchronously after first paint, massively improving FCP and TTI
+const InteractiveBackground = dynamic(
+  () => import("~/components/InteractiveBackground").then((m) => m.InteractiveBackground),
+  { ssr: false }
+);
+const WavySphereCanvas = dynamic(
+  () => import("~/components/WavySphereCanvas").then((m) => m.WavySphereCanvas),
+  { ssr: false }
+);
+const WavyClothCanvas = dynamic(
+  () => import("~/components/WavyClothCanvas").then((m) => m.WavyClothCanvas),
+  { ssr: false }
+);
 import { FloatingGlassCard } from "~/components/FloatingGlassCard";
 import { TechFloatingGlassCard } from "~/components/TechFloatingGlassCard";
-import { WavySphereCanvas } from "~/components/WavySphereCanvas";
-import { WavyClothCanvas } from "~/components/WavyClothCanvas";
 import {
   Sparkles,
   ArrowRight,

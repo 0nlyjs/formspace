@@ -30,6 +30,7 @@ export const InteractiveBackground: React.FC = () => {
     }
 
     const particles: Particle[] = [];
+    // Restored to original count of 1600 particles
     const count = 1600;
 
     const getSolarColor = () => {
@@ -64,7 +65,7 @@ export const InteractiveBackground: React.FC = () => {
     let mouseY = 0;
     let targetX = 0;
     let targetY = 0;
-    let lastMouseMoveTime = Date.now();
+    let lastMouseMoveTime = performance.now();
     
     let autoAngleY = 0;
     let currentRenderAngleY = 0;
@@ -73,7 +74,7 @@ export const InteractiveBackground: React.FC = () => {
     const handleMouseMove = (e: MouseEvent) => {
       mouseX = e.clientX - width / 2;
       mouseY = e.clientY - height / 2;
-      lastMouseMoveTime = Date.now();
+      lastMouseMoveTime = performance.now();
     };
 
     const handleResize = () => {
@@ -94,7 +95,8 @@ export const InteractiveBackground: React.FC = () => {
     const animate = () => {
       ctx.clearRect(0, 0, width, height);
 
-      const now = Date.now();
+      // PERF: performance.now() is faster and higher-resolution than Date.now()
+      const now = performance.now();
       const idleTime = now - lastMouseMoveTime;
       const isIdle = idleTime > 800;
 

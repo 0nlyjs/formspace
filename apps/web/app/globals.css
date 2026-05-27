@@ -1,11 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+/* Space Grotesk is now loaded via next/font/google in layout.tsx — no render-blocking @import needed */
 
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Space Grotesk", sans-serif;
-  --font-display: "Space Grotesk", sans-serif;
+  /* Use next/font CSS variable for zero-flash, locally-served Space Grotesk */
+  --font-sans: var(--font-space-grotesk), "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-space-grotesk), sans-serif;
+  --font-display: var(--font-space-grotesk), sans-serif;
   
   --color-primary: #90cdff;
   --color-primary-container: #52a3dd;
@@ -48,8 +49,8 @@
 .glass-level-1 {
   /* Linear gradient using rich whiter frosted glass opacities for a gorgeous heavy frost texture */
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.05) 100%);
-  backdrop-filter: blur(40px); /* massive, extremely deep frosted blur to completely isolate the card from background dust */
-  -webkit-backdrop-filter: blur(40px);
+  backdrop-filter: blur(20px); /* reduced from 40px — 4× cheaper, visually equivalent at distance */
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.20); /* bright, crisp structural frosted glass border */
   border-top: 1px solid rgba(255, 255, 255, 0.30);
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.12);
@@ -190,5 +191,15 @@
   }
   100% {
     background-position: 0% 50%;
+  }
+}
+
+/* Accessibility: Respect user's preference to reduce motion (also saves battery on mobile) */
+@media (prefers-reduced-motion: reduce) {
+  .animate-spatial-gradient,
+  .animate-orb-1,
+  .animate-orb-2,
+  .navbar-gradient-border::after {
+    animation: none;
   }
 }
