@@ -1,7 +1,7 @@
 <div align="center">
   <img src="apps/web/app/icon.png" alt="Formspace Logo" width="100" height="100" />
   
-  # 🌌 Formspace
+  # FormSpace
   
   **A beautiful, interactive form builder SaaS that feels like it’s from the future!**  
   *Built with 3D Spatial UI, React Three Fiber, tRPC, Zod, Drizzle ORM, and Scalar.*
@@ -14,7 +14,8 @@
   [![Validation: Zod](https://img.shields.io/badge/Validation-Zod-3068B7?style=for-the-badge&logo=zod)](https://zod.dev/)
   [![Docs: Scalar](https://img.shields.io/badge/Docs-Scalar-5E2BFF?style=for-the-badge)](https://scalar.com/)
 
-  [🚀 Live Site](https://formspace.mistjs.com/) • [📖 API Reference](#-api-documentation--scalar) • [🔑 Demo Account](#-pre-seeded-demo-credentials) • [🛠️ Under the Hood](#%EF%B8%8F-how-the-interactive-3d-works)
+[🚀 Live Site](https://formspace.mistjs.com/) • [🔑 Demo Account](#-pre-seeded-demo-credentials) • [🛠️ Under the Hood](#%EF%B8%8F-how-the-interactive-3d-works)
+
 </div>
 
 ---
@@ -26,7 +27,7 @@
 
 ## 🎯 What is Formspace?
 
-Formspace is a modern, Typeform-style form builder. Instead of filling out boring, static forms, Formspace turns every form into a visually stunning experience. 
+Formspace is a modern, Typeform-style form builder. Instead of filling out boring, static forms, Formspace turns every form into a visually stunning experience.
 
 Creators can design forms, configure dynamic fields, set passwords, pick creative themes, and check out response charts on a futuristic, glassmorphic dashboard. Respondents can easily fill out forms in gorgeous, mouse-responsive 3D environments without needing an account.
 
@@ -35,6 +36,7 @@ Creators can design forms, configure dynamic fields, set passwords, pick creativ
 ## ✨ Features at a Glance
 
 ### 🏗️ Core Features
+
 - 🚀 **Full Monorepo Setup**: Front-end (Next.js) and back-end (Express API) run cleanly together in a Turborepo.
 - 🔒 **Secure Accounts**: Safe creator login with hashed passwords and persistent sessions.
 - 🎨 **Dynamic Form Builder**: Add, edit, remove, and drag questions easily.
@@ -44,6 +46,7 @@ Creators can design forms, configure dynamic fields, set passwords, pick creativ
 - 📖 **Interactive API Docs**: Built-in Swagger/Scalar API docs for developers.
 
 ### 🌟 Extra Fun Stuff
+
 - 🔑 **Password Protection**: Lock your forms with a password. Questions stay hidden until the right password is entered!
 - ⏳ **Expiry Timers & Response Limits**: Set an expiration date or limit the number of submissions. The form automatically closes itself once reached.
 - 🔀 **Conditional Question Logic**: Show or hide questions based on how people answered previous single-choice questions.
@@ -55,25 +58,31 @@ Creators can design forms, configure dynamic fields, set passwords, pick creativ
 
 ## 🛠️ How the Interactive 3D Works
 
-We integrated **Three.js** and **React Three Fiber (R3F)** to create high-performance interactive spaces that react to your mouse and scrolling. 
+We integrated **Three.js** and **React Three Fiber (R3F)** to create high-performance interactive spaces that react to your mouse and scrolling.
 
 Here is exactly how the magic works in simple terms:
 
 ### 1. The Dynamic Themes
+
 Every form can be styled with 4 immersive themes:
-* **Pure Abstract (The Space-Water Theme)**: A mesh grid acts as a water sheet. Moving your mouse calculates where you are pointing on the screen (using **Raycasting**) and sends ripple waves across the grid. Beneath the water, a field of **4,500 twinkling stars** floats in a cosmic nebula.
-* **Manga Pop (The Anime Theme)**: A gorgeous cluster of particles that orbit in soft secondary paths, shifting smoothly as you slide your cursor.
-* **Fresh Leaf (The Canopy Theme)**: Green organic nodes that float and wave using gentle wind vectors and spring physics, reacting dynamically to scrolling.
-* **Retro Theme**: A grid cloth waving in the wind, mimicking classic 80s synthwave CRT screens.
+
+- **Pure Abstract (The Space-Water Theme)**: A mesh grid acts as a water sheet. Moving your mouse calculates where you are pointing on the screen (using **Raycasting**) and sends ripple waves across the grid. Beneath the water, a field of **4,500 twinkling stars** floats in a cosmic nebula.
+- **Manga Pop (The Anime Theme)**: A gorgeous cluster of particles that orbit in soft secondary paths, shifting smoothly as you slide your cursor.
+- **Fresh Leaf (The Canopy Theme)**: Green organic nodes that float and wave using gentle wind vectors and spring physics, reacting dynamically to scrolling.
+- **Retro Theme**: A grid cloth waving in the wind, mimicking classic 80s synthwave CRT screens.
 
 ### 2. Cursor Parallax & Tilting (Spring Physics)
+
 To make the UI feel tactile, we added interactive mouse tilting. When you move your cursor, the form card tilts gently using **spring interpolation**. This calculates a smooth delay (using a physics "spring") between your mouse and the card's rotation. Instead of feeling stiff, it feels soft, responsive, and organic.
 
 ### 3. Behind the Scenes: Custom GLSL Shaders
+
 Shaders are mini-programs that run directly on your computer's graphics card (GPU). Instead of asking the browser to calculate the position of thousands of stars or ripples, we wrote custom **GLSL vertex and fragment shaders**. This offloads all calculations to the GPU, keeping CPU usage virtually at 0% and giving you a glassy smooth 60 FPS performance.
 
 ### 4. Smart Performance Safeguards
+
 3D graphics can normally make laptops warm. We fixed this with two smart loops:
+
 - **Intersection Observer**: If you scroll down a page and the 3D canvas goes out of view, the loop **immediately freezes**. It only runs when you can actually see it!
 - **Page Visibility API**: When you switch browser tabs, the 3D engine pauses instantly to save battery.
 
@@ -103,8 +112,9 @@ Testing Formspace is immediate! We pre-loaded a demonstration account with test 
 
 > [!TIP]
 > **Log in with these credentials to explore the dashboard:**
-> * **Email / Username**: `test@mistjs.com` or `demo`
-> * **Password**: `mist@2434`
+>
+> - **Email / Username**: `test@mistjs.com`
+> - **Password**: `mist@2434`
 
 ---
 
@@ -112,8 +122,8 @@ Testing Formspace is immediate! We pre-loaded a demonstration account with test 
 
 Formspace automatically converts its tRPC router into standard OpenAPI specifications. Developers can check out endpoints and test them directly in the browser:
 
-* **OpenAPI Specs**: `http://localhost:3001/openapi.json`
-* **Interactive Scalar Docs**: `http://localhost:3001/docs`
+- **OpenAPI Specs**: `http://localhost:3001/openapi.json`
+- **Interactive Scalar Docs**: `http://localhost:3001/docs`
 
 ---
 
@@ -122,6 +132,7 @@ Formspace automatically converts its tRPC router into standard OpenAPI specifica
 Want to run Formspace on your machine? It takes less than **3 minutes**:
 
 ### 📋 Prerequisites
+
 - **Node.js** (v18+)
 - **PNPM** (v8+)
 - **PostgreSQL** database (Local or hosted like Neon/Supabase)
@@ -129,6 +140,7 @@ Want to run Formspace on your machine? It takes less than **3 minutes**:
 ### 🛠️ Step-by-Step Run Guide
 
 1. **Clone and Install**
+
    ```bash
    git clone https://github.com/0nlyjs/formspace.git
    cd formspace
@@ -137,6 +149,7 @@ Want to run Formspace on your machine? It takes less than **3 minutes**:
 
 2. **Configure Environment Variables**
    Create a `.env` file in the **root** folder:
+
    ```env
    # Database connection
    DATABASE_URL="postgresql://postgres:password@localhost:5432/formspace"
@@ -155,6 +168,7 @@ Want to run Formspace on your machine? It takes less than **3 minutes**:
 
 3. **Initialize Database & Seed Data**
    Drizzle ORM will set up tables, run migrations, and pre-populate your database with demo surveys:
+
    ```bash
    pnpm db:generate
    pnpm db:migrate
@@ -163,9 +177,11 @@ Want to run Formspace on your machine? It takes less than **3 minutes**:
 
 4. **Launch Dev Mode**
    Start the frontend and backend servers concurrently:
+
    ```bash
    pnpm dev
    ```
+
    - **Frontend UI**: [http://localhost:3000](http://localhost:3000)
    - **Backend API**: [http://localhost:3001](http://localhost:3001)
    - **Scalar API Docs**: [http://localhost:3001/docs](http://localhost:3001/docs)
@@ -173,4 +189,5 @@ Want to run Formspace on your machine? It takes less than **3 minutes**:
 ---
 
 ## 🛡️ License
+
 Formspace is open-source under the MIT License. Created as a solo hackathon submission with high-fidelity aesthetics.
