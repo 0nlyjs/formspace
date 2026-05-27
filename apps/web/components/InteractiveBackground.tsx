@@ -66,6 +66,7 @@ export const InteractiveBackground: React.FC = () => {
     let targetX = 0;
     let targetY = 0;
     let lastMouseMoveTime = performance.now();
+    let lastScrollTime = 0;
     
     let autoAngleY = 0;
     let currentRenderAngleY = 0;
@@ -75,6 +76,10 @@ export const InteractiveBackground: React.FC = () => {
       mouseX = e.clientX - width / 2;
       mouseY = e.clientY - height / 2;
       lastMouseMoveTime = performance.now();
+    };
+
+    const handleScroll = () => {
+      lastScrollTime = performance.now();
     };
 
     const handleResize = () => {
@@ -87,6 +92,8 @@ export const InteractiveBackground: React.FC = () => {
     };
 
     window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('touchmove', handleScroll, { passive: true });
     window.addEventListener('resize', handleResize);
 
     const fov = 600;
@@ -99,8 +106,12 @@ export const InteractiveBackground: React.FC = () => {
       const now = performance.now();
       const idleTime = now - lastMouseMoveTime;
       const isIdle = idleTime > 800;
+      const isScrolling = (now - lastScrollTime) < 300;
 
-      const rotationSpeed = isIdle ? 0.00015 : 0.00035;
+      let rotationSpeed = isIdle ? 0.00015 : 0.00035;
+      if (isScrolling) {
+        rotationSpeed *= 2.0; // Spin 2x faster during viewport scrolling
+      }
       autoAngleY += rotationSpeed;
 
       targetX += (mouseX - targetX) * 0.035;
@@ -117,7 +128,11 @@ export const InteractiveBackground: React.FC = () => {
       const cosX = Math.cos(currentRenderAngleX);
       const sinX = Math.sin(currentRenderAngleX);
 
-      particles.forEach((p) => {
+      const len = particles.length;
+
+      // High-performance flat for-loop over 1600 particles to prevent GC collection stutter
+      for (let i = 0; i < len; i++) {
+        const p = particles[i]!;
         const rx = p.x * cosY - p.z * sinY;
         const rz = p.z * cosY + p.x * sinY;
 
@@ -138,7 +153,7 @@ export const InteractiveBackground: React.FC = () => {
             ctx.fill();
           }
         }
-      });
+      }
 
       animationFrameId = requestAnimationFrame(animate);
     };
@@ -147,6 +162,8 @@ export const InteractiveBackground: React.FC = () => {
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('touchmove', handleScroll);
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animationFrameId);
     };
