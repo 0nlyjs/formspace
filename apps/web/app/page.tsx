@@ -125,8 +125,7 @@ export default function Home() {
           <div className="lg:col-span-6 flex flex-col gap-6 text-left relative z-20">
             {/* Holographic Badge (text-xs to text-sm) */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#ffb690]/5 border border-[#ffb690]/15 w-max text-sm font-semibold text-[#ffb690]/95 shadow-[0_0_15px_rgba(255,182,144,0.03)] uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5 text-[#ffb690] animate-pulse" />
-              Space Form Builder v2.0
+              Space Form Builder
             </div>
 
             {/* Big Premium Header (text-5xl/text-7xl to text-6xl/text-8xl) */}
